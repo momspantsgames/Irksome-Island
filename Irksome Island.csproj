@@ -1,0 +1,15 @@
+<Project Sdk="Godot.NET.Sdk/4.4.1">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>IrksomeIsland</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".editorconfig" />
+    <Content Include=".gitignore" />
+    <Content Include="application\ApplicationManager.cs.uid" />
+    <Content Include="entities\PlayerEntity.cs.uid" />
+    <Content Include="props\NetworkedProp.cs.uid" />
+    <Content Include="README.md" />
+  </ItemGroup>
+</Project>

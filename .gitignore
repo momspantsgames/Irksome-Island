@@ -1,16 +1,59 @@
-# Godot 4+ specific ignores
-.godot/
-.nomedia
-
-# Godot-specific ignores
+### Godot ###
+# Godot-specific
 .import/
+.godot/
 export.cfg
-export_credentials.cfg
-
-# Imported translations (automatically generated from CSV files)
+export_presets.cfg
 *.translation
+*.import
 
-# Mono-specific ignores
+# Mono / C# Godot
 .mono/
 data_*/
-mono_crash.*.json
+
+### C# / .NET ###
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug*/
+[Rr]elease*/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Ll]og/
+
+# Visual Studio user files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Others
+*.log
+*.cache
+*.tmp
+*.swp
+*.bak
+*.db
+*.pid
+*.seed
+*.pid.lock
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
