@@ -23,7 +23,7 @@ using Godot;
 
 namespace IrksomeIsland.Entities;
 
-public partial class PlayerEntity : CharacterBody3D {
+public partial class PlayerCharacter : CharacterBody3D {
 
     public override void _Ready() {
         base._Ready();

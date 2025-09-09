@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=4 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld.cs" id="1_sdvpa"]
+[ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/chunks/GrassField.tscn" id="2_x5p2k"]
+[ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/chunks/RiverEndCap.tscn" id="3_rv1w6"]
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
+
+[node name="GroundChunk1" parent="." instance=ExtResource("2_x5p2k")]
+
+[node name="GroundChunk2" parent="." instance=ExtResource("3_rv1w6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
