@@ -7,9 +7,12 @@
   <ItemGroup>
     <Content Include=".editorconfig" />
     <Content Include=".gitignore" />
-    <Content Include="application\ApplicationManager.cs.uid" />
-    <Content Include="entities\PlayerCharacter.cs.uid" />
-    <Content Include="props\NetworkedProp.cs.uid" />
+    <Content Include="core\application\ApplicationManager.cs.uid" />
+    <Content Include="core\entities\PlayerCharacter.cs.uid" />
+    <Content Include="core\props\NetworkedProp.cs.uid" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="core\camera\" />
   </ItemGroup>
 </Project>

@@ -18,15 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+namespace IrksomeIsland.Core.Constants;
 
-using Godot;
-
-namespace IrksomeIsland.Application;
-
-public partial class ApplicationManager : Node {
-
-    public override void _Ready() {
-        base._Ready();
-
-    }
+public static class NodeNames
+{
+	public const string NetworkManager = "NetworkManager";
+	public const string ApplicationManager = "ApplicationManager";
+	public const string ModelRoot = "ModelRoot";
 }
+

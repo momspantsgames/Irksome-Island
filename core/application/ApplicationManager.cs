@@ -18,15 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 using Godot;
+using IrksomeIsland.Core.Constants;
 
-namespace IrksomeIsland.Entities;
+namespace IrksomeIsland.Core.Application;
 
-public partial class PlayerCharacter : CharacterBody3D {
 
-    public override void _Ready() {
-        base._Ready();
+public partial class ApplicationManager : Node {
 
+	private NetworkManager _netManager;
+
+    public override void _Ready()
+    {
+	    Name = NodeNames.ApplicationManager;
+
+	    _netManager = GetNodeOrNull<NetworkManager>(NodeNames.NetworkManager);
+	    if (_netManager == null)
+	    {
+		    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
+		    AddChild(_netManager);
+	    }
     }
+
 }

@@ -18,15 +18,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
+using System;
 using Godot;
 
-namespace IrksomeIsland.Props;
+namespace IrksomeIsland.Core.Application;
 
-public partial class NetworkedProp : Node {
+public static class Logger {
+	public enum LogLevel {
+		Trace = 0,
+		Debug = 1,
+		Info = 2,
+		Warning = 3,
+		Error = 4
+	}
 
-    public override void _Ready() {
-        base._Ready();
+	private static LogLevel _currentLevel = LogLevel.Debug;
 
-    }
+	public static void Log(string message, LogLevel level = LogLevel.Info) {
+		if (level < _currentLevel) {
+			return;
+		}
+
+		switch (level) {
+			case LogLevel.Trace:
+				GD.Print($"[TRACE] {DateTime.Now} {message}");
+				break;
+			case LogLevel.Debug:
+				GD.Print($"[DEBUG] {DateTime.Now} {message}");
+				break;
+			case LogLevel.Info:
+				GD.Print($"[INFO] {DateTime.Now} {message}");
+				break;
+			case LogLevel.Warning:
+				GD.Print($"[WARNING] {DateTime.Now} {message}");
+				break;
+			case LogLevel.Error:
+				GD.PrintErr($"[ERROR] {DateTime.Now} {message}");
+				break;
+			default:
+				GD.Print(message);
+				break;
+		}
+	}
+
+	public static void SetLogLevel(LogLevel level) {
+		_currentLevel = level;
+	}
 }
