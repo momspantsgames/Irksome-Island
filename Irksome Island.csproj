@@ -1,18 +1,19 @@
 <Project Sdk="Godot.NET.Sdk/4.4.1">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-    <RootNamespace>IrksomeIsland</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include=".editorconfig" />
-    <Content Include=".gitignore" />
-    <Content Include="core\application\ApplicationManager.cs.uid" />
-    <Content Include="core\entities\PlayerCharacter.cs.uid" />
-    <Content Include="core\props\NetworkedProp.cs.uid" />
-    <Content Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="core\camera\" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<RootNamespace>IrksomeIsland</RootNamespace>
+
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Extra analyzers -->
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="10.*" PrivateAssets="all" IncludeAssets="analyzers" />
+		<PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.*" PrivateAssets="all" IncludeAssets="analyzers"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.*" PrivateAssets="all" IncludeAssets="analyzers"/>
+	</ItemGroup>
 </Project>

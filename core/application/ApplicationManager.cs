@@ -24,9 +24,9 @@ using IrksomeIsland.Core.Constants;
 namespace IrksomeIsland.Core.Application;
 
 
-public partial class ApplicationManager : Node {
-
-	private NetworkManager _netManager;
+public partial class ApplicationManager : Node
+{
+	private NetworkManager? _netManager;
 
     public override void _Ready()
     {

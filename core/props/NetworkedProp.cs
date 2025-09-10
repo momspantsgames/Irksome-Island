@@ -25,8 +25,4 @@ namespace IrksomeIsland.Core.Props;
 
 public partial class NetworkedProp : Node {
 
-    public override void _Ready() {
-        base._Ready();
-
-    }
 }

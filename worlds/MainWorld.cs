@@ -25,8 +25,4 @@ namespace IrksomeIsland.Worlds;
 
 public partial class MainWorld : Node3D {
 
-	public override void _Ready() {
-		base._Ready();
-
-	}
 }

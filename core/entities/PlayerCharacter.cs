@@ -25,8 +25,4 @@ namespace IrksomeIsland.Core.Entities;
 
 public partial class PlayerCharacter : CharacterBody3D {
 
-    public override void _Ready() {
-        base._Ready();
-
-    }
 }
