@@ -7,6 +7,9 @@ export_presets.cfg
 *.translation
 *.import
 
+# the godot build path
+dist/
+
 # Mono / C# Godot
 .mono/
 data_*/
