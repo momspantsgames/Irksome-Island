@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bd7wgx654cmf8"]
+[gd_scene load_steps=14 format=3 uid="uid://bd7wgx654cmf8"]
 
 [ext_resource type="PackedScene" uid="uid://bhdb3ko08rgq8" path="res://assets/models/nature/cliff_blockHalf_rock.glb" id="1_b03be"]
 [ext_resource type="PackedScene" uid="uid://dx246j0i7gv1y" path="res://assets/models/nature/ground_riverEndClosed.glb" id="2_5jq5d"]
@@ -7,202 +7,261 @@
 [ext_resource type="PackedScene" uid="uid://dvlue4jnq0ag6" path="res://assets/models/nature/ground_riverStraight.glb" id="5_u8vyl"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5jq5d"]
-size = Vector3(8, 0.5, 8)
+size = Vector3(8, 0.498108, 4)
 
-[node name="GroundChunk1" type="StaticBody3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_xc14n"]
+size = Vector3(4, 0.498108, 4)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201926, 0)
+[sub_resource type="BoxShape3D" id="BoxShape3D_fnlva"]
+size = Vector3(3, 0.498108, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u8vyl"]
+size = Vector3(1, 0.498108, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_5jq5d"]
+data = PackedVector3Array(-0.1926, -0.05, 0.3144, -0.2525, 0, 0.2984, -0.1746, 0, 0.1105, -0.1746, 0, 0.1105, -0.1209, -0.05, 0.1415, -0.1926, -0.05, 0.3144, 0.1415, -0.05, -0.1209, 0.1105, 0, -0.1746, 0.2984, 0, -0.2525, 0.2984, 0, -0.2525, 0.3144, -0.05, -0.1926, 0.1415, -0.05, -0.1209, -0.007, -0.05, -0.007, -0.0508, 0, -0.0508, 0.1105, 0, -0.1746, 0.1105, 0, -0.1746, 0.1415, -0.05, -0.1209, -0.007, -0.05, -0.007, 0.279, 0, 0.5, 0.217, -0.05, 0.5, 0.2549, -0.05, 0.3585, 0.2549, -0.05, 0.3585, 0.3086, 0, 0.3895, 0.279, 0, 0.5, 0.3086, 0, 0.3895, 0.2549, -0.05, 0.3585, 0.3585, -0.05, 0.2549, 0.3585, -0.05, 0.2549, 0.3895, 0, 0.3086, 0.3086, 0, 0.3895, -0.217, -0.05, 0.5, -0.279, 0, 0.5, -0.2525, 0, 0.2984, -0.2525, 0, 0.2984, -0.1926, -0.05, 0.3144, -0.217, -0.05, 0.5, 0.3144, -0.05, -0.1926, 0.2984, 0, -0.2525, 0.5, 0, -0.279, 0.5, 0, -0.279, 0.5, -0.05, -0.217, 0.3144, -0.05, -0.1926, 0.3895, 0, 0.3086, 0.3585, -0.05, 0.2549, 0.5, -0.05, 0.217, 0.5, -0.05, 0.217, 0.5, 0, 0.279, 0.3895, 0, 0.3086, -0.1209, -0.05, 0.1415, -0.1746, 0, 0.1105, -0.0508, 0, -0.0508, -0.0508, 0, -0.0508, -0.007, -0.05, -0.007, -0.1209, -0.05, 0.1415, 0.379, 0, 0.5, 0.279, 0, 0.5, 0.3086, 0, 0.3895, 0.3086, 0, 0.3895, 0.3895, 0, 0.3086, 0.379, 0, 0.5, 0.3895, 0, 0.3086, 0.4173, 0, 0.4173, 0.379, 0, 0.5, 0.3895, 0, 0.3086, 0.5, 0, 0.279, 0.4173, 0, 0.4173, 0.5, 0, 0.279, 0.5, 0, 0.379, 0.4173, 0, 0.4173, -0.379, 0, 0.5, -0.4659, 0, 0.2412, -0.366, 0, 0, -0.366, 0, 0, -0.279, 0, 0.5, -0.379, 0, 0.5, -0.366, 0, 0, -0.2071, 0, -0.2071, -0.279, 0, 0.5, -0.2071, 0, -0.2071, -0.2525, 0, 0.2984, -0.279, 0, 0.5, -0.2071, 0, -0.2071, -0.1746, 0, 0.1105, -0.2525, 0, 0.2984, -0.2071, 0, -0.2071, 0, 0, -0.366, -0.1746, 0, 0.1105, 0, 0, -0.366, -0.0508, 0, -0.0508, -0.1746, 0, 0.1105, 0, 0, -0.366, 0.1105, 0, -0.1746, -0.0508, 0, -0.0508, 0, 0, -0.366, 0.2412, 0, -0.4659, 0.1105, 0, -0.1746, 0.2412, 0, -0.4659, 0.2984, 0, -0.2525, 0.1105, 0, -0.1746, 0.2412, 0, -0.4659, 0.5, 0, -0.379, 0.2984, 0, -0.2525, 0.5, 0, -0.379, 0.5, 0, -0.279, 0.2984, 0, -0.2525, 0.5, 0, 0.5, 0.379, 0, 0.5, 0.4173, 0, 0.4173, 0.4173, 0, 0.4173, 0.5, 0, 0.379, 0.5, 0, 0.5, -0.379, 0, 0.5, -0.5, 0, 0.5, -0.4659, 0, 0.2412, -0.4659, 0, 0.2412, -0.5, 0, 0.5, -0.5, 0, -0.5, -0.366, 0, 0, -0.4659, 0, 0.2412, -0.5, 0, -0.5, -0.2071, 0, -0.2071, -0.366, 0, 0, -0.5, 0, -0.5, 0, 0, -0.366, -0.2071, 0, -0.2071, -0.5, 0, -0.5, 0.2412, 0, -0.4659, 0, 0, -0.366, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, 0.2412, 0, -0.4659, 0.5, 0, -0.5, 0.5, 0, -0.379, 0.2412, 0, -0.4659, 0.217, -0.05, 0.5, -0.217, -0.05, 0.5, -0.1926, -0.05, 0.3144, -0.1926, -0.05, 0.3144, -0.1209, -0.05, 0.1415, 0.217, -0.05, 0.5, -0.1209, -0.05, 0.1415, -0.007, -0.05, -0.007, 0.217, -0.05, 0.5, -0.007, -0.05, -0.007, 0.1415, -0.05, -0.1209, 0.217, -0.05, 0.5, 0.1415, -0.05, -0.1209, 0.3144, -0.05, -0.1926, 0.217, -0.05, 0.5, 0.3144, -0.05, -0.1926, 0.2549, -0.05, 0.3585, 0.217, -0.05, 0.5, 0.3144, -0.05, -0.1926, 0.3585, -0.05, 0.2549, 0.2549, -0.05, 0.3585, 0.3144, -0.05, -0.1926, 0.5, -0.05, -0.217, 0.3585, -0.05, 0.2549, 0.5, -0.05, -0.217, 0.5, -0.05, 0.217, 0.3585, -0.05, 0.2549)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_xc14n"]
+data = PackedVector3Array(-0.341, 0, 0.125, -0.341, 0, -0.125, -0.279, -0.05, -0.125, -0.279, -0.05, -0.125, -0.279, -0.05, 0.125, -0.341, 0, 0.125, -0.279, 0, 0.375, -0.341, 0, 0.125, -0.279, -0.05, 0.125, -0.279, -0.05, 0.125, -0.217, -0.05, 0.375, -0.279, 0, 0.375, -0.279, 0, 0.5, -0.279, 0, 0.375, -0.217, -0.05, 0.375, -0.217, -0.05, 0.375, -0.217, -0.05, 0.5, -0.279, 0, 0.5, -0.279, -0.05, -0.125, -0.341, 0, -0.125, -0.279, 0, -0.375, -0.279, 0, -0.375, -0.217, -0.05, -0.375, -0.279, -0.05, -0.125, 0.217, -0.05, 0.375, 0.155, -0.05, 0.125, 0.217, 0, 0.125, 0.217, 0, 0.125, 0.279, 0, 0.375, 0.217, -0.05, 0.375, 0.217, -0.05, -0.375, 0.217, -0.05, -0.5, 0.279, 0, -0.5, 0.279, 0, -0.5, 0.279, 0, -0.375, 0.217, -0.05, -0.375, -0.217, -0.05, -0.375, -0.279, 0, -0.375, -0.279, 0, -0.5, -0.279, 0, -0.5, -0.217, -0.05, -0.5, -0.217, -0.05, -0.375, 0.155, -0.05, 0.125, 0.155, -0.05, -0.125, 0.217, 0, -0.125, 0.217, 0, -0.125, 0.217, 0, 0.125, 0.155, -0.05, 0.125, 0.217, -0.05, 0.5, 0.217, -0.05, 0.375, 0.279, 0, 0.375, 0.279, 0, 0.375, 0.279, 0, 0.5, 0.217, -0.05, 0.5, 0.217, 0, -0.125, 0.155, -0.05, -0.125, 0.217, -0.05, -0.375, 0.217, -0.05, -0.375, 0.279, 0, -0.375, 0.217, 0, -0.125, 0.317, 0, 0.125, 0.317, 0, -0.125, 0.379, 0, -0.375, 0.379, 0, -0.375, 0.379, 0, 0.375, 0.317, 0, 0.125, 0.379, 0, -0.375, 0.379, 0, 0.5, 0.379, 0, 0.375, 0.379, 0, -0.375, 0.379, 0, -0.5, 0.379, 0, 0.5, 0.379, 0, -0.5, 0.5, 0, -0.5, 0.379, 0, 0.5, 0.5, 0, -0.5, 0.5, 0, 0.5, 0.379, 0, 0.5, -0.5, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.379, 0, 0.5, -0.5, 0, 0.5, -0.441, 0, 0.125, -0.379, 0, 0.375, -0.379, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, -0.125, -0.441, 0, 0.125, -0.441, 0, -0.125, -0.5, 0, -0.5, -0.379, 0, -0.5, -0.379, 0, -0.5, -0.379, 0, -0.375, -0.441, 0, -0.125, 0.279, 0, 0.5, 0.317, 0, -0.125, 0.317, 0, 0.125, 0.317, 0, 0.125, 0.379, 0, 0.5, 0.279, 0, 0.5, 0.317, 0, 0.125, 0.379, 0, 0.375, 0.379, 0, 0.5, 0.279, 0, -0.5, 0.317, 0, -0.125, 0.279, 0, 0.5, 0.279, 0, -0.5, 0.379, 0, -0.5, 0.317, 0, -0.125, 0.379, 0, -0.5, 0.379, 0, -0.375, 0.317, 0, -0.125, 0.279, 0, -0.375, 0.279, 0, -0.5, 0.279, 0, 0.5, 0.279, 0, -0.375, 0.279, 0, 0.5, 0.279, 0, 0.375, 0.279, 0, -0.375, 0.279, 0, 0.375, 0.217, 0, 0.125, 0.217, 0, 0.125, 0.217, 0, -0.125, 0.279, 0, -0.375, -0.379, 0, 0.5, -0.341, 0, -0.125, -0.341, 0, 0.125, -0.341, 0, 0.125, -0.279, 0, 0.5, -0.379, 0, 0.5, -0.341, 0, 0.125, -0.279, 0, 0.375, -0.279, 0, 0.5, -0.379, 0, -0.5, -0.341, 0, -0.125, -0.379, 0, 0.5, -0.379, 0, -0.5, -0.279, 0, -0.5, -0.341, 0, -0.125, -0.279, 0, -0.5, -0.279, 0, -0.375, -0.341, 0, -0.125, -0.379, 0, -0.375, -0.379, 0, -0.5, -0.379, 0, 0.5, -0.379, 0, -0.375, -0.379, 0, 0.5, -0.379, 0, 0.375, -0.379, 0, -0.375, -0.379, 0, 0.375, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.441, 0, -0.125, -0.379, 0, -0.375, -0.1443, 0, 0.2187, -0.1652, -0.05, 0.1736, -0.069, -0.05, 0.191, -0.069, -0.05, 0.191, -0.1065, 0, 0.2255, -0.1443, 0, 0.2187, -0.1301, -0.05, 0.3174, -0.2103, -0.05, 0.2517, -0.1578, 0, 0.2421, -0.1578, 0, 0.2421, -0.123, 0, 0.2706, -0.1301, -0.05, 0.3174, -0.1028, 0, 0.2624, -0.0593, -0.05, 0.2887, -0.1301, -0.05, 0.3174, -0.1301, -0.05, 0.3174, -0.123, 0, 0.2706, -0.1028, 0, 0.2624, -0.069, -0.05, 0.191, -0.0593, -0.05, 0.2887, -0.1028, 0, 0.2624, -0.1028, 0, 0.2624, -0.1065, 0, 0.2255, -0.069, -0.05, 0.191, -0.1578, 0, 0.2421, -0.2103, -0.05, 0.2517, -0.1652, -0.05, 0.1736, -0.1652, -0.05, 0.1736, -0.1443, 0, 0.2187, -0.1578, 0, 0.2421, -0.123, 0, 0.2706, -0.1578, 0, 0.2421, -0.1443, 0, 0.2187, -0.1443, 0, 0.2187, -0.1065, 0, 0.2255, -0.123, 0, 0.2706, -0.1065, 0, 0.2255, -0.1028, 0, 0.2624, -0.123, 0, 0.2706, 0.0491, 0, -0.313, 0.0112, -0.05, -0.3632, 0.1325, -0.05, -0.3632, 0.1325, -0.05, -0.3632, 0.0949, 0, -0.313, 0.0491, 0, -0.313, 0.0361, 0, -0.2673, -0.0219, -0.05, -0.2471, 0.0112, -0.05, -0.3632, 0.0112, -0.05, -0.3632, 0.0491, 0, -0.313, 0.0361, 0, -0.2673, 0.0686, -0.05, -0.1822, 0.0632, 0, -0.2479, 0.1025, 0, -0.2872, 0.1025, 0, -0.2872, 0.1591, -0.05, -0.2727, 0.0686, -0.05, -0.1822, 0.0632, 0, -0.2479, 0.0361, 0, -0.2673, 0.0491, 0, -0.313, 0.0491, 0, -0.313, 0.0949, 0, -0.313, 0.0632, 0, -0.2479, 0.0949, 0, -0.313, 0.1025, 0, -0.2872, 0.0632, 0, -0.2479, 0.0686, -0.05, -0.1822, -0.0219, -0.05, -0.2471, 0.0361, 0, -0.2673, 0.0361, 0, -0.2673, 0.0632, 0, -0.2479, 0.0686, -0.05, -0.1822, 0.1025, 0, -0.2872, 0.0949, 0, -0.313, 0.1325, -0.05, -0.3632, 0.1325, -0.05, -0.3632, 0.1591, -0.05, -0.2727, 0.1025, 0, -0.2872, -0.217, -0.05, 0.5, -0.2103, -0.05, 0.2517, -0.1301, -0.05, 0.3174, -0.217, -0.05, -0.5, -0.2103, -0.05, 0.2517, -0.217, -0.05, 0.5, -0.1301, -0.05, 0.3174, 0.217, -0.05, 0.5, -0.217, -0.05, 0.5, -0.217, -0.05, -0.375, -0.217, -0.05, -0.5, -0.217, -0.05, 0.5, -0.217, -0.05, -0.375, -0.217, -0.05, 0.5, -0.217, -0.05, 0.375, -0.217, -0.05, -0.375, -0.217, -0.05, 0.375, -0.279, -0.05, 0.125, -0.279, -0.05, 0.125, -0.279, -0.05, -0.125, -0.217, -0.05, -0.375, -0.1301, -0.05, 0.3174, -0.0593, -0.05, 0.2887, 0.217, -0.05, 0.5, -0.217, -0.05, -0.5, 0.0112, -0.05, -0.3632, -0.2103, -0.05, 0.2517, 0.0112, -0.05, -0.3632, -0.1652, -0.05, 0.1736, -0.2103, -0.05, 0.2517, -0.217, -0.05, -0.5, 0.217, -0.05, -0.5, 0.0112, -0.05, -0.3632, 0.217, -0.05, -0.5, 0.1325, -0.05, -0.3632, 0.0112, -0.05, -0.3632, 0.217, -0.05, -0.5, 0.1591, -0.05, -0.2727, 0.1325, -0.05, -0.3632, 0.1591, -0.05, -0.2727, 0.217, -0.05, -0.5, 0.217, -0.05, -0.375, 0.1591, -0.05, -0.2727, 0.217, -0.05, -0.375, 0.155, -0.05, -0.125, 0.155, -0.05, -0.125, 0.0686, -0.05, -0.1822, 0.1591, -0.05, -0.2727, 0.0112, -0.05, -0.3632, -0.0219, -0.05, -0.2472, -0.1652, -0.05, 0.1736, 0.0686, -0.05, -0.1822, 0.155, -0.05, -0.125, 0.155, -0.05, 0.125, 0.0686, -0.05, -0.1822, 0.155, -0.05, 0.125, 0.217, -0.05, 0.5, -0.0219, -0.05, -0.2472, 0.0686, -0.05, -0.1822, 0.217, -0.05, 0.5, 0.155, -0.05, 0.125, 0.217, -0.05, 0.375, 0.217, -0.05, 0.5, -0.0593, -0.05, 0.2887, -0.0219, -0.05, -0.2472, 0.217, -0.05, 0.5, -0.0219, -0.05, -0.2472, -0.069, -0.05, 0.1909, -0.1652, -0.05, 0.1736, -0.0219, -0.05, -0.2472, -0.0593, -0.05, 0.2887, -0.069, -0.05, 0.1909)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_fnlva"]
+data = PackedVector3Array(-0.341, 0, 0.125, -0.341, 0, -0.125, -0.279, -0.05, -0.125, -0.279, -0.05, -0.125, -0.279, -0.05, 0.125, -0.341, 0, 0.125, -0.279, 0, 0.375, -0.341, 0, 0.125, -0.279, -0.05, 0.125, -0.279, -0.05, 0.125, -0.217, -0.05, 0.375, -0.279, 0, 0.375, -0.279, 0, 0.5, -0.279, 0, 0.375, -0.217, -0.05, 0.375, -0.217, -0.05, 0.375, -0.217, -0.05, 0.5, -0.279, 0, 0.5, -0.279, -0.05, -0.125, -0.341, 0, -0.125, -0.279, 0, -0.375, -0.279, 0, -0.375, -0.217, -0.05, -0.375, -0.279, -0.05, -0.125, 0.217, -0.05, 0.375, 0.155, -0.05, 0.125, 0.217, 0, 0.125, 0.217, 0, 0.125, 0.279, 0, 0.375, 0.217, -0.05, 0.375, 0.217, -0.05, -0.375, 0.217, -0.05, -0.5, 0.279, 0, -0.5, 0.279, 0, -0.5, 0.279, 0, -0.375, 0.217, -0.05, -0.375, -0.217, -0.05, -0.375, -0.279, 0, -0.375, -0.279, 0, -0.5, -0.279, 0, -0.5, -0.217, -0.05, -0.5, -0.217, -0.05, -0.375, 0.155, -0.05, 0.125, 0.155, -0.05, -0.125, 0.217, 0, -0.125, 0.217, 0, -0.125, 0.217, 0, 0.125, 0.155, -0.05, 0.125, 0.217, -0.05, 0.5, 0.217, -0.05, 0.375, 0.279, 0, 0.375, 0.279, 0, 0.375, 0.279, 0, 0.5, 0.217, -0.05, 0.5, 0.217, 0, -0.125, 0.155, -0.05, -0.125, 0.217, -0.05, -0.375, 0.217, -0.05, -0.375, 0.279, 0, -0.375, 0.217, 0, -0.125, 0.317, 0, 0.125, 0.317, 0, -0.125, 0.379, 0, -0.375, 0.379, 0, -0.375, 0.379, 0, 0.375, 0.317, 0, 0.125, 0.379, 0, -0.375, 0.379, 0, 0.5, 0.379, 0, 0.375, 0.379, 0, -0.375, 0.379, 0, -0.5, 0.379, 0, 0.5, 0.379, 0, -0.5, 0.5, 0, -0.5, 0.379, 0, 0.5, 0.5, 0, -0.5, 0.5, 0, 0.5, 0.379, 0, 0.5, -0.5, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.379, 0, 0.5, -0.5, 0, 0.5, -0.441, 0, 0.125, -0.379, 0, 0.375, -0.379, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, -0.125, -0.441, 0, 0.125, -0.441, 0, -0.125, -0.5, 0, -0.5, -0.379, 0, -0.5, -0.379, 0, -0.5, -0.379, 0, -0.375, -0.441, 0, -0.125, -0.217, -0.05, 0.5, 0.155, -0.05, -0.125, 0.155, -0.05, 0.125, 0.155, -0.05, 0.125, 0.217, -0.05, 0.375, 0.217, -0.05, 0.5, 0.155, -0.05, 0.125, 0.217, -0.05, 0.5, -0.217, -0.05, 0.5, 0.217, -0.05, -0.5, 0.155, -0.05, -0.125, -0.217, -0.05, 0.5, 0.217, -0.05, -0.5, 0.217, -0.05, -0.375, 0.155, -0.05, -0.125, -0.217, -0.05, -0.5, 0.217, -0.05, -0.5, -0.217, -0.05, 0.5, -0.217, -0.05, -0.375, -0.217, -0.05, -0.5, -0.217, -0.05, 0.5, -0.217, -0.05, -0.375, -0.217, -0.05, 0.5, -0.217, -0.05, 0.375, -0.217, -0.05, -0.375, -0.217, -0.05, 0.375, -0.279, -0.05, 0.125, -0.279, -0.05, 0.125, -0.279, -0.05, -0.125, -0.217, -0.05, -0.375, 0.279, 0, 0.5, 0.317, 0, -0.125, 0.317, 0, 0.125, 0.317, 0, 0.125, 0.379, 0, 0.5, 0.279, 0, 0.5, 0.317, 0, 0.125, 0.379, 0, 0.375, 0.379, 0, 0.5, 0.279, 0, -0.5, 0.317, 0, -0.125, 0.279, 0, 0.5, 0.279, 0, -0.5, 0.379, 0, -0.5, 0.317, 0, -0.125, 0.379, 0, -0.5, 0.379, 0, -0.375, 0.317, 0, -0.125, 0.279, 0, -0.375, 0.279, 0, -0.5, 0.279, 0, 0.5, 0.279, 0, -0.375, 0.279, 0, 0.5, 0.279, 0, 0.375, 0.279, 0, -0.375, 0.279, 0, 0.375, 0.217, 0, 0.125, 0.217, 0, 0.125, 0.217, 0, -0.125, 0.279, 0, -0.375, -0.379, 0, 0.5, -0.341, 0, -0.125, -0.341, 0, 0.125, -0.341, 0, 0.125, -0.279, 0, 0.5, -0.379, 0, 0.5, -0.341, 0, 0.125, -0.279, 0, 0.375, -0.279, 0, 0.5, -0.379, 0, -0.5, -0.341, 0, -0.125, -0.379, 0, 0.5, -0.379, 0, -0.5, -0.279, 0, -0.5, -0.341, 0, -0.125, -0.279, 0, -0.5, -0.279, 0, -0.375, -0.341, 0, -0.125, -0.379, 0, -0.375, -0.379, 0, -0.5, -0.379, 0, 0.5, -0.379, 0, -0.375, -0.379, 0, 0.5, -0.379, 0, 0.375, -0.379, 0, -0.375, -0.379, 0, 0.375, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.441, 0, -0.125, -0.379, 0, -0.375)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_u8vyl"]
+data = PackedVector3Array(-0.5, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.379, 0, 0.5, -0.5, 0, 0.5, -0.441, 0, 0.125, -0.379, 0, 0.375, -0.379, 0, 0.5, -0.5, 0, -0.5, -0.441, 0, 0, -0.441, 0, 0.125, -0.3973, 0, -0.1983, -0.441, 0, 0, -0.5, 0, -0.5, -0.2577, 0, -0.3457, -0.3973, 0, -0.1983, -0.5, 0, -0.5, -0.2577, 0, -0.3457, -0.2964, 0, -0.3048, -0.3973, 0, -0.1983, -0.062, 0, -0.4, -0.2577, 0, -0.3457, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0, -0.5, -0.062, 0, -0.4, 0.5, 0, -0.5, 0.1336, 0, -0.3457, -0.062, 0, -0.4, 0.5, 0, -0.5, 0.2431, 0, -0.2302, 0.1336, 0, -0.3457, 0.5, 0, -0.5, 0.2733, 0, -0.1983, 0.2431, 0, -0.2302, 0.5, 0, -0.5, 0.317, 0, 0, 0.2733, 0, -0.1983, 0.5, 0, -0.5, 0.317, 0, 0.125, 0.317, 0, 0, 0.5, 0, -0.5, 0.379, 0, 0.375, 0.317, 0, 0.125, 0.5, 0, -0.5, 0.379, 0, 0.5, 0.379, 0, 0.375, 0.5, 0, -0.5, 0.5, 0, 0.5, 0.379, 0, 0.5, -0.379, 0, 0.5, -0.341, 0, 0.0109, -0.341, 0, 0.1128, -0.341, 0, 0.1128, -0.279, 0, 0.5, -0.379, 0, 0.5, -0.341, 0, 0.1128, -0.279, 0, 0.3628, -0.279, 0, 0.5, -0.341, 0, 0.0109, -0.379, 0, 0.5, -0.379, 0, 0.375, -0.3973, 0, -0.1983, -0.341, 0, 0.0109, -0.379, 0, 0.375, -0.3973, 0, -0.1983, -0.379, 0, 0.375, -0.441, 0, 0.125, -0.441, 0, 0.125, -0.441, 0, 0, -0.3973, 0, -0.1983, -0.3973, 0, -0.1983, -0.2964, 0, -0.3048, -0.341, 0, 0.0109, -0.2964, 0, -0.3048, -0.3056, 0, -0.1497, -0.341, 0, 0.0109, -0.2964, 0, -0.3048, -0.2238, 0, -0.236, -0.3056, 0, -0.1497, -0.2964, 0, -0.3048, -0.2577, 0, -0.3457, -0.2238, 0, -0.236, -0.2577, 0, -0.3457, -0.2042, 0, -0.2568, -0.2238, 0, -0.236, -0.2577, 0, -0.3457, -0.062, 0, -0.4, -0.2042, 0, -0.2568, -0.062, 0, -0.4, -0.062, 0, -0.2962, -0.2042, 0, -0.2568, -0.062, 0, -0.4, 0.1336, 0, -0.3457, -0.062, 0, -0.2962, 0.1336, 0, -0.3457, 0.0801, 0, -0.2568, -0.062, 0, -0.2962, 0.1336, 0, -0.3457, 0.1705, 0, -0.1614, 0.0801, 0, -0.2568, 0.1336, 0, -0.3457, 0.2431, 0, -0.2302, 0.1705, 0, -0.1614, 0.2431, 0, -0.2302, 0.1816, 0, -0.1497, 0.1705, 0, -0.1614, 0.2431, 0, -0.2302, 0.217, 0, 0.0109, 0.1816, 0, -0.1497, 0.2431, 0, -0.2302, 0.217, 0, 0.1372, 0.217, 0, 0.0109, 0.2431, 0, -0.2302, 0.279, 0, 0.3872, 0.217, 0, 0.1372, 0.2431, 0, -0.2302, 0.2733, 0, -0.1983, 0.279, 0, 0.3872, 0.2733, 0, -0.1983, 0.317, 0, 0, 0.279, 0, 0.3872, 0.279, 0, 0.3872, 0.317, 0, 0, 0.317, 0, 0.125, 0.279, 0, 0.3872, 0.317, 0, 0.125, 0.379, 0, 0.5, 0.317, 0, 0.125, 0.379, 0, 0.375, 0.379, 0, 0.5, 0.379, 0, 0.5, 0.279, 0, 0.5, 0.279, 0, 0.3872, -0.279, -0.05, 0.1052, -0.279, -0.05, 0.0176, -0.2488, -0.05, -0.1195, -0.2488, -0.05, -0.1195, -0.217, -0.05, 0.3552, -0.279, -0.05, 0.1052, -0.2488, -0.05, -0.1195, -0.1788, -0.05, -0.1934, -0.217, -0.05, 0.3552, -0.1788, -0.05, -0.1934, -0.217, -0.05, 0.5, -0.217, -0.05, 0.3552, -0.1788, -0.05, -0.1934, 0.217, -0.05, 0.5, -0.217, -0.05, 0.5, -0.1788, -0.05, -0.1934, -0.171, -0.05, -0.2016, 0.217, -0.05, 0.5, -0.171, -0.05, -0.2016, -0.062, -0.05, -0.2319, 0.217, -0.05, 0.5, -0.062, -0.05, -0.2319, 0.047, -0.05, -0.2016, 0.217, -0.05, 0.5, 0.047, -0.05, -0.2016, 0.155, -0.05, 0.1448, 0.217, -0.05, 0.5, 0.155, -0.05, 0.1448, 0.217, -0.05, 0.3948, 0.217, -0.05, 0.5, 0.047, -0.05, -0.2016, 0.1248, -0.05, -0.1195, 0.155, -0.05, 0.1448, 0.1248, -0.05, -0.1195, 0.155, -0.05, 0.0176, 0.155, -0.05, 0.1448, 0.279, 0, 0.5, 0.217, -0.05, 0.5, 0.217, -0.05, 0.3948, 0.217, -0.05, 0.3948, 0.279, 0, 0.3872, 0.279, 0, 0.5, -0.341, 0, 0.1128, -0.341, 0, 0.0109, -0.279, -0.05, 0.0176, -0.279, -0.05, 0.0176, -0.279, -0.05, 0.1052, -0.341, 0, 0.1128, -0.279, 0, 0.5, -0.279, 0, 0.3628, -0.217, -0.05, 0.3552, -0.217, -0.05, 0.3552, -0.217, -0.05, 0.5, -0.279, 0, 0.5, -0.171, -0.05, -0.2016, -0.2042, 0, -0.2568, -0.062, 0, -0.2962, -0.062, 0, -0.2962, -0.062, -0.05, -0.2319, -0.171, -0.05, -0.2016, 0.1248, -0.05, -0.1195, 0.047, -0.05, -0.2016, 0.0801, 0, -0.2568, 0.0801, 0, -0.2568, 0.1705, 0, -0.1614, 0.1248, -0.05, -0.1195, 0.1705, 0, -0.1614, 0.1816, 0, -0.1497, 0.1248, -0.05, -0.1195, 0.155, -0.05, 0.0176, 0.1248, -0.05, -0.1195, 0.1816, 0, -0.1497, 0.1816, 0, -0.1497, 0.217, 0, 0.0109, 0.155, -0.05, 0.0176, 0.155, -0.05, 0.1448, 0.155, -0.05, 0.0176, 0.217, 0, 0.0109, 0.217, 0, 0.0109, 0.217, 0, 0.1372, 0.155, -0.05, 0.1448, 0.217, -0.05, 0.3948, 0.155, -0.05, 0.1448, 0.217, 0, 0.1372, 0.217, 0, 0.1372, 0.279, 0, 0.3872, 0.217, -0.05, 0.3948, -0.279, -0.05, 0.0176, -0.341, 0, 0.0109, -0.3056, 0, -0.1497, -0.3056, 0, -0.1497, -0.2488, -0.05, -0.1195, -0.279, -0.05, 0.0176, 0.047, -0.05, -0.2016, -0.062, -0.05, -0.2319, -0.062, 0, -0.2962, -0.062, 0, -0.2962, 0.0801, 0, -0.2568, 0.047, -0.05, -0.2016, -0.2488, -0.05, -0.1195, -0.3056, 0, -0.1497, -0.2238, 0, -0.236, -0.2238, 0, -0.236, -0.1788, -0.05, -0.1934, -0.2488, -0.05, -0.1195, -0.2238, 0, -0.236, -0.2042, 0, -0.2568, -0.1788, -0.05, -0.1934, -0.2042, 0, -0.2568, -0.171, -0.05, -0.2016, -0.1788, -0.05, -0.1934, -0.279, 0, 0.3628, -0.341, 0, 0.1128, -0.279, -0.05, 0.1052, -0.279, -0.05, 0.1052, -0.217, -0.05, 0.3552, -0.279, 0, 0.3628)
+
+[node name="RiverEndCap" type="StaticBody3D"]
+
+[node name="grass_col" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201263, 2)
 shape = SubResource("BoxShape3D_5jq5d")
 
-[node name="ground_riverRocks2" parent="." instance=ExtResource("3_xc14n")]
+[node name="grass_col2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.201263, -2)
+shape = SubResource("BoxShape3D_xc14n")
+
+[node name="grass_col3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.201263, -2.5)
+shape = SubResource("BoxShape3D_fnlva")
+
+[node name="grass_col4" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.201263, -3.5)
+shape = SubResource("BoxShape3D_u8vyl")
+
+[node name="ground_riverBendBank2_col" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0.45, -0.5)
+shape = SubResource("ConcavePolygonShape3D_5jq5d")
+
+[node name="ground_riverRocks3_col" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.5, 0.45, -0.5)
+shape = SubResource("ConcavePolygonShape3D_xc14n")
+
+[node name="ground_riverRocks3_col2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0.5, 0.45, -1.5)
+shape = SubResource("ConcavePolygonShape3D_xc14n")
+
+[node name="ground_riverStraight3_col" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.5, 0.45, -0.5)
+shape = SubResource("ConcavePolygonShape3D_fnlva")
+
+[node name="ground_riverStraight3_col2" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.5, 0.45, -0.5)
+shape = SubResource("ConcavePolygonShape3D_fnlva")
+
+[node name="ground_riverEndClosed2_col" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.45, -2.5)
+shape = SubResource("ConcavePolygonShape3D_u8vyl")
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="ground_riverRocks2" parent="Geometry" instance=ExtResource("3_xc14n")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -1.5)
 
-[node name="ground_riverBendBank2" parent="." instance=ExtResource("4_fnlva")]
+[node name="ground_riverBendBank2" parent="Geometry" instance=ExtResource("4_fnlva")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.5, 0.5, -0.5)
 
-[node name="ground_riverRocks3" parent="." instance=ExtResource("3_xc14n")]
+[node name="ground_riverRocks3" parent="Geometry" instance=ExtResource("3_xc14n")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.5, 0.5, -0.5)
 
-[node name="ground_riverStraight3" parent="." instance=ExtResource("5_u8vyl")]
+[node name="ground_riverStraight3" parent="Geometry" instance=ExtResource("5_u8vyl")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.5, 0.5, -0.5)
 
-[node name="ground_riverStraight2" parent="." instance=ExtResource("5_u8vyl")]
+[node name="ground_riverStraight2" parent="Geometry" instance=ExtResource("5_u8vyl")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.5, 0.5, -0.5)
 
-[node name="cliff_blockHalf_rock5" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock5" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock6" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock6" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock7" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock7" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock8" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock8" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock9" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock9" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock11" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock11" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock12" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock12" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock13" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock13" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock14" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock14" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock15" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock15" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock16" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock16" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock17" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock17" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock19" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock19" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock20" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock20" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock21" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock21" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock22" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock22" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock23" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock23" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock24" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock24" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock25" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock25" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock27" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock27" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock28" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock28" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock29" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock29" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock30" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock30" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock31" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock31" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock32" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock32" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock33" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock33" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock34" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock34" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -0.5)
 
-[node name="cliff_blockHalf_rock35" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock35" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock36" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock36" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock37" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock37" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock38" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock38" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock39" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock39" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock40" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock40" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock41" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock41" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock42" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock42" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -0.5)
 
-[node name="cliff_blockHalf_rock43" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock43" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock44" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock44" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock45" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock45" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock46" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock46" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock47" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock47" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock48" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock48" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock49" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock49" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock50" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock50" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -0.5)
 
-[node name="cliff_blockHalf_rock51" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock51" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock52" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock52" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock53" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock53" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock54" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock54" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock55" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock55" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock56" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock56" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock57" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock57" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0.5)
 
-[node name="cliff_blockHalf_rock58" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock58" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -0.5)
 
-[node name="cliff_blockHalf_rock59" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock59" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -1.5)
 
-[node name="cliff_blockHalf_rock60" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock60" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -2.5)
 
-[node name="cliff_blockHalf_rock61" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock61" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -3.5)
 
-[node name="cliff_blockHalf_rock62" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock62" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 3.5)
 
-[node name="cliff_blockHalf_rock63" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock63" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 2.5)
 
-[node name="cliff_blockHalf_rock64" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock64" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 1.5)
 
-[node name="cliff_blockHalf_rock65" parent="." instance=ExtResource("1_b03be")]
+[node name="cliff_blockHalf_rock65" parent="Geometry" instance=ExtResource("1_b03be")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0.5)
 
-[node name="ground_riverEndClosed2" parent="." instance=ExtResource("2_5jq5d")]
+[node name="ground_riverEndClosed2" parent="Geometry" instance=ExtResource("2_5jq5d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -2.5)

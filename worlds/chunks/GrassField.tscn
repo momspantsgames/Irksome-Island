@@ -5,7 +5,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_yb6ne"]
 size = Vector3(8, 0.5, 8)
 
-[node name="GroundChunk1" type="StaticBody3D"]
+[node name="GrassField" type="StaticBody3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.201926, 0)
