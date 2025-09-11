@@ -27,7 +27,7 @@ public partial class NetworkManager : Node {
     public enum ConnectionState { Disconnected, Connecting, Connected, Failed }
     public enum NetworkRole { None, Host, Client, DedicatedServer }
 
-    private ENetMultiplayerPeer? _peer;
+    private ENetMultiplayerPeer _peer;
 
     public NetworkRole CurrentRole { get; private set; } = NetworkRole.None;
     public ConnectionState State { get; private set; } = ConnectionState.Disconnected;
@@ -37,11 +37,11 @@ public partial class NetworkManager : Node {
 
     public static bool IsHeadless => DisplayServer.GetName() == "headless";
 
-    public event Action<long>? PeerJoined;      // server side
-    public event Action<long>? PeerLeft;        // server side
-    public event Action? Connected;             // client side
-    public event Action<string>? ConnectFailed; // client side
-    public event Action? ServerWentAway;        // client side
+    public event Action<long> PeerJoined;      // server side
+    public event Action<long> PeerLeft;        // server side
+    public event Action Connected;             // client side
+    public event Action<string> ConnectFailed; // client side
+    public event Action ServerWentAway;        // client side
 
     public override void _Ready()
     {

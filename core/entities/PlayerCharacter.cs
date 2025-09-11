@@ -20,9 +20,52 @@
 
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities;
 
 public partial class PlayerCharacter : CharacterBody3D {
 
+	private Node3D _modelRoot;
+	private Node _currentModel;
+	private CharacterModel ModelId { get; set; } = CharacterModel.CharacterA;
+
+	public override void _Ready()
+	{
+		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
+		ApplyModel(ModelId);
+	}
+
+	private bool SetModel(CharacterModel id)
+	{
+		if (!ModelMap.ContainsKey(id)) return false;
+		if (id == ModelId && _currentModel != null) return true;
+		ModelId = id;
+		ApplyModel(id);
+		return true;
+	}
+
+	private void ApplyModel(CharacterModel id)
+	{
+		_currentModel?.QueueFree();
+		var path = ModelMap[id];
+		var ps = ResourceLoader.Load<PackedScene>(path);
+		if (ps == null) return;
+		_currentModel = ps.Instantiate();
+		_modelRoot.AddChild(_currentModel);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void RpcRequestModel(short id)
+	{
+		if (!Multiplayer.IsServer()) return;
+		var cid = (CharacterModel)id;
+		SetModel(cid);
+	}
+
+	private static readonly Dictionary<CharacterModel, string> ModelMap =
+		new()
+		{
+			[CharacterModel.CharacterA] = Paths.ForCharacterModel("CharacterA")
+		};
 }

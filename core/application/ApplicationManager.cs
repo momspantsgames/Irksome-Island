@@ -26,7 +26,7 @@ namespace IrksomeIsland.Core.Application;
 
 public partial class ApplicationManager : Node
 {
-	private NetworkManager? _netManager;
+	private NetworkManager _netManager;
 
     public override void _Ready()
     {

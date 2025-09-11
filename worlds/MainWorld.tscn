@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/chunks/GrassField.tscn" id="2_x5p2k"]
 [ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/chunks/RiverEndCap.tscn" id="3_rv1w6"]
 [ext_resource type="PackedScene" uid="uid://bmkseep1wgddl" path="res://worlds/chunks/RiverMiddle.tscn" id="4_486uk"]
-[ext_resource type="PackedScene" uid="uid://ba8l5qe6qb1ps" path="res://prefabs/characters/CharacterA.tscn" id="4_rv1w6"]
+[ext_resource type="PackedScene" uid="uid://d5istukjan5s" path="res://prefabs/buildings/Tavern.tscn" id="6_csjyp"]
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
@@ -20,5 +20,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
 [node name="RiverMiddle" parent="." instance=ExtResource("4_486uk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
 
-[node name="CharacterA" parent="." instance=ExtResource("4_rv1w6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.455997, -7)
+[node name="Tavern" parent="." instance=ExtResource("6_csjyp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.454339, -6)
