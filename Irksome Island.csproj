@@ -1,32 +1,22 @@
 <Project Sdk="Godot.NET.Sdk/4.4.1">
-	<PropertyGroup>
+  <PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>12.0</LangVersion>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<EnableDynamicLoading>true</EnableDynamicLoading>
-		<RootNamespace>IrksomeIsland</RootNamespace>
-		
+    	<EnableDynamicLoading>true</EnableDynamicLoading>
+    	<RootNamespace>IrksomeIsland</RootNamespace>
+
 		<!--Disable warning of invalid/incompatible GodotSharp version-->
 		<NoWarn>NU1605</NoWarn>
-		
+
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
 <!--		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+  </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="10.*" PrivateAssets="all" IncludeAssets="analyzers" />
 		<PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.*" PrivateAssets="all" IncludeAssets="analyzers"/>
 		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.*" PrivateAssets="all" IncludeAssets="analyzers"/>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-		<PackageReference Include="gdUnit4.api" Version="5.0.0" />
-		<PackageReference Include="gdUnit4.test.adapter" Version="3.0.0" />
-		<PackageReference Include="gdUnit4.analyzers" Version="1.0.0">
-			<PrivateAssets>none</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 </Project>
