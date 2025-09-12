@@ -23,3 +23,7 @@ file_logging/log_path="user://logs/irksome.log"
 [dotnet]
 
 project/assembly_name="Irksome Island"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
