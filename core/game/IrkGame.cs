@@ -19,42 +19,39 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
-using IrksomeIsland.Core.Game;
 
-namespace IrksomeIsland.Core.Application;
+namespace IrksomeIsland.Core.Game;
 
-
-public partial class ApplicationManager : Node
+public abstract partial class IrkGame(GameConfiguration config) : Node
 {
-	private NetworkManager _netManager = null!;
-	private IrkGame? _activeGame;
+	public PackedScene? WorldScene { get; set; }
+	protected Node? World;
 
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-	    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-	    AddChild(_netManager);
-    }
+	// todo: props and players nodes - managers?
 
-    public void StartGame(GameConfiguration config)
-    {
-	    _activeGame?.StopGame();
-	    _activeGame = CreateGame(config);
-	    AddChild(_activeGame);
-	    _activeGame.StartGame();
-    }
+	// just stores the configuration it was created with
+	protected GameConfiguration Configuration { get; init; } = config;
 
-    public void StopGame()
-    {
-	    _activeGame?.StopGame();
-	    _activeGame?.QueueFree();
-	    _activeGame = null;
-    }
+	public virtual void StartGame()
+	{
+		if (WorldScene == null)
+			WorldScene = ResourceLoader.Load<PackedScene>(Paths.ForWorld(Configuration.WorldName));
+		if (WorldScene == null)
+			throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
 
-    private IrkGame CreateGame(GameConfiguration config)
-    {
-	    // only one game type for now, future may have multiple and will need some sort of factory
-	    return new NetworkGame(config) { Name = NodeNames.NetworkGame };
-    }
+		World = WorldScene.Instantiate();
+
+		AddChild(World);
+	}
+
+	public virtual void StopGame()
+	{
+		World?.QueueFree();
+		World = null;
+		WorldScene = null;
+	}
+
 }
+

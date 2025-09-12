@@ -40,8 +40,6 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	public override void _EnterTree()
 	{
-		if (_sync != null) return;
-
 		_sync = new MultiplayerSynchronizer { Name = NodeNames.NetworkedCharacterSynchronizer };
 		_sync.RootPath = "..";
 		AddChild(_sync);
@@ -63,7 +61,7 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	{
 		if (!States.TryGetValue(next, out var newState)) return;
 
-		CurrentState?.Exit();
+		CurrentState.Exit();
 		CurrentState = newState;
 		CurrentState.Enter();
 	}
@@ -77,11 +75,9 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	protected void SetModel(CharacterModelType id)
 	{
-		if (ModelTypeId != id)
-		{ ModelTypeId = id;
-			ApplyModel(id);
-
-		}
+		if (ModelTypeId == id) return;
+		ModelTypeId = id;
+		ApplyModel(id);
 	}
 
 	public void RequestState(CharacterStateType desired)
@@ -98,7 +94,7 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	private void RpcRequestModel(short id)
 	{ if (Multiplayer.IsServer()) SetModel((CharacterModelType)id); }
 
-	public override void _Process(double delta) => CurrentState?.HandleInput(delta);
-	public override void _PhysicsProcess(double delta) => CurrentState?.PhysicsUpdate(delta);
+	public override void _Process(double delta) => CurrentState.HandleInput(delta);
+	public override void _PhysicsProcess(double delta) => CurrentState.PhysicsUpdate(delta);
 
 }

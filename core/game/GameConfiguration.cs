@@ -19,42 +19,16 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Constants;
-using IrksomeIsland.Core.Game;
+using IrksomeIsland.Core.Application;
 
-namespace IrksomeIsland.Core.Application;
+namespace IrksomeIsland.Core.Game;
 
-
-public partial class ApplicationManager : Node
+public sealed class GameConfiguration
 {
-	private NetworkManager _netManager = null!;
-	private IrkGame? _activeGame;
-
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-	    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-	    AddChild(_netManager);
-    }
-
-    public void StartGame(GameConfiguration config)
-    {
-	    _activeGame?.StopGame();
-	    _activeGame = CreateGame(config);
-	    AddChild(_activeGame);
-	    _activeGame.StartGame();
-    }
-
-    public void StopGame()
-    {
-	    _activeGame?.StopGame();
-	    _activeGame?.QueueFree();
-	    _activeGame = null;
-    }
-
-    private IrkGame CreateGame(GameConfiguration config)
-    {
-	    // only one game type for now, future may have multiple and will need some sort of factory
-	    return new NetworkGame(config) { Name = NodeNames.NetworkGame };
-    }
+	public string WorldName { get; init; } = string.Empty;
+	public int MaxPlayers { get; init; } = 16;
+	public string? Password { get; init; }
+	public string Name { get; init; } = "Irksome Island Game";
+	public bool IsPrivate { get; init; } = false;
 }
+

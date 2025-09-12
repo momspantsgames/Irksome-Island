@@ -28,7 +28,9 @@ public static class Paths
 	private const string SceneSuffix = ".tscn";
 	private const string Prefabs = "prefabs";
 	private const string Characters = "characters";
+	private const string Worlds = "worlds";
 
 	public static string ForCharacterModel(string fileName) => $"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
+	public static string ForWorld(string fileName) => $"{ResourcesPrefix}{Worlds}/{fileName}{SceneSuffix}";
 }
 

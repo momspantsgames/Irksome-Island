@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Godot;
+
 namespace IrksomeIsland.Core.Constants;
 
 public static class NodeNames
@@ -26,5 +28,6 @@ public static class NodeNames
 	public const string ApplicationManager = "ApplicationManager";
 	public const string ModelRoot = "ModelRoot";
 	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
+	public const string NetworkGame = "NetworkGame";
 }
 
