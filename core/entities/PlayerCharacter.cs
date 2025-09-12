@@ -18,54 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 using Godot;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities.States;
+using IrksomeIsland.Core.Entities.States.Impl;
 
 namespace IrksomeIsland.Core.Entities;
 
-public partial class PlayerCharacter : CharacterBody3D {
+public partial class PlayerCharacter : NetworkedCharacter {
 
-	private Node3D _modelRoot;
-	private Node _currentModel;
-	private CharacterModel ModelId { get; set; } = CharacterModel.CharacterA;
-
-	public override void _Ready()
+	private static readonly Dictionary<CharacterModelType,string> ModelMap = new()
 	{
-		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
-		ApplyModel(ModelId);
+		[CharacterModelType.CharacterA] = Paths.ForCharacterModel("CharacterA")
+	};
+
+	private static readonly Dictionary<CharacterModelType, PackedScene> Cache = new();
+
+	private Node3D _modelRoot = null!;
+	private Node _currentModel = null!;
+
+	protected override void BuildStates()
+	{
+		States[CharacterStateType.Idle] = new IdleState(this);
 	}
 
-	private bool SetModel(CharacterModel id)
+	protected override void ApplyModel(CharacterModelType id)
 	{
-		if (!ModelMap.ContainsKey(id)) return false;
-		if (id == ModelId && _currentModel != null) return true;
-		ModelId = id;
-		ApplyModel(id);
-		return true;
-	}
+		if (!ModelMap.TryGetValue(id, out var path)) return;
 
-	private void ApplyModel(CharacterModel id)
-	{
 		_currentModel?.QueueFree();
-		var path = ModelMap[id];
-		var ps = ResourceLoader.Load<PackedScene>(path);
+		if (!Cache.TryGetValue(id, out var ps))
+		{
+			ps = ResourceLoader.Load<PackedScene>(path);
+			if (ps != null) Cache[id] = ps;
+		}
 		if (ps == null) return;
+
 		_currentModel = ps.Instantiate();
 		_modelRoot.AddChild(_currentModel);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void RpcRequestModel(short id)
+	public override void _Ready()
 	{
-		if (!Multiplayer.IsServer()) return;
-		var cid = (CharacterModel)id;
-		SetModel(cid);
+		base._Ready();
+
+		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
 	}
 
-	private static readonly Dictionary<CharacterModel, string> ModelMap =
-		new()
-		{
-			[CharacterModel.CharacterA] = Paths.ForCharacterModel("CharacterA")
-		};
 }

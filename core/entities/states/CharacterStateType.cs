@@ -18,26 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Godot;
-using IrksomeIsland.Core.Constants;
+namespace IrksomeIsland.Core.Entities.States;
 
-namespace IrksomeIsland.Core.Application;
-
-
-public partial class ApplicationManager : Node
-{
-	private NetworkManager _netManager = null!;
-
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-
-	    _netManager = GetNodeOrNull<NetworkManager>(NodeNames.NetworkManager);
-	    if (_netManager == null)
-	    {
-		    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-		    AddChild(_netManager);
-	    }
-    }
-
+public enum CharacterStateType : byte {
+	Idle = 0,
+	Walking = 1,
+	Running = 2,
+	Jumping = 3,
+	Falling = 4,
+	Attacking = 5,
+	Dying = 6,
+	Dead = 7,
+	Respawning = 8,
+	Teleporting = 9,
+	Teleported = 10
 }
+

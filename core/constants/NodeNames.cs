@@ -25,5 +25,6 @@ public static class NodeNames
 	public const string NetworkManager = "NetworkManager";
 	public const string ApplicationManager = "ApplicationManager";
 	public const string ModelRoot = "ModelRoot";
+	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
 }
 

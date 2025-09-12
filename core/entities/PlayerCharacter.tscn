@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpr26qme8tk3e"]
+[gd_scene load_steps=5 format=3 uid="uid://bpr26qme8tk3e"]
 
 [ext_resource type="Script" uid="uid://cpdwx7dxjcmvi" path="res://core/entities/PlayerCharacter.cs" id="1_hlmxi"]
 [ext_resource type="PackedScene" uid="uid://ba8l5qe6qb1ps" path="res://prefabs/characters/CharacterA.tscn" id="2_n15xt"]
@@ -6,6 +6,11 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hlmxi"]
 radius = 0.0593516
 height = 0.27969
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_n15xt"]
+properties/0/path = NodePath(".:ModelId")
+properties/0/spawn = true
+properties/0/replication_mode = 2
 
 [node name="PlayerCharacter" type="CharacterBody3D"]
 script = ExtResource("1_hlmxi")
@@ -17,3 +22,6 @@ shape = SubResource("CapsuleShape3D_hlmxi")
 [node name="ModelRoot" type="Node3D" parent="."]
 
 [node name="CharacterA" parent="ModelRoot" instance=ExtResource("2_n15xt")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_n15xt")

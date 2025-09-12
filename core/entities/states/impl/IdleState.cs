@@ -19,25 +19,17 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Constants;
 
-namespace IrksomeIsland.Core.Application;
+namespace IrksomeIsland.Core.Entities.States.Impl;
 
-
-public partial class ApplicationManager : Node
+public class IdleState(NetworkedCharacter c) : CharacterState(c)
 {
-	private NetworkManager _netManager = null!;
+	public override CharacterStateType Id => CharacterStateType.Idle;
 
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-
-	    _netManager = GetNodeOrNull<NetworkManager>(NodeNames.NetworkManager);
-	    if (_netManager == null)
-	    {
-		    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-		    AddChild(_netManager);
-	    }
-    }
+	public override void Enter()
+	{
+		C.Velocity = new Vector3(C.Velocity.X, C.Velocity.Y, C.Velocity.Z * 0.0f);
+	}
 
 }
+

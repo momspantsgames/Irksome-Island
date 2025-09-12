@@ -19,25 +19,18 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Constants;
 
-namespace IrksomeIsland.Core.Application;
+namespace IrksomeIsland.Core.Entities.States;
 
-
-public partial class ApplicationManager : Node
+public abstract class CharacterState(NetworkedCharacter c)
 {
-	private NetworkManager _netManager = null!;
+	protected readonly NetworkedCharacter C = c;
+	public abstract CharacterStateType Id { get; }
 
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-
-	    _netManager = GetNodeOrNull<NetworkManager>(NodeNames.NetworkManager);
-	    if (_netManager == null)
-	    {
-		    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-		    AddChild(_netManager);
-	    }
-    }
-
+	public virtual void Enter() { }
+	public virtual void Exit() { }
+	public virtual void HandleInput(double delta) { }
+	public virtual void PhysicsUpdate(double delta) { }
+	protected bool IsOwner => C.IsMultiplayerAuthority();
+	protected bool IsServer => C.Multiplayer.IsServer();
 }

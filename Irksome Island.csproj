@@ -7,7 +7,7 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisLevel>latest</AnalysisLevel>
 <!--		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
-<!--		<Nullable>enable</Nullable>-->
+		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
