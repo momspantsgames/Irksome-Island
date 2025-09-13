@@ -23,6 +23,7 @@ file_logging/log_path="user://logs/irksome.log"
 [display]
 
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [dotnet]
 

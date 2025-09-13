@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=7 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld.cs" id="1_sdvpa"]
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/chunks/GrassField.tscn" id="2_x5p2k"]
 [ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/chunks/RiverEndCap.tscn" id="3_rv1w6"]
 [ext_resource type="PackedScene" uid="uid://bmkseep1wgddl" path="res://worlds/chunks/RiverMiddle.tscn" id="4_486uk"]
+[ext_resource type="PackedScene" uid="uid://cply6hcse0fu7" path="res://ui/menus/main/MainMenu.tscn" id="6_206v3"]
 [ext_resource type="PackedScene" uid="uid://d5istukjan5s" path="res://prefabs/buildings/Tavern.tscn" id="6_csjyp"]
 
 [node name="MainWorld" type="Node3D"]
@@ -22,3 +23,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
 
 [node name="Tavern" parent="." instance=ExtResource("6_csjyp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.454339, -6)
+
+[node name="MainMenu" parent="." instance=ExtResource("6_206v3")]

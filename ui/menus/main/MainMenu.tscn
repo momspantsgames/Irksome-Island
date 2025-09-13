@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cply6hcse0fu7"]
+[gd_scene load_steps=5 format=3 uid="uid://cply6hcse0fu7"]
 
 [ext_resource type="Theme" uid="uid://dna1ukw14tkb1" path="res://ui/menus/main/MainTheme.tres" id="1_66ua2"]
 [ext_resource type="Script" uid="uid://cebg1bfvika4j" path="res://ui/menus/main/MainMenu.cs" id="2_eoa7d"]
 [ext_resource type="Texture2D" uid="uid://cypiupcy1oj18" path="res://assets/textures/ui/text-logo-yes-its-ai.png" id="2_n657a"]
+[ext_resource type="PackedScene" uid="uid://c2vovfenvbaq6" path="res://ui/menus/main/subs/Home.tscn" id="4_eoa7d"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -47,3 +48,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 alignment = 1
+
+[node name="DeleteMe" parent="MarginContainer/HBoxToCenter/Menu/SubMenu" instance=ExtResource("4_eoa7d")]
+layout_mode = 2
+
+[node name="Camera3D" type="Camera3D" parent="."]

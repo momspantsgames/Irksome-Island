@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://swjlnoj4xdv4"]
+
+[node name="HomeMenu" type="VBoxContainer"]
+offset_right = 94.0
+offset_bottom = 66.0

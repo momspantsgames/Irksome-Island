@@ -13,3 +13,13 @@ text = "Host Game"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Join Game"
+
+[node name="Options" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Options"
+
+[node name="Quit" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Quit"
