@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=3 format=3 uid="uid://dna1ukw14tkb1"]
 
 [ext_resource type="FontFile" uid="uid://djvhmec88q1g" path="res://assets/fonts/Kenney Future.ttf" id="1_p017y"]
-[ext_resource type="StyleBox" uid="uid://cfcle0lwvx5nq" path="res://ui/themes/MainMenu/TranspBG.tres" id="2_p017y"]
+[ext_resource type="StyleBox" uid="uid://cfcle0lwvx5nq" path="res://ui/menus/main/TranspBG.tres" id="2_p017y"]
 
 [resource]
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)

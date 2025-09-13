@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ncleil2cqd0c"]
 
-[ext_resource type="Theme" uid="uid://dna1ukw14tkb1" path="res://ui/themes/MainMenu/MainTheme.tres" id="1_a6crx"]
-[ext_resource type="Texture2D" uid="uid://cypiupcy1oj18" path="res://assets/textures/ui/text-logo-yes-its-ai.png" id="1_khj84"]
+[ext_resource type="Theme" uid="uid://dna1ukw14tkb1" path="res://ui/menus/main/MainTheme.tres" id="1_66ua2"]
+[ext_resource type="Texture2D" uid="uid://cypiupcy1oj18" path="res://assets/textures/ui/text-logo-yes-its-ai.png" id="2_n657a"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_a6crx")
+theme = ExtResource("1_66ua2")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -36,7 +36,7 @@ theme_override_constants/separation = 10
 [node name="Logo" type="TextureRect" parent="MarginContainer/HBoxToCenter/Menu"]
 custom_minimum_size = Vector2(400, 210)
 layout_mode = 2
-texture = ExtResource("1_khj84")
+texture = ExtResource("2_n657a")
 expand_mode = 1
 stretch_mode = 5
 

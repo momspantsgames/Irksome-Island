@@ -20,7 +20,7 @@
 
 using Godot;
 
-namespace IrksomeIsland.Ui.Menus;
+namespace IrksomeIsland.Ui.Menus.Main;
 
 public partial class MainMenu : Node
 {
