@@ -22,6 +22,6 @@ using Godot;
 
 namespace IrksomeIsland.Ui.Menus.Main;
 
-public partial class MainMenu : Node
+public partial class MainMenu : Control
 {
 }

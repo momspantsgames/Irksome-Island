@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://c2vovfenvbaq6"]
+
+[node name="HomeMenu" type="VBoxContainer"]
+offset_right = 94.0
+offset_bottom = 66.0
+
+[node name="Host" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Host Game"
+
+[node name="Join" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Join Game"
