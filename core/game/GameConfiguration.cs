@@ -18,9 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Godot;
-using IrksomeIsland.Core.Application;
-
 namespace IrksomeIsland.Core.Game;
 
 public sealed class GameConfiguration
@@ -31,4 +28,3 @@ public sealed class GameConfiguration
 	public string Name { get; init; } = "Irksome Island Game";
 	public bool IsPrivate { get; init; } = false;
 }
-

@@ -18,13 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using Godot;
 
 namespace IrksomeIsland.Core.Application;
 
-public static class Logger {
-	public enum LogLevel {
+public static class Logger
+{
+	public enum LogLevel
+	{
 		Trace = 0,
 		Debug = 1,
 		Info = 2,
@@ -34,12 +35,15 @@ public static class Logger {
 
 	private static LogLevel _currentLevel = LogLevel.Debug;
 
-	public static void Log(string message, LogLevel level = LogLevel.Info) {
-		if (level < _currentLevel) {
+	public static void Log(string message, LogLevel level = LogLevel.Info)
+	{
+		if (level < _currentLevel)
+		{
 			return;
 		}
 
-		switch (level) {
+		switch (level)
+		{
 			case LogLevel.Trace:
 				GD.Print($"[TRACE] {DateTime.Now} {message}");
 				break;
@@ -61,7 +65,8 @@ public static class Logger {
 		}
 	}
 
-	public static void SetLogLevel(LogLevel level) {
+	public static void SetLogLevel(LogLevel level)
+	{
 		_currentLevel = level;
 	}
 }

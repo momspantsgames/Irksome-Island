@@ -22,15 +22,14 @@
 using Godot;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities.States;
-using IrksomeIsland.Core.Entities.States.Impl;
 
 namespace IrksomeIsland.Core.Entities;
 
 public abstract partial class NetworkedCharacter : CharacterBody3D
 {
 	protected readonly Dictionary<CharacterStateType, CharacterState> States = new();
-	protected CharacterState CurrentState = null!;
 	private MultiplayerSynchronizer _sync = null!;
+	protected CharacterState CurrentState = null!;
 
 	public CharacterStateType CurrentStateId { get; private set; } = CharacterStateType.Idle;
 	public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
@@ -81,20 +80,29 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	}
 
 	public void RequestState(CharacterStateType desired)
-	{ if (Multiplayer.IsServer()) SetState(desired); else RpcId(1, nameof(RpcRequestState), (byte)desired); }
+	{
+		if (Multiplayer.IsServer()) SetState(desired);
+		else RpcId(1, nameof(RpcRequestState), (byte)desired);
+	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private void RpcRequestState(byte desired)
-	{ if (Multiplayer.IsServer()) SetState((CharacterStateType)desired); }
+	{
+		if (Multiplayer.IsServer()) SetState((CharacterStateType)desired);
+	}
 
 	public void RequestModel(CharacterModelType id)
-	{ if (Multiplayer.IsServer()) SetModel(id); else RpcId(1, nameof(RpcRequestModel), (short)id); }
+	{
+		if (Multiplayer.IsServer()) SetModel(id);
+		else RpcId(1, nameof(RpcRequestModel), (short)id);
+	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private void RpcRequestModel(short id)
-	{ if (Multiplayer.IsServer()) SetModel((CharacterModelType)id); }
+	{
+		if (Multiplayer.IsServer()) SetModel((CharacterModelType)id);
+	}
 
 	public override void _Process(double delta) => CurrentState.HandleInput(delta);
 	public override void _PhysicsProcess(double delta) => CurrentState.PhysicsUpdate(delta);
-
 }

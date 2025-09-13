@@ -18,28 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Entities.States;
+using Godot;
 
-public abstract class CharacterState(NetworkedCharacter c)
+namespace IrksomeIsland.Ui.Menus;
+
+public partial class MainMenu : Node
 {
-	protected readonly NetworkedCharacter C = c;
-	public abstract CharacterStateType Id { get; }
-	protected bool IsOwner => C.IsMultiplayerAuthority();
-	protected bool IsServer => C.Multiplayer.IsServer();
-
-	public virtual void Enter()
-	{
-	}
-
-	public virtual void Exit()
-	{
-	}
-
-	public virtual void HandleInput(double delta)
-	{
-	}
-
-	public virtual void PhysicsUpdate(double delta)
-	{
-	}
 }

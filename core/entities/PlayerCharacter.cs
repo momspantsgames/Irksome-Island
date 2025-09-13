@@ -25,17 +25,18 @@ using IrksomeIsland.Core.Entities.States.Impl;
 
 namespace IrksomeIsland.Core.Entities;
 
-public partial class PlayerCharacter : NetworkedCharacter {
+public partial class PlayerCharacter : NetworkedCharacter
+{
 
-	private static readonly Dictionary<CharacterModelType,string> ModelMap = new()
+	private static readonly Dictionary<CharacterModelType, string> ModelMap = new()
 	{
 		[CharacterModelType.CharacterA] = Paths.ForCharacterModel("CharacterA")
 	};
 
 	private static readonly Dictionary<CharacterModelType, PackedScene> Cache = new();
+	private Node _currentModel = null!;
 
 	private Node3D _modelRoot = null!;
-	private Node _currentModel = null!;
 
 	protected override void BuildStates()
 	{
@@ -52,6 +53,7 @@ public partial class PlayerCharacter : NetworkedCharacter {
 			ps = ResourceLoader.Load<PackedScene>(path);
 			if (ps != null) Cache[id] = ps;
 		}
+
 		if (ps == null) return;
 
 		_currentModel = ps.Instantiate();
@@ -64,5 +66,4 @@ public partial class PlayerCharacter : NetworkedCharacter {
 
 		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
 	}
-
 }

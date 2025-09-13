@@ -18,8 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Entities;
-
 namespace IrksomeIsland.Core.Constants;
 
 public static class Paths
@@ -30,7 +28,8 @@ public static class Paths
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
 
-	public static string ForCharacterModel(string fileName) => $"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
+	public static string ForCharacterModel(string fileName) =>
+		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
+
 	public static string ForWorld(string fileName) => $"{ResourcesPrefix}{Worlds}/{fileName}{SceneSuffix}";
 }
-

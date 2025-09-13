@@ -19,30 +19,36 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Game;
 
 public abstract partial class IrkGame(GameConfiguration config) : Node
 {
-	public PackedScene? WorldScene { get; set; }
+	protected readonly Dictionary<long, Node3D> Players = new();
+	protected readonly Dictionary<Guid, Node3D> Props = new();
+	protected Node3D PlayersRoot = null!;
+	protected Node3D PropsRoot = null!;
 	protected Node? World;
-
-	// todo: props and players nodes - managers?
+	protected PackedScene? WorldScene;
 
 	// just stores the configuration it was created with
-	protected GameConfiguration Configuration { get; init; } = config;
+	protected GameConfiguration Configuration { get; } = config;
+
+	public override void _Ready()
+	{
+		PlayersRoot = GetOrCreate<Node3D>(NodeNames.PlayersRoot);
+		PropsRoot = GetOrCreate<Node3D>(NodeNames.PropsRoot);
+	}
 
 	public virtual void StartGame()
 	{
 		if (WorldScene == null)
 			WorldScene = ResourceLoader.Load<PackedScene>(Paths.ForWorld(Configuration.WorldName));
-		if (WorldScene == null)
-			throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
 
-		World = WorldScene.Instantiate();
+		if (WorldScene == null) throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
 
+		World = WorldScene?.Instantiate();
 		AddChild(World);
 	}
 
@@ -53,5 +59,58 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		WorldScene = null;
 	}
 
-}
+	protected Node3D SpawnPlayerLocal(int authorityPeerId, string scenePath, string name)
+	{
+		var ps = ResourceLoader.Load<PackedScene>(scenePath);
+		if (ps == null) throw new InvalidOperationException($"Missing: {scenePath}");
+		var n = ps.Instantiate<Node3D>();
+		n.Name = name;
+		n.SetMultiplayerAuthority(authorityPeerId);
+		PlayersRoot.AddChild(n);
+		Players[authorityPeerId] = n;
+		return n;
+	}
 
+	protected Node3D SpawnPropLocal(Guid id, string scenePath, string name)
+	{
+		var ps = ResourceLoader.Load<PackedScene>(scenePath);
+		if (ps == null) throw new InvalidOperationException($"Missing: {scenePath}");
+		var n = ps.Instantiate<Node3D>();
+		n.Name = name;
+		PropsRoot.AddChild(n);
+		Props[id] = n;
+		return n;
+	}
+
+	protected void DespawnLocal(Node node)
+	{
+		foreach (var kv in Players)
+		{
+			if (kv.Value == node)
+			{
+				Players.Remove(kv.Key);
+				break;
+			}
+		}
+
+		foreach (var kv in Props)
+		{
+			if (kv.Value == node)
+			{
+				Props.Remove(kv.Key);
+				break;
+			}
+		}
+
+		node.QueueFree();
+	}
+
+	protected T GetOrCreate<T>(string name) where T : Node, new()
+		=> GetNodeOrNull<T>(name) ?? AddChildReturn(new T { Name = name });
+
+	private T AddChildReturn<T>(T n) where T : Node
+	{
+		AddChild(n);
+		return n;
+	}
+}

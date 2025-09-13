@@ -22,6 +22,6 @@ using Godot;
 
 namespace IrksomeIsland.Core.Props;
 
-public partial class NetworkedProp : Node {
-
+public partial class NetworkedProp : Node
+{
 }

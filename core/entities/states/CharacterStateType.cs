@@ -20,7 +20,8 @@
 
 namespace IrksomeIsland.Core.Entities.States;
 
-public enum CharacterStateType : byte {
+public enum CharacterStateType : byte
+{
 	Idle = 0,
 	Walking = 1,
 	Running = 2,
@@ -33,4 +34,3 @@ public enum CharacterStateType : byte {
 	Teleporting = 9,
 	Teleported = 10
 }
-

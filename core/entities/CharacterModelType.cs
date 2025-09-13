@@ -20,7 +20,8 @@
 
 namespace IrksomeIsland.Core.Entities;
 
-public enum CharacterModelType : short {
+public enum CharacterModelType : short
+{
 	CharacterA = 0,
 	CharacterB = 1,
 	CharacterC = 2,
@@ -40,4 +41,3 @@ public enum CharacterModelType : short {
 	CharacterQ = 16,
 	CharacterR = 17
 }
-

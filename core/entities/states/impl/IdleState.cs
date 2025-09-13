@@ -30,6 +30,4 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	{
 		C.Velocity = new Vector3(C.Velocity.X, C.Velocity.Y, C.Velocity.Z * 0.0f);
 	}
-
 }
-

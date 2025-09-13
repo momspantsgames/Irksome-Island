@@ -20,10 +20,14 @@ config/icon="uid://2721xb3etq7n"
 file_logging/enable_file_logging=true
 file_logging/log_path="user://logs/irksome.log"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [dotnet]
 
 project/assembly_name="Irksome Island"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+enabled=PackedStringArray()

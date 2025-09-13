@@ -24,37 +24,34 @@ using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Core.Application;
 
-
 public partial class ApplicationManager : Node
 {
-	private NetworkManager _netManager = null!;
 	private IrkGame? _activeGame;
+	private NetworkManager _netManager = null!;
 
-    public override void _Ready()
-    {
-	    Name = NodeNames.ApplicationManager;
-	    _netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-	    AddChild(_netManager);
-    }
+	public override void _Ready()
+	{
+		Name = NodeNames.ApplicationManager;
+		_netManager = new NetworkManager { Name = NodeNames.NetworkManager };
+		AddChild(_netManager);
+	}
 
-    public void StartGame(GameConfiguration config)
-    {
-	    _activeGame?.StopGame();
-	    _activeGame = CreateGame(config);
-	    AddChild(_activeGame);
-	    _activeGame.StartGame();
-    }
+	public void StartGame(GameConfiguration config)
+	{
+		_activeGame?.StopGame();
+		_activeGame = CreateGame(config);
+		AddChild(_activeGame);
+		_activeGame.StartGame();
+	}
 
-    public void StopGame()
-    {
-	    _activeGame?.StopGame();
-	    _activeGame?.QueueFree();
-	    _activeGame = null;
-    }
+	public void StopGame()
+	{
+		_activeGame?.StopGame();
+		_activeGame?.QueueFree();
+		_activeGame = null;
+	}
 
-    private IrkGame CreateGame(GameConfiguration config)
-    {
-	    // only one game type for now, future may have multiple and will need some sort of factory
-	    return new NetworkGame(config) { Name = NodeNames.NetworkGame };
-    }
+	private IrkGame CreateGame(GameConfiguration config) =>
+		// only one game type for now, future may have multiple and will need some sort of factory
+		new NetworkGame(config) { Name = NodeNames.NetworkGame };
 }

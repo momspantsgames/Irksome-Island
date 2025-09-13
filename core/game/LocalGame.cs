@@ -18,28 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Entities.States;
+using Godot;
 
-public abstract class CharacterState(NetworkedCharacter c)
+namespace IrksomeIsland.Core.Game;
+
+public partial class LocalGame(GameConfiguration config) : IrkGame(config)
 {
-	protected readonly NetworkedCharacter C = c;
-	public abstract CharacterStateType Id { get; }
-	protected bool IsOwner => C.IsMultiplayerAuthority();
-	protected bool IsServer => C.Multiplayer.IsServer();
 
-	public virtual void Enter()
+	public void SpawnPlayer(string scenePath)
 	{
+		SpawnPlayerLocal(1, scenePath, "Player");
 	}
 
-	public virtual void Exit()
-	{
-	}
-
-	public virtual void HandleInput(double delta)
-	{
-	}
-
-	public virtual void PhysicsUpdate(double delta)
-	{
-	}
+	public Node3D SpawnProp(Guid id, string scenePath)
+		=> SpawnPropLocal(id, scenePath, $"Prop_{id.ToString()[..8]}");
 }

@@ -19,10 +19,9 @@
 // THE SOFTWARE.
 
 using Godot;
-using System;
 
 namespace IrksomeIsland.Worlds;
 
-public partial class MainWorld : Node3D {
-
+public partial class MainWorld : Node3D
+{
 }
