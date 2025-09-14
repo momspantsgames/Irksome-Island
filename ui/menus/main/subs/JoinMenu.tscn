@@ -3,3 +3,60 @@
 [node name="JoinMenu" type="VBoxContainer"]
 offset_right = 94.0
 offset_bottom = 66.0
+theme_override_constants/separation = 20
+
+[node name="Inputs" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="NameLabel" type="Label" parent="Inputs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Name"
+horizontal_alignment = 2
+
+[node name="NameBox" type="LineEdit" parent="Inputs"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Lester"
+alignment = 2
+
+[node name="AddressLabel" type="Label" parent="Inputs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Address"
+horizontal_alignment = 2
+
+[node name="AddressBox" type="LineEdit" parent="Inputs"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="PasswordLabel" type="Label" parent="Inputs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Password"
+horizontal_alignment = 2
+
+[node name="PasswordBox" type="LineEdit" parent="Inputs"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+secret = true
+secret_character = "*"
+
+[node name="JoinGame" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Join Game"
+
+[node name="Back" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Back"

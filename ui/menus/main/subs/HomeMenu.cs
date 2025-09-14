@@ -19,13 +19,18 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Application;
 
 namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
-public partial class HomeMenu : Control
+public partial class HomeMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 {
+	private Button? _hostButton;
+	private Button? _joinButton;
+	private Button? _optionsButton;
 	private Button? _quitButton;
+
+	public Action<MainMenu.MainMenuScreen>? RequestScreen { get; set; }
+	public Action? RequestBack { get; set; }
 
 	public override void _Ready()
 	{
@@ -33,11 +38,34 @@ public partial class HomeMenu : Control
 
 		_quitButton = GetNode<Button>("Quit");
 		_quitButton.Pressed += OnQuitPressed;
+
+		_hostButton = GetNode<Button>("Host");
+		_hostButton.Pressed += OnHostPressed;
+
+		_joinButton = GetNode<Button>("Join");
+		_joinButton.Pressed += OnJoinPressed;
+
+		_optionsButton = GetNode<Button>("Options");
+		_optionsButton.Pressed += OnOptionsPressed;
 	}
 
 	private void OnQuitPressed()
 	{
-		Logger.Log("User has request to terminate the application.");
 		GetTree().Quit();
+	}
+
+	private void OnHostPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Host);
+	}
+
+	private void OnJoinPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Join);
+	}
+
+	private void OnOptionsPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Options);
 	}
 }

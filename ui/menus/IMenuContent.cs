@@ -18,22 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Constants;
+namespace IrksomeIsland.Ui.Menus;
 
-namespace IrksomeIsland.Ui.Menus.Main;
-
-public partial class MainMenu : MenuRouter<MainMenu.MainMenuScreen>
+public interface IMenuContent<TScreen> where TScreen : struct, Enum
 {
-	public enum MainMenuScreen { Home, Options, Host, Join }
-
-	protected override Dictionary<MainMenuScreen, string> ScreenMap { get; } =
-		new()
-		{
-			{ MainMenuScreen.Home, Paths.ForMainMenu("HomeMenu") },
-			{ MainMenuScreen.Options, Paths.ForMainMenu("OptionsMenu") },
-			{ MainMenuScreen.Join, Paths.ForMainMenu("JoinMenu") },
-			{ MainMenuScreen.Host, Paths.ForMainMenu("HostMenu") }
-		};
-
-	protected override MainMenuScreen GetDefaultScreen() => MainMenuScreen.Home;
+	Action<TScreen>? RequestScreen { get; set; }
+	Action? RequestBack { get; set; }
 }

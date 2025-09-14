@@ -18,22 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Constants;
+using Godot;
 
-namespace IrksomeIsland.Ui.Menus.Main;
+namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
-public partial class MainMenu : MenuRouter<MainMenu.MainMenuScreen>
+public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 {
-	public enum MainMenuScreen { Home, Options, Host, Join }
+	private Button? _backButton;
+	private LineEdit? _maxPlayers;
+	private LineEdit? _password;
+	private LineEdit? _playerName;
 
-	protected override Dictionary<MainMenuScreen, string> ScreenMap { get; } =
-		new()
-		{
-			{ MainMenuScreen.Home, Paths.ForMainMenu("HomeMenu") },
-			{ MainMenuScreen.Options, Paths.ForMainMenu("OptionsMenu") },
-			{ MainMenuScreen.Join, Paths.ForMainMenu("JoinMenu") },
-			{ MainMenuScreen.Host, Paths.ForMainMenu("HostMenu") }
-		};
+	public Action<MainMenu.MainMenuScreen>? RequestScreen { get; set; }
+	public Action? RequestBack { get; set; }
 
-	protected override MainMenuScreen GetDefaultScreen() => MainMenuScreen.Home;
+	public override void _Ready()
+	{
+		base._Ready();
+
+		_playerName = GetNode<LineEdit>("Inputs/NameBox");
+		_maxPlayers = GetNode<LineEdit>("Inputs/PlayersBox");
+		_password = GetNode<LineEdit>("Inputs/PasswordBox");
+
+		_backButton = GetNode<Button>("Back");
+		_backButton.Pressed += () => RequestBack?.Invoke();
+	}
+
+	private void OnQuitPressed()
+	{
+		GetTree().Quit();
+	}
+
+	private void OnHostPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Host);
+	}
+
+	private void OnJoinPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Join);
+	}
+
+	private void OnOptionsPressed()
+	{
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Options);
+	}
 }

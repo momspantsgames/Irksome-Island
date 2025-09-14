@@ -27,9 +27,12 @@ public static class Paths
 	private const string Prefabs = "prefabs";
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
+	private const string MainMenu = "ui/menus/main/subs";
 
 	public static string ForCharacterModel(string fileName) =>
 		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
 
 	public static string ForWorld(string fileName) => $"{ResourcesPrefix}{Worlds}/{fileName}{SceneSuffix}";
+
+	public static string ForMainMenu(string fileName) => $"{ResourcesPrefix}{MainMenu}/{fileName}{SceneSuffix}";
 }

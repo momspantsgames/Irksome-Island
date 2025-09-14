@@ -25,3 +25,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.454339, -6)
 
 [node name="MainMenu" parent="." instance=ExtResource("6_206v3")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
