@@ -1,8 +1,11 @@
-[gd_scene format=3 uid="uid://c2vovfenvbaq6"]
+[gd_scene load_steps=2 format=3 uid="uid://c2vovfenvbaq6"]
+
+[ext_resource type="Script" uid="uid://cinj5hrcm7cgb" path="res://ui/menus/main/subs/HomeMenu.cs" id="1_6j5jd"]
 
 [node name="HomeMenu" type="VBoxContainer"]
 offset_right = 94.0
 offset_bottom = 66.0
+script = ExtResource("1_6j5jd")
 
 [node name="Host" type="Button" parent="."]
 layout_mode = 2

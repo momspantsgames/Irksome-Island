@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://dna1ukw14tkb1" path="res://ui/menus/main/MainTheme.tres" id="1_66ua2"]
 [ext_resource type="Script" uid="uid://cebg1bfvika4j" path="res://ui/menus/main/MainMenu.cs" id="2_eoa7d"]
 [ext_resource type="Texture2D" uid="uid://cypiupcy1oj18" path="res://assets/textures/ui/text-logo-yes-its-ai.png" id="2_n657a"]
-[ext_resource type="PackedScene" uid="uid://c2vovfenvbaq6" path="res://ui/menus/main/subs/Home.tscn" id="4_eoa7d"]
+[ext_resource type="PackedScene" uid="uid://c2vovfenvbaq6" path="res://ui/menus/main/subs/HomeMenu.tscn" id="4_eoa7d"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3

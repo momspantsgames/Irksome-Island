@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dmxer2ycq2j65"]
+
+[node name="JoinMenu" type="VBoxContainer"]
+offset_right = 94.0
+offset_bottom = 66.0
