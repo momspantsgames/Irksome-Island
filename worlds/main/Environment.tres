@@ -1,0 +1,8 @@
+[gd_resource type="Environment" load_steps=2 format=3 uid="uid://qv4yxf518qqv"]
+
+[ext_resource type="Sky" uid="uid://ds4c1iqpgjqcv" path="res://worlds/main/Sky.tres" id="1_mhe5x"]
+
+[resource]
+background_mode = 2
+sky = ExtResource("1_mhe5x")
+ambient_light_source = 3

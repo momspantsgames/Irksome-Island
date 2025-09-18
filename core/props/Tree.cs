@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Momspants Games
+﻿// Copyright (c) 2025 Momspants Games
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,8 @@
 
 using Godot;
 
-namespace IrksomeIsland.Worlds;
+namespace IrksomeIsland.Core.Props;
 
-public partial class MainWorld : Node3D
+public partial class Tree : StaticBody3D
 {
 }
