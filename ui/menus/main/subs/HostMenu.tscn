@@ -18,6 +18,19 @@ theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 10
 columns = 2
 
+[node name="PortLabel" type="Label" parent="Inputs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Port"
+horizontal_alignment = 2
+
+[node name="PortBox" type="LineEdit" parent="Inputs"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "24565"
+alignment = 2
+
 [node name="NameLabel" type="Label" parent="Inputs"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -40,7 +53,7 @@ horizontal_alignment = 2
 [node name="PlayersBox" type="LineEdit" parent="Inputs"]
 layout_mode = 2
 size_flags_horizontal = 8
-text = "16"
+text = "8"
 alignment = 2
 
 [node name="PasswordLabel" type="Label" parent="Inputs"]

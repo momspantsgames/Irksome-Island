@@ -87,7 +87,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8477, 0.443347, -3.73138)
 [node name="StaticLights" type="Node3D" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="StaticLights"]
-transform = Transform3D(-1, 7.92319e-08, -3.69464e-08, 1.51808e-08, 0.573577, 0.819152, 8.60946e-08, 0.819152, -0.573577, 0, 4, 5)
+transform = Transform3D(-1, 7.92319e-08, -3.6946492e-08, 1.51808e-08, 0.57357687, 0.8191518, 8.60946e-08, 0.8191518, -0.57357687, 0, 4, 5)
 light_color = Color(0.997037, 1, 0.853499, 1)
 shadow_enabled = true
 

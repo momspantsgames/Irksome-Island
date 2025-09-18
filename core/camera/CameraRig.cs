@@ -18,16 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Game;
+using Godot;
 
-public sealed class GameConfiguration
+namespace IrksomeIsland.Core.Camera;
+
+public partial class CameraRig : Camera3D
 {
-	public GameType? GameType { get; init; }
-	public string? WorldName { get; init; }
-	public int? MaxPlayers { get; init; }
-	public string? Password { get; init; }
-	public string Name { get; init; } = "Irksome Island Game";
-	public bool IsPrivate { get; init; } = false;
-	public string? LocalPlayerName { get; init; }
-	public int? Port { get; init; }
+	private CameraController? Controller { get; set; }
+
+	public void SetController(CameraController? controller)
+	{
+		Controller?.OnDetach(this);
+		Controller = controller;
+		Controller?.OnAttach(this);
+	}
+
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		Controller?.HandleInput(this, @event);
+	}
+
+	public override void _Process(double delta)
+	{
+		Controller?.UpdateCamera(this, delta);
+	}
 }

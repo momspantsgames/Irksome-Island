@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025 Momspants Games
+// Copyright (c) 2025 Momspants Games
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,16 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Game;
+using Godot;
 
-public sealed class GameConfiguration
+namespace IrksomeIsland.Worlds.MainWorld;
+
+public partial class MainWorld : Node3D
 {
-	public GameType? GameType { get; init; }
-	public string? WorldName { get; init; }
-	public int? MaxPlayers { get; init; }
-	public string? Password { get; init; }
-	public string Name { get; init; } = "Irksome Island Game";
-	public bool IsPrivate { get; init; } = false;
-	public string? LocalPlayerName { get; init; }
-	public int? Port { get; init; }
 }

@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Game;
@@ -27,6 +28,7 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 {
 	protected readonly Dictionary<long, Node3D> Players = new();
 	protected readonly Dictionary<Guid, Node3D> Props = new();
+	protected CameraRig? CameraRig;
 	protected Node3D PlayersRoot = null!;
 	protected Node3D PropsRoot = null!;
 	protected Node? World;
@@ -43,13 +45,16 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 
 	public virtual void StartGame()
 	{
-		if (WorldScene == null)
+		if (WorldScene == null && Configuration.WorldName != null)
 			WorldScene = ResourceLoader.Load<PackedScene>(Paths.ForWorld(Configuration.WorldName));
 
 		if (WorldScene == null) throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
 
 		World = WorldScene?.Instantiate();
 		AddChild(World);
+
+		CameraRig = new CameraRig();
+		AddChild(CameraRig);
 	}
 
 	public virtual void StopGame()
@@ -57,6 +62,9 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		World?.QueueFree();
 		World = null;
 		WorldScene = null;
+
+		CameraRig?.QueueFree();
+		CameraRig = null;
 	}
 
 	protected Node3D SpawnPlayerLocal(int authorityPeerId, string scenePath, string name)

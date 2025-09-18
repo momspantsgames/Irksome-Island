@@ -18,16 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Game;
+using Godot;
 
-public sealed class GameConfiguration
+namespace IrksomeIsland.Core.Camera;
+
+public partial class StaticCameraController(Vector3 position, Vector3 rotationDegrees) : CameraController
 {
-	public GameType? GameType { get; init; }
-	public string? WorldName { get; init; }
-	public int? MaxPlayers { get; init; }
-	public string? Password { get; init; }
-	public string Name { get; init; } = "Irksome Island Game";
-	public bool IsPrivate { get; init; } = false;
-	public string? LocalPlayerName { get; init; }
-	public int? Port { get; init; }
+	private Vector3 Position { get; set; } = position;
+	private Vector3 RotationDegrees { get; set; } = rotationDegrees;
+
+	public override void OnAttach(CameraRig rig)
+	{
+		// Snap immediately when attached
+		rig.GlobalPosition = Position;
+		rig.GlobalRotationDegrees = RotationDegrees;
+	}
+
+	public override void OnDetach(CameraRig rig)
+	{
+		// Nothing to clean up for a static camera
+	}
+
+	public override void HandleInput(CameraRig rig, InputEvent e)
+	{
+		// no input
+	}
+
+	public override void UpdateCamera(CameraRig rig, double delta)
+	{
+		rig.GlobalPosition = Position;
+		rig.GlobalRotationDegrees = RotationDegrees;
+	}
 }

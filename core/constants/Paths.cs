@@ -28,11 +28,13 @@ public static class Paths
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
 	private const string MainMenu = "ui/menus/main/subs";
+	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
 
 	public static string ForCharacterModel(string fileName) =>
 		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
 
-	public static string ForWorld(string fileName) => $"{ResourcesPrefix}{Worlds}/{fileName}{SceneSuffix}";
+	public static string ForWorld(string worldName) =>
+		$"{ResourcesPrefix}{Worlds}/{worldName}/{worldName}{SceneSuffix}";
 
 	public static string ForMainMenu(string fileName) => $"{ResourcesPrefix}{MainMenu}/{fileName}{SceneSuffix}";
 }

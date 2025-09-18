@@ -1,0 +1,11 @@
+[gd_resource type="ProceduralSkyMaterial" load_steps=2 format=3 uid="uid://byc0y6qf8alvd"]
+
+[ext_resource type="Texture2D" uid="uid://cwo3h8t4305p" path="res://worlds/main/SkyNoise.tres" id="1_6ckeh"]
+
+[resource]
+sky_top_color = Color(0, 0.455342, 0.797242, 1)
+sky_horizon_color = Color(0.18582433, 0.61063194, 0.99999017, 1)
+sky_cover = ExtResource("1_6ckeh")
+sky_cover_modulate = Color(0.650553, 0.650553, 0.650553, 1)
+ground_bottom_color = Color(0.13378221, 0.5268158, 0.72345173, 1)
+ground_horizon_color = Color(0.08235294, 0.39215687, 0.54509807, 1)

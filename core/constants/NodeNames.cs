@@ -22,13 +22,16 @@ namespace IrksomeIsland.Core.Constants;
 
 public static class NodeNames
 {
+	private const string AppRoot = "AppRoot";
 	public const string NetworkManager = "NetworkManager";
 	public const string ApplicationManager = "ApplicationManager";
 	public const string ModelRoot = "ModelRoot";
 	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
-	public const string NetworkGame = "NetworkGame";
 	public const string PlayersRoot = "Players";
 	public const string PropsRoot = "Props";
 	public const string PlayerSpawner = "PlayerSpawner";
 	public const string PropSpawner = "PropSpawner";
+	public const string WorldMain = "MainWorld";
+
+	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
 }

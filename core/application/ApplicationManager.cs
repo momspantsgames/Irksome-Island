@@ -34,6 +34,8 @@ public partial class ApplicationManager : Node
 		Name = NodeNames.ApplicationManager;
 		_netManager = new NetworkManager { Name = NodeNames.NetworkManager };
 		AddChild(_netManager);
+
+		StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
 	}
 
 	public void StartGame(GameConfiguration config)
@@ -51,7 +53,16 @@ public partial class ApplicationManager : Node
 		_activeGame = null;
 	}
 
-	private IrkGame CreateGame(GameConfiguration config) =>
-		// only one game type for now, future may have multiple and will need some sort of factory
-		new NetworkGame(config) { Name = NodeNames.NetworkGame };
+	private static IrkGame CreateGame(GameConfiguration config)
+	{
+
+		IrkGame game = config.GameType switch
+		{
+			GameType.Attract => new AttractGame(config),
+			GameType.Network => new NetworkGame(config),
+			_ => throw new InvalidOperationException($"Unknown game type: {config.GameType}")
+		};
+
+		return game;
+	}
 }

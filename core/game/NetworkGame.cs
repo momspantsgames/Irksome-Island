@@ -20,6 +20,7 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Game;
@@ -32,6 +33,8 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	public override void _Ready()
 	{
 		base._Ready();
+
+		Name = "NetworkGame";
 
 		_playerSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PlayerSpawner);
 		_playerSpawner.SpawnPath = $"../{NodeNames.PlayersRoot}";
@@ -90,6 +93,22 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		node.SetMultiplayerAuthority(peer);
 
 		Players[peer] = node;
+
+		// if this is a local player, they need a camera controller
+		if (peer == Multiplayer.GetUniqueId() && CameraRig != null)
+		{
+			var follow = new OrbitFollowCameraController
+			{
+				Target = node,
+				Offset = new Vector3(0, 2.2f, -5.5f),
+				FollowSpeed = 12f,
+				LookAtTarget = true
+			};
+
+			CameraRig.SetController(follow);
+			CameraRig.Current = true;
+		}
+
 		return node;
 	}
 

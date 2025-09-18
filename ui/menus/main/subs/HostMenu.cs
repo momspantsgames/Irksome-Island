@@ -19,6 +19,9 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
@@ -29,6 +32,7 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 	private LineEdit? _maxPlayers;
 	private LineEdit? _password;
 	private LineEdit? _playerName;
+	private LineEdit? _port;
 
 	public Action<MainMenu.MainMenuScreen>? RequestScreen { get; set; }
 	public Action? RequestBack { get; set; }
@@ -37,6 +41,7 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 	{
 		base._Ready();
 
+		_port = GetNode<LineEdit>("Inputs/PortBox");
 		_playerName = GetNode<LineEdit>("Inputs/NameBox");
 		_maxPlayers = GetNode<LineEdit>("Inputs/PlayersBox");
 		_password = GetNode<LineEdit>("Inputs/PasswordBox");
@@ -50,6 +55,26 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 
 	private void OnHostPressed()
 	{
-		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Host);
+		var name = _playerName?.Text?.StripEdges() ?? "Host Player";
+		var max = int.TryParse(_maxPlayers?.Text, out var m) ? Mathf.Clamp(m, 1, 64) : 8;
+		var port = int.TryParse(_port?.Text, out var p) ? Mathf.Clamp(p, 1024, 65535) : 25565;
+		// var pwd = _password?.Text ?? ""; // not used yet
+
+		var app = GetNode<ApplicationManager>(NodeNames.ApplicationManagerPath());
+		var net = app.GetNode<NetworkManager>(NodeNames.NetworkManager);
+
+		net.StartServer(port, max);
+
+		var config = new GameConfiguration
+		{
+			WorldName = NodeNames.WorldMain,
+			LocalPlayerName = name,
+			Port = port
+		};
+
+		app.StartGame(config);
+
+		// optionally hide menu
+		GetTree().Root.RemoveChild(this); // or Visible = false
 	}
 }

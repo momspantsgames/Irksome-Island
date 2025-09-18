@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Momspants Games
+﻿// Copyright (c) 2025 Momspants Games
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Godot;
+namespace IrksomeIsland.Core.Game;
 
-namespace IrksomeIsland.Worlds.Main;
-
-public partial class MainWorld : Node3D
+public enum GameType : short
 {
+	Attract = 0,
+	Network = 1
 }

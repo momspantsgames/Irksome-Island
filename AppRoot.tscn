@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://x0twiioeh6g1"]
+
+[ext_resource type="Script" uid="uid://da4cixemgqqmv" path="res://core/application/ApplicationManager.cs" id="1_c0isk"]
+
+[node name="AppRoot" type="Node"]
+script = ExtResource("1_c0isk")

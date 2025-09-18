@@ -18,16 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Godot;
+using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Ui.Menus.Main;
+
 namespace IrksomeIsland.Core.Game;
 
-public sealed class GameConfiguration
+public partial class AttractGame(GameConfiguration config) : IrkGame(config)
 {
-	public GameType? GameType { get; init; }
-	public string? WorldName { get; init; }
-	public int? MaxPlayers { get; init; }
-	public string? Password { get; init; }
-	public string Name { get; init; } = "Irksome Island Game";
-	public bool IsPrivate { get; init; } = false;
-	public string? LocalPlayerName { get; init; }
-	public int? Port { get; init; }
+	private MainMenu? _mainMenu;
+
+	public override void _Ready()
+	{
+		base._Ready();
+
+		Name = "AttractGame";
+
+		var scene = GD.Load<PackedScene>(Paths.MainMenuScene);
+		_mainMenu = scene.Instantiate<MainMenu>();
+		AddChild(_mainMenu);
+	}
 }
