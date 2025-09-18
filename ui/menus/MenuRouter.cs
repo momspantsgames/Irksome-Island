@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Application;
+using Logger = IrksomeIsland.Core.Application.Logger;
 
 namespace IrksomeIsland.Ui.Menus;
 
