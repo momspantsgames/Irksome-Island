@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://nqrptmgy305u"]
+
+[ext_resource type="Script" uid="uid://deiub7w5c4mr3" path="res://core/game/NetworkGame.cs" id="1_2os2k"]
+[ext_resource type="PackedScene" uid="uid://bfqnr2nxxfyc3" path="res://worlds/main/MainWorld.tscn" id="1_ff44b"]
+
+[node name="NetworkGame" type="Node"]
+script = ExtResource("1_2os2k")
+
+[node name="MainWorld" parent="." instance=ExtResource("1_ff44b")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
