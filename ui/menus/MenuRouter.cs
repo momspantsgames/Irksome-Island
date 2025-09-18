@@ -27,6 +27,7 @@ public abstract partial class MenuRouter<TScreen> : Control where TScreen : stru
 {
 	private readonly Stack<TScreen> _history = new();
 	private Control? _currentMenu;
+	private TScreen _currentScreen;
 	private HBoxContainer? _menuContainer;
 	[Export] private NodePath? SlotPath { get; set; }
 	protected abstract Dictionary<TScreen, string> ScreenMap { get; }
@@ -34,7 +35,8 @@ public abstract partial class MenuRouter<TScreen> : Control where TScreen : stru
 	public override void _Ready()
 	{
 		_menuContainer = GetNode<HBoxContainer>(SlotPath);
-		ShowScreen(GetDefaultScreen(), false);
+		_currentScreen = GetDefaultScreen();
+		ShowScreen(_currentScreen, false);
 	}
 
 	protected abstract TScreen GetDefaultScreen();
@@ -42,7 +44,7 @@ public abstract partial class MenuRouter<TScreen> : Control where TScreen : stru
 	public void ShowScreen(TScreen screen, bool pushHistory = true)
 	{
 		if (pushHistory && _currentMenu != null)
-			_history.Push(screen);
+			_history.Push(_currentScreen);
 
 		_currentMenu?.QueueFree();
 
@@ -57,6 +59,7 @@ public abstract partial class MenuRouter<TScreen> : Control where TScreen : stru
 
 		_menuContainer?.AddChild(instance);
 		_currentMenu = instance;
+		_currentScreen = screen;
 		CallDeferred(nameof(GrabFirstFocusable), instance);
 
 		if (instance is IMenuContent<TScreen> content)

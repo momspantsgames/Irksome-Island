@@ -22,13 +22,10 @@ using Godot;
 
 namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
-public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
+public partial class OptionsMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 {
 	private Button? _backButton;
-	private Button? _hostButton;
-	private LineEdit? _maxPlayers;
-	private LineEdit? _password;
-	private LineEdit? _playerName;
+	private Button? _saveOptionsButton;
 
 	public Action<MainMenu.MainMenuScreen>? RequestScreen { get; set; }
 	public Action? RequestBack { get; set; }
@@ -37,19 +34,15 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 	{
 		base._Ready();
 
-		_playerName = GetNode<LineEdit>("Inputs/NameBox");
-		_maxPlayers = GetNode<LineEdit>("Inputs/PlayersBox");
-		_password = GetNode<LineEdit>("Inputs/PasswordBox");
-
-		_hostButton = GetNode<Button>("HostGame");
-		_hostButton.Pressed += OnHostPressed;
+		_saveOptionsButton = GetNode<Button>("SaveOptions");
+		_saveOptionsButton.Pressed += OnSaveOptionsPressed;
 
 		_backButton = GetNode<Button>("Back");
 		_backButton.Pressed += () => RequestBack?.Invoke();
 	}
 
-	private void OnHostPressed()
+	private void OnSaveOptionsPressed()
 	{
-		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Host);
+		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Join);
 	}
 }

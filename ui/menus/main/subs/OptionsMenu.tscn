@@ -1,8 +1,11 @@
-[gd_scene format=3 uid="uid://dkc2uyjuf8g6d"]
+[gd_scene load_steps=2 format=3 uid="uid://dkc2uyjuf8g6d"]
+
+[ext_resource type="Script" uid="uid://ceb58vo7jg1e5" path="res://ui/menus/main/subs/OptionsMenu.cs" id="1_xvxrp"]
 
 [node name="OptionsMenu" type="VBoxContainer"]
 offset_right = 94.0
 offset_bottom = 66.0
+script = ExtResource("1_xvxrp")
 
 [node name="Inputs" type="GridContainer" parent="."]
 layout_mode = 2
