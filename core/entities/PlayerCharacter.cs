@@ -29,7 +29,14 @@ public partial class PlayerCharacter : NetworkedCharacter
 {
 	private static readonly Dictionary<CharacterModelType, string> ModelMap = new()
 	{
-		[CharacterModelType.CharacterA] = Paths.ForCharacterModel("CharacterA")
+		[CharacterModelType.CharacterA] = Paths.ForCharacterModel("CharacterA"),
+		[CharacterModelType.CharacterB] = Paths.ForCharacterModel("CharacterB"),
+		[CharacterModelType.CharacterC] = Paths.ForCharacterModel("CharacterC"),
+		[CharacterModelType.CharacterD] = Paths.ForCharacterModel("CharacterD"),
+		[CharacterModelType.CharacterE] = Paths.ForCharacterModel("CharacterE"),
+		[CharacterModelType.CharacterF] = Paths.ForCharacterModel("CharacterF"),
+		[CharacterModelType.CharacterG] = Paths.ForCharacterModel("CharacterG"),
+		[CharacterModelType.CharacterH] = Paths.ForCharacterModel("CharacterH")
 	};
 
 	private static readonly Dictionary<CharacterModelType, PackedScene> Cache = new();
