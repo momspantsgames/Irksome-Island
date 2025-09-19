@@ -31,6 +31,7 @@ public static class NodeNames
 	public const string PropsRoot = "Props";
 	public const string PlayerSpawner = "PlayerSpawner";
 	public const string PropSpawner = "PropSpawner";
+	public const string CameraRig = "CameraRig";
 	public const string WorldMain = "MainWorld";
 
 	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";

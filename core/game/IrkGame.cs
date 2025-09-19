@@ -58,6 +58,7 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		AddChild(World);
 
 		CameraRig = new CameraRig();
+		CameraRig.Name = NodeNames.CameraRig;
 		AddChild(CameraRig);
 	}
 

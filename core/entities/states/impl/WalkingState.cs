@@ -63,7 +63,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 		// desired world move dir
 		var dir = right * wish.X + fwd * wish.Y;
-		dir = dir.LengthSquared() > 1e-6f ? dir.Normalized() : Vector3.Zero;
+		dir = dir.LengthSquared() > Gameplay.FloatMathEpsilon ? dir.Normalized() : Vector3.Zero;
 
 		// target speed (Shift to run)
 		var run = Input.IsActionPressed(Actions.MovementAction.Run);
@@ -86,7 +86,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		C.MoveAndSlide();
 
 		// face move direction if any
-		if (hasInput && dir.LengthSquared() > 1e-6f)
+		if (hasInput && dir.LengthSquared() > Gameplay.FloatMathEpsilon)
 		{
 			var yaw = Mathf.Atan2(dir.X, dir.Z);
 			var rot = C.Rotation;

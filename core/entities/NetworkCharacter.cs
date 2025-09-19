@@ -117,6 +117,6 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 		if (Multiplayer.IsServer()) SetModel((CharacterModelType)id);
 	}
 
-	public override void _Process(double delta) => CurrentState.HandleInput(delta);
-	public override void _PhysicsProcess(double delta) => CurrentState.PhysicsUpdate(delta);
+	public override void _Process(double delta) => CurrentState?.HandleInput(delta);
+	public override void _PhysicsProcess(double delta) => CurrentState?.PhysicsUpdate(delta);
 }

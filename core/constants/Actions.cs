@@ -36,6 +36,16 @@ public static class Actions
 		public static string Jump => "jump";
 	}
 
+	public static class Camera
+	{
+		public static string RotateLeft => "cam_rotate_left";
+		public static string RotateRight => "cam_rotate_right";
+		public static string ZoomIn => "cam_zoom_in";
+		public static string ZoomOut => "cam_zoom_out";
+		public static string PitchUp => "cam_pitch_up";
+		public static string PitchDown => "cam_pitch_down";
+	}
+
 	public static class Ui
 	{
 		public static string Accept => "ui_accept";

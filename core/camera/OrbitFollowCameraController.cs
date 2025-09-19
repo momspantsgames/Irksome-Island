@@ -19,165 +19,93 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
+using static IrksomeIsland.Core.Constants.Gameplay;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class OrbitFollowCameraController : CameraController
 {
-	private bool _initialized;
-	private float _pitch, _yaw;
-	private CameraRig? _rig;
-	private bool _rigSubscribed, _targetSubscribed;
+	private float _pitch;
+	private Node3D? _target;
 
-	public Node3D? Target { get; set; }
-	public Vector3 Offset { get; set; } = new(0, 2.0f, -5.0f);
-	public float FollowSpeed { get; set; } = 12f;
+	private float _yaw;
 	public bool LookAtTarget { get; set; } = true;
-	public bool RequireRightMouse { get; set; } = true;
-	public float Sensitivity { get; set; } = 0.01f;
-	public Vector2 PitchLimitsRad { get; set; } = new(-1.2f, 1.2f);
-	public float ZoomStep { get; set; } = 0.6f;
-	public float MinRadius { get; set; } = 1.5f;
-	public float MaxRadius { get; set; } = 8.0f;
+	public float Sensitivity { get; set; } = 0.015f; // mouse
+	public float TurnSpeed { get; set; } = 1.6f;     // keyboard rad/s
+	public bool RequireRmb { get; set; } = true;
 
-	public void SetTarget(Node3D target)
+	public void SetTarget(Node3D t, CameraRig rig)
 	{
-		// Unsubscribe from previous target if needed
-		if (!_initialized && Target != null && _targetSubscribed)
-		{
-			Target.TreeEntered -= OnTreeEnteredCheckInit;
-			_targetSubscribed = false;
-		}
+		_target = t;
+		rig.SetTarget(t);
 
-		Target = target;
-
-		// If rig already set and both are in-tree, init now
-		if (_rig != null && _rig.IsInsideTree() && Target.IsInsideTree())
-		{
-			InitOrbit();
-		}
-		else if (!_initialized && Target != null && !Target.IsInsideTree() && !_targetSubscribed)
-		{
-			Target.TreeEntered += OnTreeEnteredCheckInit;
-			_targetSubscribed = true;
-		}
-	}
-
-	public override void OnAttach(CameraRig rig)
-	{
-		_rig = rig;
-
-		if (rig.IsInsideTree() && Target != null && Target.IsInsideTree())
-		{
-			InitOrbit();
-			return;
-		}
-
-		if (!rig.IsInsideTree() && !_rigSubscribed)
-		{
-			rig.TreeEntered += OnTreeEnteredCheckInit;
-			_rigSubscribed = true;
-		}
-
-		if (Target != null && !Target.IsInsideTree() && !_targetSubscribed)
-		{
-			Target.TreeEntered += OnTreeEnteredCheckInit;
-			_targetSubscribed = true;
-		}
-	}
-
-	public override void OnDetach(CameraRig rig)
-	{
-		UnsubscribeSignals();
-	}
-
-	private void OnTreeEnteredCheckInit()
-	{
-		if (_initialized || _rig == null || Target == null) return;
-
-		if (_rig.IsInsideTree() && Target.IsInsideTree())
-		{
-			InitOrbit();
-			UnsubscribeSignals();
-		}
-	}
-
-	private void UnsubscribeSignals()
-	{
-		if (_rig != null && _rigSubscribed)
-		{
-			_rig.TreeEntered -= OnTreeEnteredCheckInit;
-			_rigSubscribed = false;
-		}
-
-		if (Target != null && _targetSubscribed)
-		{
-			Target.TreeEntered -= OnTreeEnteredCheckInit;
-			_targetSubscribed = false;
-		}
-	}
-
-	private void InitOrbit()
-	{
-		if (_rig == null || Target == null) return;
-
-		var to = _rig.GlobalTransform.Origin - Target.GlobalTransform.Origin;
-
-		if (to.LengthSquared() > 1e-6f)
+		// init yaw/pitch from current rig-to-target
+		var to = rig.GlobalTransform.Origin - t.GlobalTransform.Origin;
+		if (to.LengthSquared() > FloatMathEpsilon)
 		{
 			_yaw = Mathf.Atan2(to.X, to.Z);
 			_pitch = Mathf.Asin(to.Normalized().Y);
 		}
 
-		var radius = Mathf.Clamp(Mathf.Abs(Offset.Z), MinRadius, MaxRadius);
-		Offset = new Vector3(Offset.X, Offset.Y, -radius); // preserve your Y=2.0f
-
-		_initialized = true;
+		rig.DesiredArmLength = Mathf.Clamp(Gameplay.Camera.ThirdPersonSpringArmLength,
+			Gameplay.Camera.MinimumThirdPersonZoom,
+			Gameplay.Camera.MaxThirdPersonZoom);
 	}
 
 	public override void HandleInput(CameraRig rig, InputEvent e)
 	{
-		if (e is InputEventMouseMotion mm)
+		if (e is InputEventMouseMotion mm && (!RequireRmb || Input.IsMouseButtonPressed(MouseButton.Right)))
 		{
-			if (!RequireRightMouse || Input.IsMouseButtonPressed(MouseButton.Right))
-			{
-				_yaw -= mm.Relative.X * Sensitivity;
-				_pitch -= mm.Relative.Y * Sensitivity;
-				_pitch = Mathf.Clamp(_pitch, PitchLimitsRad.X, PitchLimitsRad.Y);
-			}
+			_yaw -= mm.Relative.X * Sensitivity;
+			_pitch -= mm.Relative.Y * Sensitivity;
+			_pitch = Mathf.Clamp(_pitch, Gameplay.Camera.ThirdPersonPitchLimitsRad.X,
+				Gameplay.Camera.ThirdPersonPitchLimitsRad.Y);
 		}
-		else if (e is InputEventMouseButton mb && mb.Pressed)
+		else if (e is InputEventMouseButton { Pressed: true } mb)
 		{
-			var radius = Mathf.Abs(Offset.Z);
-			if (mb.ButtonIndex == MouseButton.WheelUp) radius -= ZoomStep;
-			if (mb.ButtonIndex == MouseButton.WheelDown) radius += ZoomStep;
-			radius = Mathf.Clamp(radius, MinRadius, MaxRadius);
-			Offset = new Vector3(Offset.X, Offset.Y, -radius);
+			switch (mb.ButtonIndex)
+			{
+				case MouseButton.WheelUp:
+					rig.DesiredArmLength -= Gameplay.Camera.ThirdPersonZoomStep;
+					break;
+				case MouseButton.WheelDown:
+					rig.DesiredArmLength += Gameplay.Camera.ThirdPersonZoomStep;
+					break;
+			}
+
+			rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength, Gameplay.Camera.MinimumThirdPersonZoom,
+				Gameplay.Camera.MaxThirdPersonZoom);
 		}
 	}
 
 	public override void UpdateCamera(CameraRig rig, double delta)
 	{
-		if (Target == null || !IsInstanceValid(Target)) return;
+		if (_target == null) return;
 
-		var t = Target.GlobalTransform.Origin;
+		var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
+		            Input.GetActionStrength(Actions.Camera.RotateLeft)) * TurnSpeed * (float)delta;
 
-		var radius = Mathf.Abs(Offset.Z);
-		var cp = Mathf.Cos(_pitch);
-		var x = radius * cp * Mathf.Sin(_yaw);
-		var y = radius * Mathf.Sin(_pitch) + Offset.Y;
-		var z = radius * cp * Mathf.Cos(_yaw);
+		var kPitch = (Input.GetActionStrength(Actions.Camera.PitchUp) -
+		              Input.GetActionStrength(Actions.Camera.PitchDown)) * TurnSpeed * (float)delta;
 
-		var desired = t + new Vector3(x, y, z);
+		if (kYaw > FloatMathEpsilon)
+			_yaw += kYaw;
 
-		var dt = Mathf.Min((float)delta, 0.05f);
-		var a = 1f - Mathf.Exp(-FollowSpeed * dt);
-		rig.GlobalPosition = rig.GlobalPosition.Lerp(desired, a);
-
-		if (LookAtTarget)
+		if (kPitch > FloatMathEpsilon)
 		{
-			var to = t - rig.GlobalTransform.Origin;
-			if (to.LengthSquared() > 1e-6f) rig.LookAt(t, Vector3.Up);
+			_pitch = Mathf.Clamp(_pitch + kPitch, Gameplay.Camera.ThirdPersonPitchLimitsRad.X,
+				Gameplay.Camera.ThirdPersonPitchLimitsRad.Y);
 		}
+
+		// orbit pivot
+		var t = _target.GlobalTransform.Origin + new Vector3(0, Gameplay.Camera.ThirdPersonPivotHeight, 0);
+		var cp = Mathf.Cos(_pitch);
+		var dir = new Vector3(cp * Mathf.Sin(_yaw), Mathf.Sin(_pitch), cp * Mathf.Cos(_yaw));
+
+		// place rig at pivot; spring arm on the rig handles collision/retraction
+		rig.DesiredPivot = t + dir * 0.001f;
+
+		if (LookAtTarget) rig.LookAt(t, Vector3.Up);
 	}
 }

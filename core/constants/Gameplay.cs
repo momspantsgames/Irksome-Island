@@ -20,27 +20,19 @@
 
 using Godot;
 
-namespace IrksomeIsland.Core.Camera;
+namespace IrksomeIsland.Core.Constants;
 
-public abstract partial class CameraController : Resource
+public static class Gameplay
 {
-	public float FollowSpeed { get; set; } = 12f;
+	public static float FloatMathEpsilon => 1e-4f;
 
-	public virtual void OnAttach(CameraRig rig)
+	public static class Camera
 	{
-	}
-
-	public virtual void OnDetach(CameraRig rig)
-	{
-	}
-
-	public abstract void HandleInput(CameraRig rig, InputEvent e);
-	public abstract void UpdateCamera(CameraRig rig, double delta);
-
-	public static Vector3 Smooth(Vector3 from, Vector3 to, double dt, float speed)
-	{
-		var cap = Mathf.Min((float)dt, 0.05f);
-		var a = 1f - Mathf.Exp(-speed * cap);
-		return from.Lerp(to, a);
+		public static float MinimumThirdPersonZoom => .5f;
+		public static float MaxThirdPersonZoom => 5.0f;
+		public static float ThirdPersonZoomStep => 0.7f;
+		public static Vector2 ThirdPersonPitchLimitsRad => new(-1.2f, 1.2f);
+		public static float ThirdPersonPivotHeight => 0f;
+		public static float ThirdPersonSpringArmLength => 1.0f;
 	}
 }

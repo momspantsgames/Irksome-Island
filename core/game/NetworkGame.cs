@@ -174,16 +174,15 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		// if this is a local player, they need a camera controller
 		if (peer == Multiplayer.GetUniqueId() && CameraRig != null)
 		{
-			var follow = new OrbitFollowCameraController
-			{
-				Target = node,
-				Offset = new Vector3(0, 2.2f, -5.5f),
-				FollowSpeed = 12f,
-				LookAtTarget = true
-			};
-
+			var follow = new OrbitFollowCameraController();
 			CameraRig.SetController(follow);
-			CameraRig.Current = true;
+
+			// defer this until the player is in the tree
+			node.TreeEntered += () =>
+			{
+				follow.SetTarget(node, CameraRig);
+				CameraRig.Camera.MakeCurrent();
+			};
 		}
 
 		return node;

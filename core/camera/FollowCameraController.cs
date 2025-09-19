@@ -19,13 +19,12 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class FollowCameraController : CameraController
 {
-
-	public float FollowSpeed { get; set; } = 10f;
 	public bool LookAtTarget { get; set; } = true;
 	public Vector3 Offset { get; set; } = new(0, 2.0f, -5.0f);
 	private bool OffsetLocal { get; set; } = true;
@@ -63,7 +62,7 @@ public partial class FollowCameraController : CameraController
 		if (!LookAtTarget) return;
 		var targetPos = Target.GlobalTransform.Origin;
 		targetPos.Y = rig.GlobalTransform.Origin.Y;
-		if ((targetPos - rig.GlobalTransform.Origin).LengthSquared() > 1e-6f)
+		if ((targetPos - rig.GlobalTransform.Origin).LengthSquared() > Gameplay.FloatMathEpsilon)
 			rig.LookAt(targetPos, Vector3.Up);
 	}
 
