@@ -27,13 +27,13 @@ namespace IrksomeIsland.Core.Application;
 public partial class ApplicationManager : Node
 {
 	private IrkGame? _activeGame;
-	private NetworkManager _netManager = null!;
+	public NetworkManager NetworkManager { get; private set; } = null!;
 
 	public override void _Ready()
 	{
 		Name = NodeNames.ApplicationManager;
-		_netManager = new NetworkManager { Name = NodeNames.NetworkManager };
-		AddChild(_netManager);
+		NetworkManager = new NetworkManager { Name = NodeNames.NetworkManager };
+		AddChild(NetworkManager);
 
 		StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
 	}
@@ -46,7 +46,7 @@ public partial class ApplicationManager : Node
 		_activeGame.StartGame();
 	}
 
-	public void StopGame()
+	private void StopGame()
 	{
 		_activeGame?.StopGame();
 		_activeGame?.QueueFree();

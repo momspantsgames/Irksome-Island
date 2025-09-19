@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 
@@ -34,11 +35,14 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 	protected Node? World;
 	protected PackedScene? WorldScene;
 
+	protected ApplicationManager App { get; private set; } = null!;
+
 	// just stores the configuration it was created with
 	protected GameConfiguration Configuration { get; } = config;
 
 	public override void _Ready()
 	{
+		App = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
 		PlayersRoot = GetOrCreate<Node3D>(NodeNames.PlayersRoot);
 		PropsRoot = GetOrCreate<Node3D>(NodeNames.PropsRoot);
 	}

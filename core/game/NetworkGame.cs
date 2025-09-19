@@ -20,6 +20,7 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 
@@ -29,6 +30,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 {
 	private MultiplayerSpawner _playerSpawner = null!;
 	private MultiplayerSpawner _propSpawner = null!;
+	protected NetworkManager Network => App.NetworkManager;
 
 	public override void _Ready()
 	{
@@ -43,6 +45,65 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		_propSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PropSpawner);
 		_propSpawner.SpawnPath = $"../{NodeNames.PropsRoot}";
 		_propSpawner.SpawnFunction = new Callable(this, nameof(SpawnPropFromData));
+	}
+
+	public override void StartGame()
+	{
+		base.StartGame();
+
+		// server spawns itself
+		if (Network.IsServer)
+		{
+			// todo: load from player input
+			var path = Paths.ForCharacterModel("CharacterA");
+			ServerAddPlayer(Multiplayer.GetUniqueId(), path);
+		}
+
+		Network.PeerJoined += OnPeerJoined;
+		Network.PeerLeft += OnPeerLeft;
+		Network.Connected += OnClientConnected;
+		Network.ServerWentAway += OnServerWentAway;
+	}
+
+	public override void StopGame()
+	{
+		Network.PeerJoined -= OnPeerJoined;
+		Network.PeerLeft -= OnPeerLeft;
+		Network.Connected -= OnClientConnected;
+		Network.ServerWentAway -= OnServerWentAway;
+
+		base.StopGame();
+	}
+
+	private void OnPeerJoined(long id)
+	{
+		if (!Network.IsServer) return;
+
+		// todo: load from player input
+		var path = Paths.ForCharacterModel("CharacterA");
+		ServerAddPlayer((int)id, path);
+	}
+
+	private void OnPeerLeft(long id)
+	{
+		if (!Network.IsServer) return;
+		ServerRemovePlayer((int)id);
+	}
+
+	private void OnClientConnected()
+	{
+		// client waits; server will spawn and MultiplayerSpawner will sync
+	}
+
+	private void OnServerWentAway()
+	{
+		var newConfig = new GameConfiguration
+		{
+			WorldName = NodeNames.WorldMain,
+			GameType = GameType.Attract
+		};
+
+		App.StartGame(newConfig);
 	}
 
 	public Node3D ServerAddPlayer(int peerId, string scenePath)
