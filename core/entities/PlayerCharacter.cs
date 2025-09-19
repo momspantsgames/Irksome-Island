@@ -27,7 +27,6 @@ namespace IrksomeIsland.Core.Entities;
 
 public partial class PlayerCharacter : NetworkedCharacter
 {
-
 	private static readonly Dictionary<CharacterModelType, string> ModelMap = new()
 	{
 		[CharacterModelType.CharacterA] = Paths.ForCharacterModel("CharacterA")
@@ -63,8 +62,8 @@ public partial class PlayerCharacter : NetworkedCharacter
 
 	public override void _Ready()
 	{
-		base._Ready();
-
 		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
+
+		base._Ready();
 	}
 }

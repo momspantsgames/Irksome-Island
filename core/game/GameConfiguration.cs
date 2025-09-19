@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using IrksomeIsland.Core.Entities;
+
 namespace IrksomeIsland.Core.Game;
 
 public sealed class GameConfiguration
@@ -29,5 +31,6 @@ public sealed class GameConfiguration
 	public string Name { get; init; } = "Irksome Island Game";
 	public bool IsPrivate { get; init; } = false;
 	public string? LocalPlayerName { get; init; }
+	public CharacterModelType? LocalPlayerModel { get; init; }
 	public int? Port { get; init; }
 }

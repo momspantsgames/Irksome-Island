@@ -56,8 +56,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		// server spawns itself
 		if (Network.IsServer)
 		{
-			// todo: load from player input
-			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.PlayerCharacterScene);
+			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.PlayerCharacterScene, Configuration.LocalPlayerModel);
 		}
 
 		Network.PeerJoined += OnPeerJoined;
@@ -80,9 +79,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	{
 		if (!Network.IsServer) return;
 
-		// todo: load from player input
-		var path = Paths.ForCharacterModel("CharacterA");
-		ServerAddPlayer((int)id, path);
+		ServerAddPlayer((int)id, Paths.PlayerCharacterScene, Configuration.LocalPlayerModel);
 	}
 
 	private void OnPeerLeft(long id)
@@ -107,12 +104,12 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		App.StartGame(newConfig);
 	}
 
-	public Node3D ServerAddPlayer(int peerId, string scenePath)
+	public Node3D ServerAddPlayer(int peerId, string scenePath, CharacterModelType? configurationLocalPlayerModel)
 	{
 		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
 		var xf = new Transform3D(Basis.Identity, GetPlayerSpawnPoint());
 		var state = CharacterStateType.Idle;
-		var model = CharacterModelType.CharacterA; // todo: load from player input
+		var model = configurationLocalPlayerModel ?? CharacterModelType.CharacterA;
 		var data = new Dictionary
 		{
 			{ "path", scenePath },

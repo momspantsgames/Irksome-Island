@@ -21,15 +21,29 @@
 using Godot;
 using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
 public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 {
+	private static readonly Dictionary<string, CharacterModelType> ModelNames = new()
+	{
+		["Kid Nickelback"] = CharacterModelType.CharacterA,
+		["Scrivener Rodney"] = CharacterModelType.CharacterB,
+		["Archivist Balky"] = CharacterModelType.CharacterC,
+		["Blood-Bargainer 5000"] = CharacterModelType.CharacterD,
+		["Clemptor"] = CharacterModelType.CharacterE,
+		["Diamond Tarjella"] = CharacterModelType.CharacterF,
+		["The CHUD"] = CharacterModelType.CharacterG,
+		["Big Hank Cramblin"] = CharacterModelType.CharacterH
+	};
+
 	private Button? _backButton;
 	private Button? _hostButton;
 	private LineEdit? _maxPlayers;
+	private OptionButton? _modelList;
 	private LineEdit? _password;
 	private LineEdit? _playerName;
 	private LineEdit? _port;
@@ -45,6 +59,9 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 		_playerName = GetNode<LineEdit>("Inputs/NameBox");
 		_maxPlayers = GetNode<LineEdit>("Inputs/PlayersBox");
 		_password = GetNode<LineEdit>("Inputs/PasswordBox");
+		_modelList = GetNode<OptionButton>("Inputs/ModelList");
+
+		BuildCharacterModelList();
 
 		_hostButton = GetNode<Button>("HostGame");
 		_hostButton.Pressed += OnHostPressed;
@@ -53,11 +70,29 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 		_backButton.Pressed += () => RequestBack?.Invoke();
 	}
 
+	private void BuildCharacterModelList()
+	{
+		_modelList?.Clear();
+		if (_modelList == null) return;
+
+		var i = 0;
+		foreach (var kv in ModelNames)
+		{
+			_modelList.AddItem(kv.Key);
+			_modelList.SetItemMetadata(i, (int)kv.Value);
+			i++;
+		}
+
+		_modelList.Select(0);
+	}
+
 	private void OnHostPressed()
 	{
 		var name = _playerName?.Text?.StripEdges() ?? "Host Player";
 		var max = int.TryParse(_maxPlayers?.Text, out var m) ? Mathf.Clamp(m, 1, 64) : 8;
 		var port = int.TryParse(_port?.Text, out var p) ? Mathf.Clamp(p, 1024, 65535) : 25565;
+		var model = GetSelectedModelOrDefault();
+
 		// var pwd = _password?.Text ?? ""; // not used yet
 
 		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
@@ -69,10 +104,26 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 		{
 			WorldName = NodeNames.WorldMain,
 			LocalPlayerName = name,
+			MaxPlayers = max,
+			LocalPlayerModel = model,
 			Port = port,
 			GameType = GameType.Network
 		};
 
 		app.StartGame(config);
+	}
+
+	private CharacterModelType GetSelectedModelOrDefault()
+	{
+		if (_modelList == null || _modelList.ItemCount == 0)
+			return CharacterModelType.CharacterA;
+
+		var meta = _modelList.GetItemMetadata(_modelList.Selected);
+		if (meta.VariantType != Variant.Type.Nil)
+			return (CharacterModelType)(int)meta;
+
+		// Fallback by text if metadata missing
+		var label = _modelList.GetItemText(_modelList.Selected);
+		return ModelNames.GetValueOrDefault(label, CharacterModelType.CharacterA);
 	}
 }

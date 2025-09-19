@@ -44,6 +44,18 @@ size_flags_horizontal = 8
 text = "Lester"
 alignment = 2
 
+[node name="ModelLabel" type="Label" parent="Inputs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Model"
+horizontal_alignment = 2
+
+[node name="ModelList" type="OptionButton" parent="Inputs"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
 [node name="PlayersLabel" type="Label" parent="Inputs"]
 layout_mode = 2
 size_flags_horizontal = 3

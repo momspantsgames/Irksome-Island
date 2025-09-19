@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=7 format=3 uid="uid://dna1ukw14tkb1"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://dna1ukw14tkb1"]
 
 [ext_resource type="FontFile" uid="uid://djvhmec88q1g" path="res://assets/fonts/Kenney Future.ttf" id="1_qqlyd"]
 [ext_resource type="StyleBox" uid="uid://cfcle0lwvx5nq" path="res://ui/menus/main/styles/TranspBG.tres" id="2_jc5n2"]
@@ -16,6 +16,34 @@ data = {
 
 [sub_resource type="ImageTexture" id="ImageTexture_3shyw"]
 image = SubResource("Image_ekdbl")
+
+[sub_resource type="DPITexture" id="DPITexture_i7o87"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\"><path fill=\"none\" stroke=\"#b2b2b2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-opacity=\".85\" stroke-width=\"2\" d=\"m2 4 4 4 4-4\"/></svg>
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7allg"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fkpnl"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [resource]
 Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -71,3 +99,26 @@ LineEdit/icons/clear = SubResource("ImageTexture_3shyw")
 LineEdit/styles/focus = ExtResource("3_jc5n2")
 LineEdit/styles/normal = ExtResource("3_jc5n2")
 LineEdit/styles/read_only = ExtResource("2_jc5n2")
+OptionButton/colors/font_color = Color(0, 0, 0, 1)
+OptionButton/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+OptionButton/colors/font_focus_color = Color(0, 0, 0, 1)
+OptionButton/colors/font_hover_color = Color(0.41981304, 0.41981304, 0.41981408, 1)
+OptionButton/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+OptionButton/colors/font_outline_color = Color(0, 0, 0, 1)
+OptionButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+OptionButton/constants/arrow_margin = 4
+OptionButton/constants/h_separation = 4
+OptionButton/constants/modulate_arrow = 0
+OptionButton/constants/outline_size = 0
+OptionButton/font_sizes/font_size = 30
+OptionButton/fonts/font = ExtResource("1_qqlyd")
+OptionButton/icons/arrow = SubResource("DPITexture_i7o87")
+OptionButton/styles/disabled = SubResource("StyleBoxFlat_7allg")
+OptionButton/styles/disabled_mirrored = SubResource("StyleBoxFlat_fkpnl")
+OptionButton/styles/focus = ExtResource("3_jc5n2")
+OptionButton/styles/hover = ExtResource("3_jc5n2")
+OptionButton/styles/hover_mirrored = ExtResource("3_jc5n2")
+OptionButton/styles/normal = ExtResource("3_jc5n2")
+OptionButton/styles/normal_mirrored = ExtResource("3_jc5n2")
+OptionButton/styles/pressed = ExtResource("3_jc5n2")
+OptionButton/styles/pressed_mirrored = ExtResource("3_jc5n2")
