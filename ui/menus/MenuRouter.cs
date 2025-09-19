@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
-using Logger = IrksomeIsland.Core.Application.Logger;
+using IrksomeIsland.Core.Application;
 
 namespace IrksomeIsland.Ui.Menus;
 
@@ -50,7 +50,7 @@ public abstract partial class MenuRouter<TScreen> : Control where TScreen : stru
 
 		if (!ScreenMap.TryGetValue(screen, out var scenePath))
 		{
-			Logger.Log($"No scene mapped for {screen}", Logger.LogLevel.Error);
+			IrkLogger.Log($"No scene mapped for {screen}", IrkLogger.LogLevel.Error);
 			return;
 		}
 

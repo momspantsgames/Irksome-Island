@@ -23,6 +23,8 @@ using Godot.Collections;
 using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
+using IrksomeIsland.Core.Entities.States;
 
 namespace IrksomeIsland.Core.Game;
 
@@ -55,8 +57,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		if (Network.IsServer)
 		{
 			// todo: load from player input
-			var path = Paths.ForCharacterModel("CharacterA");
-			ServerAddPlayer(Multiplayer.GetUniqueId(), path);
+			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.PlayerCharacterScene);
 		}
 
 		Network.PeerJoined += OnPeerJoined;
@@ -109,7 +110,18 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	public Node3D ServerAddPlayer(int peerId, string scenePath)
 	{
 		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
-		var data = new Dictionary { { "path", scenePath }, { "peer", peerId } };
+		var xf = new Transform3D(Basis.Identity, GetPlayerSpawnPoint());
+		var state = CharacterStateType.Idle;
+		var model = CharacterModelType.CharacterA; // todo: load from player input
+		var data = new Dictionary
+		{
+			{ "path", scenePath },
+			{ "peer", peerId },
+			{ "spawn", xf },
+			{ "state", (int)state },
+			{ "model", (int)model }
+		};
+
 		var n = _playerSpawner.Spawn(data) as Node3D
 		        ?? throw new InvalidOperationException("Spawn failed");
 
@@ -147,11 +159,18 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		var d = (Dictionary)dv;
 		var path = (string)d["path"];
 		var peer = (int)d["peer"];
+		var spawn = (Transform3D)d["spawn"];
+		var state = (CharacterStateType)(int)d["state"];
+		var model = (CharacterModelType)(int)d["model"];
 
 		var ps = ResourceLoader.Load<PackedScene>(path);
 		var node = ps.Instantiate<Node3D>();
 		node.Name = $"Player_{peer}";
 		node.SetMultiplayerAuthority(peer);
+		node.SetDeferred("global_transform", spawn);
+
+		if (node is NetworkedCharacter nc)
+			nc.Bootstrap(state, model);
 
 		Players[peer] = node;
 

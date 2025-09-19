@@ -125,4 +125,12 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		AddChild(n);
 		return n;
 	}
+
+	protected Vector3 GetPlayerSpawnPoint()
+	{
+		if (World == null) return Vector3.Zero;
+
+		var sp = World.GetNodeOrNull<Marker3D>("PlayerSpawnPoint");
+		return sp?.GlobalPosition ?? Vector3.Zero;
+	}
 }

@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using IrksomeIsland.Core.Application;
+
 namespace IrksomeIsland.Core.Entities.States;
 
 public abstract class CharacterState(NetworkedCharacter c)
@@ -27,19 +29,34 @@ public abstract class CharacterState(NetworkedCharacter c)
 	protected bool IsOwner => C.IsMultiplayerAuthority();
 	protected bool IsServer => C.Multiplayer.IsServer();
 
-	public virtual void Enter()
+	public void Enter()
+	{
+		IrkLogger.Log($"{Id}.Enter() for {C.Name}", IrkLogger.LogLevel.Trace);
+		OnEnter();
+	}
+
+	public void Exit()
+	{
+		IrkLogger.Log($"{Id}.Exit() for {C.Name}", IrkLogger.LogLevel.Trace);
+		OnExit();
+	}
+
+	public void HandleInput(double delta) => OnHandleInput(delta);
+	public void PhysicsUpdate(double delta) => OnPhysicsUpdate(delta);
+
+	protected virtual void OnEnter()
 	{
 	}
 
-	public virtual void Exit()
+	protected virtual void OnExit()
 	{
 	}
 
-	public virtual void HandleInput(double delta)
+	protected virtual void OnHandleInput(double delta)
 	{
 	}
 
-	public virtual void PhysicsUpdate(double delta)
+	protected virtual void OnPhysicsUpdate(double delta)
 	{
 	}
 }

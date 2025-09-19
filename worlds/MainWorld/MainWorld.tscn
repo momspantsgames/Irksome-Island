@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://bfqnr2nxxfyc3"]
 
-[ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/main/MainWorld.cs" id="1_sdvpa"]
-[ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/main/chunks/GrassField.tscn" id="2_x5p2k"]
+[ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld/MainWorld.cs" id="1_sdvpa"]
+[ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/MainWorld/chunks/GrassField.tscn" id="2_x5p2k"]
 [ext_resource type="PackedScene" uid="uid://ct0ofp7wgxtcp" path="res://prefabs/flora/TreeCone.tscn" id="3_206v3"]
-[ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/main/chunks/RiverEndCap.tscn" id="3_rv1w6"]
-[ext_resource type="PackedScene" uid="uid://bmkseep1wgddl" path="res://worlds/main/chunks/RiverMiddle.tscn" id="4_486uk"]
+[ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/MainWorld/chunks/RiverEndCap.tscn" id="3_rv1w6"]
+[ext_resource type="PackedScene" uid="uid://bmkseep1wgddl" path="res://worlds/MainWorld/chunks/RiverMiddle.tscn" id="4_486uk"]
 [ext_resource type="PackedScene" uid="uid://d5istukjan5s" path="res://prefabs/buildings/Tavern.tscn" id="6_csjyp"]
 [ext_resource type="PackedScene" uid="uid://bnguk6fmtyabs" path="res://prefabs/flora/TreeFat.tscn" id="7_206v3"]
-[ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/main/Environment.tres" id="8_ea240"]
+[ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/MainWorld/Environment.tres" id="8_ea240"]
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
@@ -111,3 +111,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_ea240")
+
+[node name="PlayerSpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 1.7979572, 0.46276888, -7.413038)

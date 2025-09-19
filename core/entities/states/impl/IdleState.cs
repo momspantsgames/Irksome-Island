@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities.States.Impl;
 
@@ -26,8 +27,32 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 {
 	public override CharacterStateType Id => CharacterStateType.Idle;
 
-	public override void Enter()
+	protected override void OnEnter()
 	{
 		C.Velocity = new Vector3(C.Velocity.X, C.Velocity.Y, C.Velocity.Z * 0.0f);
+	}
+
+	protected override void OnHandleInput(double delta)
+	{
+		if (!IsOwner) return;
+		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
+		var iz = Input.GetActionStrength(Actions.Movement.Backward) - Input.GetActionStrength(Actions.Movement.Forward);
+
+		if (ix * ix + iz * iz > 0.0001f)
+			C.RequestState(CharacterStateType.Walking);
+	}
+
+	protected override void OnPhysicsUpdate(double delta)
+	{
+		// bleed horizontal speed to zero; keep gravity
+		var v = C.Velocity;
+		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * 16f));
+		v.Z = Mathf.Lerp(v.Z, 0f, 1f - Mathf.Exp(-(float)delta * 16f));
+
+		var g = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
+		v.Y -= g * (float)delta;
+
+		C.Velocity = v;
+		C.MoveAndSlide();
 	}
 }

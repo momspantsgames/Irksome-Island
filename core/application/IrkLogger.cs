@@ -22,7 +22,7 @@ using Godot;
 
 namespace IrksomeIsland.Core.Application;
 
-public static class Logger
+public static class IrkLogger
 {
 	public enum LogLevel
 	{

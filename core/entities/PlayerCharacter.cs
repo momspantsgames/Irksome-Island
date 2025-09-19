@@ -34,13 +34,14 @@ public partial class PlayerCharacter : NetworkedCharacter
 	};
 
 	private static readonly Dictionary<CharacterModelType, PackedScene> Cache = new();
-	private Node _currentModel = null!;
+	private Node? _currentModel;
 
-	private Node3D _modelRoot = null!;
+	private Node3D? _modelRoot;
 
 	protected override void BuildStates()
 	{
 		States[CharacterStateType.Idle] = new IdleState(this);
+		States[CharacterStateType.Walking] = new WalkingState(this);
 	}
 
 	protected override void ApplyModel(CharacterModelType id)
@@ -57,7 +58,7 @@ public partial class PlayerCharacter : NetworkedCharacter
 		if (ps == null) return;
 
 		_currentModel = ps.Instantiate();
-		_modelRoot.AddChild(_currentModel);
+		_modelRoot?.AddChild(_currentModel);
 	}
 
 	public override void _Ready()

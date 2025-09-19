@@ -52,7 +52,7 @@ public partial class NetworkManager : Node
 		Multiplayer.ConnectionFailed += OnConnectionFailed;
 		Multiplayer.ServerDisconnected += OnServerDisconnected;
 
-		Logger.Log("NetworkManager initialized");
+		IrkLogger.Log("NetworkManager initialized");
 	}
 
 	public override void _ExitTree()
@@ -73,7 +73,7 @@ public partial class NetworkManager : Node
 		}
 
 		BindPeer(_peer, NetworkRole.Host, ConnectionState.Connected);
-		Logger.Log($"Server started on port {port} with max players {maxPlayers}");
+		IrkLogger.Log($"Server started on port {port} with max players {maxPlayers}");
 	}
 
 	public void StartDedicatedServer(int port, int maxPlayers)
@@ -89,7 +89,7 @@ public partial class NetworkManager : Node
 		}
 
 		BindPeer(_peer, NetworkRole.DedicatedServer, ConnectionState.Connected);
-		Logger.Log($"Dedicated server started on port {port} with max players {maxPlayers}");
+		IrkLogger.Log($"Dedicated server started on port {port} with max players {maxPlayers}");
 	}
 
 	public void ConnectToServer(string address, int port)
@@ -109,7 +109,7 @@ public partial class NetworkManager : Node
 		Multiplayer.MultiplayerPeer = _peer;
 		CurrentRole = NetworkRole.Client;
 
-		Logger.Log($"Attempting to connect to {address}:{port}");
+		IrkLogger.Log($"Attempting to connect to {address}:{port}");
 	}
 
 	public void Disconnect()
@@ -127,7 +127,7 @@ public partial class NetworkManager : Node
 			}
 		}
 
-		Logger.Log("Disconnected from network");
+		IrkLogger.Log("Disconnected from network");
 	}
 
 	public bool IsPlayerConnected(long playerId)
@@ -163,7 +163,7 @@ public partial class NetworkManager : Node
 		if (State == ConnectionState.Disconnected)
 			return true;
 
-		Logger.Log($"{reasonIfBusy}: already connected or connecting", Logger.LogLevel.Warning);
+		IrkLogger.Log($"{reasonIfBusy}: already connected or connecting", IrkLogger.LogLevel.Warning);
 		return false;
 	}
 
@@ -171,26 +171,26 @@ public partial class NetworkManager : Node
 	{
 		State = ConnectionState.Failed;
 		CurrentRole = NetworkRole.None;
-		Logger.Log(message, Logger.LogLevel.Error);
+		IrkLogger.Log(message, IrkLogger.LogLevel.Error);
 		ConnectFailed?.Invoke(message);
 	}
 
 	private void OnPeerConnected(long id)
 	{
-		Logger.Log($"Peer connected: {id}");
+		IrkLogger.Log($"Peer connected: {id}");
 		if (IsServer) PeerJoined?.Invoke(id);
 	}
 
 	private void OnPeerDisconnected(long id)
 	{
-		Logger.Log($"Peer disconnected: {id}");
+		IrkLogger.Log($"Peer disconnected: {id}");
 		if (IsServer) PeerLeft?.Invoke(id);
 	}
 
 	private void OnConnectedToServer()
 	{
 		State = ConnectionState.Connected;
-		Logger.Log("Successfully connected to server");
+		IrkLogger.Log("Successfully connected to server");
 		Connected?.Invoke();
 	}
 
@@ -201,7 +201,7 @@ public partial class NetworkManager : Node
 
 	private void OnServerDisconnected()
 	{
-		Logger.Log("Disconnected from server");
+		IrkLogger.Log("Disconnected from server");
 		State = ConnectionState.Disconnected;
 		CurrentRole = NetworkRole.None;
 		ServerWentAway?.Invoke();

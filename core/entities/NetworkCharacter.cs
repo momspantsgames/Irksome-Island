@@ -29,10 +29,18 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 {
 	protected readonly Dictionary<CharacterStateType, CharacterState> States = new();
 	private MultiplayerSynchronizer _sync = null!;
-	protected CharacterState CurrentState = null!;
+	protected CharacterState? CurrentState;
 
 	public CharacterStateType CurrentStateId { get; private set; } = CharacterStateType.Idle;
 	public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
+
+	[ExportCategory("Debug")]
+	[Export]
+	public CharacterStateType DebugCurrentState
+	{
+		get => CurrentStateId;
+		set => CurrentStateId = value;
+	}
 
 	protected abstract void BuildStates();
 	protected abstract void ApplyModel(CharacterModelType id);
@@ -49,6 +57,12 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 		_sync.ReplicationConfig = rc;
 	}
 
+	public void Bootstrap(CharacterStateType state, CharacterModelType model)
+	{
+		CurrentStateId = state;
+		ModelTypeId = model;
+	}
+
 	public override void _Ready()
 	{
 		BuildStates();
@@ -60,7 +74,7 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	{
 		if (!States.TryGetValue(next, out var newState)) return;
 
-		CurrentState.Exit();
+		CurrentState?.Exit();
 		CurrentState = newState;
 		CurrentState.Enter();
 	}
