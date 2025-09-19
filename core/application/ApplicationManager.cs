@@ -40,7 +40,7 @@ public partial class ApplicationManager : Node
 
 	public void StartGame(GameConfiguration config)
 	{
-		_activeGame?.StopGame();
+		StopGame();
 		_activeGame = CreateGame(config);
 		AddChild(_activeGame);
 		_activeGame.StartGame();

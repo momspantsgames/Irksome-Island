@@ -141,8 +141,10 @@ public partial class NetworkManager : Node
 		var peers = Multiplayer.GetPeers();
 		if (peers == null) return false;
 		foreach (var p in peers)
+		{
 			if (p == (int)playerId)
 				return true;
+		}
 
 		return false;
 	}
@@ -158,7 +160,7 @@ public partial class NetworkManager : Node
 
 	private bool EnsureDisconnected(string reasonIfBusy)
 	{
-		if (State == ConnectionState.Disconnected && Multiplayer.MultiplayerPeer == null)
+		if (State == ConnectionState.Disconnected)
 			return true;
 
 		Logger.Log($"{reasonIfBusy}: already connected or connecting", Logger.LogLevel.Warning);

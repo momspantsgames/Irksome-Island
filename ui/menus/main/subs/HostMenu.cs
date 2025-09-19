@@ -60,7 +60,7 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 		var port = int.TryParse(_port?.Text, out var p) ? Mathf.Clamp(p, 1024, 65535) : 25565;
 		// var pwd = _password?.Text ?? ""; // not used yet
 
-		var app = GetNode<ApplicationManager>(NodeNames.ApplicationManagerPath());
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
 		var net = app.GetNode<NetworkManager>(NodeNames.NetworkManager);
 
 		net.StartServer(port, max);
@@ -69,12 +69,10 @@ public partial class HostMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 		{
 			WorldName = NodeNames.WorldMain,
 			LocalPlayerName = name,
-			Port = port
+			Port = port,
+			GameType = GameType.Network
 		};
 
 		app.StartGame(config);
-
-		// optionally hide menu
-		GetTree().Root.RemoveChild(this); // or Visible = false
 	}
 }
