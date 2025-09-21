@@ -3,14 +3,13 @@
 [ext_resource type="Script" uid="uid://cpdwx7dxjcmvi" path="res://core/entities/PlayerCharacter.cs" id="1_hlmxi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hlmxi"]
-radius = 0.0593516
-height = 0.27969
+height = 2.6640625
 
 [node name="PlayerCharacter" type="CharacterBody3D"]
 script = ExtResource("1_hlmxi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.136602, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3332635, 0)
 shape = SubResource("CapsuleShape3D_hlmxi")
 
 [node name="ModelRoot" type="Node3D" parent="."]

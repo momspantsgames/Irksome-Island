@@ -19,93 +19,94 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Constants;
-using static IrksomeIsland.Core.Constants.Gameplay;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class OrbitFollowCameraController : CameraController
 {
-	private float _pitch;
+	private bool _rotating;
+
 	private Node3D? _target;
+	private float _yaw, _pitch;
+	[Export] public float MaxArm = 8.0f;
+	[Export] public float MinArm = 1.8f;
+	[Export] public Vector2 PitchLimitsRad = new(-1.2f, 1.2f);
+	[Export] public float PivotHeight = 2.0f;
+	[Export] public bool RequireRmb = true; // MMO-style
+	[Export] public float Sensitivity = 0.015f;
+	[Export] public float TurnSpeed = 1.6f;
+	[Export] public float ZoomStep = 0.7f;
 
-	private float _yaw;
-	public bool LookAtTarget { get; set; } = true;
-	public float Sensitivity { get; set; } = 0.015f; // mouse
-	public float TurnSpeed { get; set; } = 1.6f;     // keyboard rad/s
-	public bool RequireRmb { get; set; } = true;
-
-	public void SetTarget(Node3D t, CameraRig rig)
+	public void SetTarget(CameraRig rig, Node3D target)
 	{
-		_target = t;
-		rig.SetTarget(t);
+		_target = target;
+		rig.SetTarget(target);
 
-		// init yaw/pitch from current rig-to-target
-		var to = rig.GlobalTransform.Origin - t.GlobalTransform.Origin;
-		if (to.LengthSquared() > FloatMathEpsilon)
+		// Init yaw/pitch from current rig↔target
+		var to = rig.GlobalTransform.Origin - target.GlobalTransform.Origin;
+		if (to.LengthSquared() > 1e-6f)
 		{
 			_yaw = Mathf.Atan2(to.X, to.Z);
 			_pitch = Mathf.Asin(to.Normalized().Y);
 		}
 
-		rig.DesiredArmLength = Mathf.Clamp(Gameplay.Camera.ThirdPersonSpringArmLength,
-			Gameplay.Camera.MinimumThirdPersonZoom,
-			Gameplay.Camera.MaxThirdPersonZoom);
+		rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength <= 0 ? 5.5f : rig.DesiredArmLength, MinArm, MaxArm);
 	}
 
 	public override void HandleInput(CameraRig rig, InputEvent e)
 	{
-		if (e is InputEventMouseMotion mm && (!RequireRmb || Input.IsMouseButtonPressed(MouseButton.Right)))
+		if (e is InputEventMouseButton mb)
+		{
+			if (mb.ButtonIndex == MouseButton.Right)
+			{
+				_rotating = mb.Pressed;
+				Input.MouseMode = _rotating ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
+			}
+
+			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelUp)
+				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength - ZoomStep, MinArm, MaxArm);
+
+			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelDown)
+				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength + ZoomStep, MinArm, MaxArm);
+		}
+
+		if (e is InputEventMouseMotion mm && (!_rotating && RequireRmb ? false : true))
 		{
 			_yaw -= mm.Relative.X * Sensitivity;
 			_pitch -= mm.Relative.Y * Sensitivity;
-			_pitch = Mathf.Clamp(_pitch, Gameplay.Camera.ThirdPersonPitchLimitsRad.X,
-				Gameplay.Camera.ThirdPersonPitchLimitsRad.Y);
-		}
-		else if (e is InputEventMouseButton { Pressed: true } mb)
-		{
-			switch (mb.ButtonIndex)
-			{
-				case MouseButton.WheelUp:
-					rig.DesiredArmLength -= Gameplay.Camera.ThirdPersonZoomStep;
-					break;
-				case MouseButton.WheelDown:
-					rig.DesiredArmLength += Gameplay.Camera.ThirdPersonZoomStep;
-					break;
-			}
-
-			rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength, Gameplay.Camera.MinimumThirdPersonZoom,
-				Gameplay.Camera.MaxThirdPersonZoom);
+			_pitch = Mathf.Clamp(_pitch, PitchLimitsRad.X, PitchLimitsRad.Y);
+			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
 		}
 	}
 
-	public override void UpdateCamera(CameraRig rig, double delta)
+	public override void UpdateCamera(CameraRig rig, double dt)
 	{
-		if (_target == null) return;
+		if (_target == null || !_target.IsInsideTree()) return;
 
-		var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
-		            Input.GetActionStrength(Actions.Camera.RotateLeft)) * TurnSpeed * (float)delta;
-
-		var kPitch = (Input.GetActionStrength(Actions.Camera.PitchUp) -
-		              Input.GetActionStrength(Actions.Camera.PitchDown)) * TurnSpeed * (float)delta;
-
-		if (kYaw > FloatMathEpsilon)
-			_yaw += kYaw;
-
-		if (kPitch > FloatMathEpsilon)
+		if (_rotating)
 		{
-			_pitch = Mathf.Clamp(_pitch + kPitch, Gameplay.Camera.ThirdPersonPitchLimitsRad.X,
-				Gameplay.Camera.ThirdPersonPitchLimitsRad.Y);
+			var kYaw = (Input.GetActionStrength("cam_rotate_right") - Input.GetActionStrength("cam_rotate_left")) *
+			           TurnSpeed * (float)dt;
+
+			var kPit = (Input.GetActionStrength("cam_pitch_up") - Input.GetActionStrength("cam_pitch_down")) *
+			           TurnSpeed * (float)dt;
+
+			if (kYaw != 0) _yaw += kYaw;
+			if (kPit != 0) _pitch = Mathf.Clamp(_pitch + kPit, PitchLimitsRad.X, PitchLimitsRad.Y);
+			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
 		}
 
-		// orbit pivot
-		var t = _target.GlobalTransform.Origin + new Vector3(0, Gameplay.Camera.ThirdPersonPivotHeight, 0);
+		var t = _target.GlobalTransform.Origin + new Vector3(0, PivotHeight, 0);
 		var cp = Mathf.Cos(_pitch);
 		var dir = new Vector3(cp * Mathf.Sin(_yaw), Mathf.Sin(_pitch), cp * Mathf.Cos(_yaw));
 
-		// place rig at pivot; spring arm on the rig handles collision/retraction
+		// Put rig at orbit pivot; spring arm retracts camera on collisions
 		rig.DesiredPivot = t + dir * 0.001f;
+	}
 
-		if (LookAtTarget) rig.LookAt(t, Vector3.Up);
+	public override void OnDetach(CameraRig rig)
+	{
+		_rotating = false;
+		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
 }

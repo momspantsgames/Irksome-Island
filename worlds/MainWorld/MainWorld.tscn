@@ -1,12 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=4 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld/MainWorld.cs" id="1_sdvpa"]
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/MainWorld/chunks/GrassField.tscn" id="2_x5p2k"]
-[ext_resource type="PackedScene" uid="uid://ct0ofp7wgxtcp" path="res://prefabs/flora/TreeCone.tscn" id="3_206v3"]
-[ext_resource type="PackedScene" uid="uid://bd7wgx654cmf8" path="res://worlds/MainWorld/chunks/RiverEndCap.tscn" id="3_rv1w6"]
-[ext_resource type="PackedScene" uid="uid://bmkseep1wgddl" path="res://worlds/MainWorld/chunks/RiverMiddle.tscn" id="4_486uk"]
-[ext_resource type="PackedScene" uid="uid://d5istukjan5s" path="res://prefabs/buildings/Tavern.tscn" id="6_csjyp"]
-[ext_resource type="PackedScene" uid="uid://bnguk6fmtyabs" path="res://prefabs/flora/TreeFat.tscn" id="7_206v3"]
 [ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/MainWorld/Environment.tres" id="8_ea240"]
 
 [node name="MainWorld" type="Node3D"]
@@ -16,73 +11,7 @@ script = ExtResource("1_sdvpa")
 
 [node name="Fat" type="Node3D" parent="Trees"]
 
-[node name="TreeFat9" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 0.446279, -2)
-
-[node name="TreeFat2" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7, 0.446279, -3.3)
-
-[node name="TreeFat10" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.446279, 0.1)
-
-[node name="TreeFat3" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.446279, 2)
-
-[node name="TreeFat4" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.446279, 2)
-
-[node name="TreeFat5" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.446279, -1)
-
-[node name="TreeFat6" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.446279, -11)
-
-[node name="TreeFat7" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.446279, -10.2)
-
-[node name="TreeFat8" parent="Trees/Fat" instance=ExtResource("7_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.446279, -10.2)
-
 [node name="Cone" type="Node3D" parent="Trees"]
-
-[node name="TreeCone" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.443347, 0)
-
-[node name="TreeCone2" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.93043, 0.443347, -0.47348)
-
-[node name="TreeCone3" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.556451, 0.443347, 0.220634)
-
-[node name="TreeCone4" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.461896, 0.443347, 0.991504)
-
-[node name="TreeCone5" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.06544, 0.443347, 3.32366)
-
-[node name="TreeCone6" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.86647, 0.443347, 1.17038)
-
-[node name="TreeCone7" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.86647, 0.443347, -8.75467)
-
-[node name="TreeCone8" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.33022, 0.443347, -7.48765)
-
-[node name="TreeCone9" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.868337, 0.443347, -8.02299)
-
-[node name="TreeCone10" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.54496, 0.443347, -8.02299)
-
-[node name="TreeCone11" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5285, 0.443347, -8.70442)
-
-[node name="TreeCone12" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8477, 0.443347, -6.73138)
-
-[node name="TreeCone13" parent="Trees/Cone" instance=ExtResource("3_206v3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8477, 0.443347, -3.73138)
 
 [node name="StaticLights" type="Node3D" parent="."]
 
@@ -93,24 +22,16 @@ shadow_enabled = true
 
 [node name="Buildings" type="Node3D" parent="."]
 
-[node name="Tavern" parent="Buildings" instance=ExtResource("6_csjyp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.454339, -6)
-
 [node name="Chunks" type="Node3D" parent="."]
 
 [node name="GroundChunk1" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, -1, -9)
 
 [node name="GroundChunk3" parent="Chunks" instance=ExtResource("2_x5p2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
-
-[node name="GroundChunk2" parent="Chunks" instance=ExtResource("3_rv1w6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
-
-[node name="RiverMiddle" parent="Chunks" instance=ExtResource("4_486uk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -9)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_ea240")
 
 [node name="PlayerSpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(-0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, -0.70710677, 1.7979572, 0.46276888, -7.413038)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.2, -9)

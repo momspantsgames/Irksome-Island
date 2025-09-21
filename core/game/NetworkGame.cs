@@ -180,8 +180,8 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 			// defer this until the player is in the tree
 			node.TreeEntered += () =>
 			{
-				follow.SetTarget(node, CameraRig);
-				CameraRig.Camera.MakeCurrent();
+				follow.SetTarget(CameraRig, node);
+				CameraRig.Cam.MakeCurrent();
 			};
 		}
 

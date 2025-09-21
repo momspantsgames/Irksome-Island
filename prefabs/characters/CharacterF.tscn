@@ -5,4 +5,3 @@
 [node name="CharacterF" type="Node3D"]
 
 [node name="character-f" parent="." instance=ExtResource("1_roxne")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)

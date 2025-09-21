@@ -19,87 +19,76 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class CameraRig : Node3D
 {
-
-	private SpringArm3D _arm = null!;
 	private CameraController? _controller;
-	[Export] public bool EnableSmoothing { get; set; } = true;
-	[Export] public float FollowSpeed { get; set; } = 12f;
-	[Export(PropertyHint.Layers3DPhysics)] public uint CollisionMask { get; set; } = 1;
-	[Export] public float ArmLength { get; set; } = 1f;
+	public uint ArmCollisionMask = 1u << 0 | 1u << 1 | 1u << 2;
+	public float ArmLength = 5.5f;
+	public float DesiredArmLength;       // boom length
+	public Vector3 DesiredPivot;         // where the rig should sit
+	public bool EnableSmoothing = false; // start OFF to remove “animate back”
+	public float FollowSpeed = 12f;
 
-	public Node3D? Target { get; private set; }
-	public Vector3 DesiredPivot { get; set; }
-	public float DesiredArmLength { get; set; }
-	public Camera3D Camera { get; private set; } = null!;
+	public Node3D? Target;
+
+	public SpringArm3D Arm { get; private set; } = null!;
+	public Camera3D Cam { get; private set; } = null!;
 
 	public override void _Ready()
 	{
-		_arm = GetNodeOrNull<SpringArm3D>("SpringArm3D") ?? CreateArm();
-		Camera = _arm.GetNodeOrNull<Camera3D>("Camera3D") ?? CreateCamera();
+		Arm = GetNodeOrNull<SpringArm3D>("SpringArm3D") ?? CreateArm();
+		Cam = Arm.GetNodeOrNull<Camera3D>("Camera3D") ?? CreateCamera();
 
-		_arm.CollisionMask = CollisionMask;
-		_arm.SpringLength = ArmLength;
+		// SpringArm extends along local −Z. Flip it so −Z points away from target.
+		Arm.RotationDegrees = new Vector3(0, 180, 0);
+
+		Arm.SpringLength = ArmLength;
+		Arm.CollisionMask = ArmCollisionMask;
 		DesiredArmLength = ArmLength;
+		DesiredPivot = GlobalPosition; // seed to avoid snapping from origin
 	}
 
 	private SpringArm3D CreateArm()
 	{
-		var arm = new SpringArm3D { Name = "SpringArm3D", SpringLength = ArmLength, CollisionMask = CollisionMask };
+		var arm = new SpringArm3D { Name = "SpringArm3D" };
+		arm.Shape = new SphereShape3D { Radius = 0.3f }; // REQUIRED for collisions
 		AddChild(arm);
 		return arm;
 	}
 
 	private Camera3D CreateCamera()
 	{
-		var c = new Camera3D { Name = "Camera3D", Current = true };
-		_arm.AddChild(c);
+		var c = new Camera3D { Name = "Camera3D" };
+		Arm.AddChild(c);
 		return c;
 	}
 
-	public void SetTarget(Node3D? t)
+	public void SetTarget(Node3D t)
 	{
 		Target = t;
-		_arm.ClearExcludedObjects();
-
-		// ignore the target and the camera rigging
-		if (t != null)
-		{
-			foreach (var co in EnumerateColliders(t))
-				_arm.AddExcludedObject(co.GetRid());
-		}
-
-		foreach (var co in EnumerateColliders(this))
-			_arm.AddExcludedObject(co.GetRid());
+		Arm.ClearExcludedObjects();
+		// Exclude player and rig colliders so camera doesn’t retract on itself
+		foreach (var co in EnumerateColliders(t)) Arm.AddExcludedObject(co.GetRid());
+		foreach (var co in EnumerateColliders(this)) Arm.AddExcludedObject(co.GetRid());
 	}
 
 	private static IEnumerable<CollisionObject3D> EnumerateColliders(Node n)
 	{
 		if (n is CollisionObject3D co) yield return co;
 		foreach (var c in n.GetChildren())
-		{
-			foreach (var found in EnumerateColliders(c))
-			{
-				yield return found;
-			}
-		}
+		foreach (var x in EnumerateColliders(c))
+			yield return x;
 	}
 
-	public void SetController(CameraController? controller)
+	public void SetController(CameraController? c)
 	{
 		_controller?.OnDetach(this);
-		_controller = controller;
+		_controller = c;
 		_controller?.OnAttach(this);
-		if (_controller != null) // sync shared values
-		{
-			FollowSpeed = _controller.FollowSpeed;
-			DesiredArmLength = Gameplay.Camera.ThirdPersonSpringArmLength;
-		}
+		if (c != null) FollowSpeed = c.FollowSpeed;
 	}
 
 	public override void _UnhandledInput(InputEvent @event) => _controller?.HandleInput(this, @event);
@@ -108,13 +97,12 @@ public partial class CameraRig : Node3D
 	{
 		_controller?.UpdateCamera(this, delta);
 
-		// apply smoothing and arm settings
 		GlobalPosition = EnableSmoothing
 			? CameraController.Smooth(GlobalPosition, DesiredPivot, delta, FollowSpeed)
 			: DesiredPivot;
 
 		ArmLength = DesiredArmLength;
-		_arm.SpringLength = ArmLength;
-		_arm.CollisionMask = CollisionMask;
+		Arm.SpringLength = ArmLength;
+		Arm.CollisionMask = ArmCollisionMask;
 	}
 }
