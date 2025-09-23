@@ -36,7 +36,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	{
 		if (!IsOwner) return;
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
-		var iz = Input.GetActionStrength(Actions.Movement.Backward) - Input.GetActionStrength(Actions.Movement.Forward);
+		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 
 		if (ix * ix + iz * iz > 0.0001f)
 			C.RequestState(CharacterStateType.Walking);

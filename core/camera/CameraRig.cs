@@ -78,9 +78,12 @@ public partial class CameraRig : Node3D
 	private static IEnumerable<CollisionObject3D> EnumerateColliders(Node n)
 	{
 		if (n is CollisionObject3D co) yield return co;
-		foreach (var c in n.GetChildren())
-		foreach (var x in EnumerateColliders(c))
-			yield return x;
+		var cs = n.GetChildren();
+		foreach (var c in cs)
+		{
+			foreach (var x in EnumerateColliders(c))
+				yield return x;
+		}
 	}
 
 	public void SetController(CameraController? c)
@@ -93,8 +96,10 @@ public partial class CameraRig : Node3D
 
 	public override void _UnhandledInput(InputEvent @event) => _controller?.HandleInput(this, @event);
 
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
+		base._PhysicsProcess(delta);
+
 		_controller?.UpdateCamera(this, delta);
 
 		GlobalPosition = EnableSmoothing

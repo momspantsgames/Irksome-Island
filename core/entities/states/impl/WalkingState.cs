@@ -49,7 +49,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		if (cam == null) return;
 
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
-		var iz = Input.GetActionStrength(Actions.Movement.Backward) - Input.GetActionStrength(Actions.Movement.Forward);
+		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 		var wish = new Vector2(ix, iz);
 		var hasInput = wish.LengthSquared() > 0.0001f;
 

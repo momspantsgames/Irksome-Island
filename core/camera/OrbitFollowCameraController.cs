@@ -28,14 +28,14 @@ public partial class OrbitFollowCameraController : CameraController
 
 	private Node3D? _target;
 	private float _yaw, _pitch;
-	[Export] public float MaxArm = 8.0f;
-	[Export] public float MinArm = 1.8f;
-	[Export] public Vector2 PitchLimitsRad = new(-1.2f, 1.2f);
-	[Export] public float PivotHeight = 2.0f;
-	[Export] public bool RequireRmb = true; // MMO-style
-	[Export] public float Sensitivity = 0.015f;
-	[Export] public float TurnSpeed = 1.6f;
-	[Export] public float ZoomStep = 0.7f;
+	public float MaxArm = 8.0f;
+	public float MinArm = 1.8f;
+	public Vector2 PitchLimitsRad = new(-1.2f, 1.2f);
+	public float PivotHeight = 2.0f;
+	public bool RequireRmb = true; // MMO-style
+	public float Sensitivity = 0.015f;
+	public float TurnSpeed = 1.6f;
+	public float ZoomStep = 0.7f;
 
 	public void SetTarget(CameraRig rig, Node3D target)
 	{
@@ -70,7 +70,7 @@ public partial class OrbitFollowCameraController : CameraController
 				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength + ZoomStep, MinArm, MaxArm);
 		}
 
-		if (e is InputEventMouseMotion mm && (!_rotating && RequireRmb ? false : true))
+		if (e is InputEventMouseMotion mm && (_rotating || !RequireRmb))
 		{
 			_yaw -= mm.Relative.X * Sensitivity;
 			_pitch -= mm.Relative.Y * Sensitivity;
@@ -100,8 +100,8 @@ public partial class OrbitFollowCameraController : CameraController
 		var cp = Mathf.Cos(_pitch);
 		var dir = new Vector3(cp * Mathf.Sin(_yaw), Mathf.Sin(_pitch), cp * Mathf.Cos(_yaw));
 
-		// Put rig at orbit pivot; spring arm retracts camera on collisions
-		rig.DesiredPivot = t + dir * 0.001f;
+		rig.DesiredPivot = t;
+		rig.LookAt(t + dir, Vector3.Up);
 	}
 
 	public override void OnDetach(CameraRig rig)
