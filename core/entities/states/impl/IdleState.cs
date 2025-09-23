@@ -29,7 +29,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 
 	protected override void OnEnter()
 	{
-		C.Velocity = new Vector3(C.Velocity.X, C.Velocity.Y, C.Velocity.Z * 0.0f);
+		C.Velocity = new Vector3(0.0f, C.Velocity.Y, 0.0f);
 	}
 
 	protected override void OnHandleInput(double delta)
@@ -38,7 +38,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
 		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 
-		if (ix * ix + iz * iz > 0.0001f)
+		if (ix * ix + iz * iz > Gameplay.FloatMathEpsilon)
 			C.RequestState(CharacterStateType.Walking);
 	}
 
@@ -46,8 +46,8 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	{
 		// bleed horizontal speed to zero; keep gravity
 		var v = C.Velocity;
-		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * 16f));
-		v.Z = Mathf.Lerp(v.Z, 0f, 1f - Mathf.Exp(-(float)delta * 16f));
+		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));
+		v.Z = Mathf.Lerp(v.Z, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));
 
 		var g = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 		v.Y -= g * (float)delta;

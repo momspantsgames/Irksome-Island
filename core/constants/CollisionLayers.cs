@@ -20,6 +20,7 @@
 
 namespace IrksomeIsland.Core.Constants;
 
+[Flags]
 public enum CollisionLayers : uint
 {
 	None = 0,

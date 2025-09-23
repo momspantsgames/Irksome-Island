@@ -19,20 +19,24 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class CameraRig : Node3D
 {
-	private CameraController? _controller;
-	public uint ArmCollisionMask = 1u << 0 | 1u << 1 | 1u << 2;
-	public float ArmLength = 5.5f;
-	public float DesiredArmLength;       // boom length
-	public Vector3 DesiredPivot;         // where the rig should sit
-	public bool EnableSmoothing = false; // start OFF to remove “animate back”
-	public float FollowSpeed = 12f;
+	private const bool EnableSmoothing = false;
 
-	public Node3D? Target;
+	private static readonly uint ArmCollisionMask =
+		(CollisionLayers.World | CollisionLayers.Props | CollisionLayers.Dynamic).ToMask();
+
+	private float _armLength = Gameplay.Camera.MinZoom;
+	private CameraController? _controller;
+
+	private float _followSpeed = Gameplay.Camera.FollowSpeed;
+	private Node3D? _target;
+	public Vector3 DesiredPivot { get; set; }
+	public float DesiredArmLength { get; set; }
 
 	public SpringArm3D Arm { get; private set; } = null!;
 	public Camera3D Cam { get; private set; } = null!;
@@ -45,9 +49,9 @@ public partial class CameraRig : Node3D
 		// SpringArm extends along local −Z. Flip it so −Z points away from target.
 		Arm.RotationDegrees = new Vector3(0, 180, 0);
 
-		Arm.SpringLength = ArmLength;
+		Arm.SpringLength = _armLength;
 		Arm.CollisionMask = ArmCollisionMask;
-		DesiredArmLength = ArmLength;
+		DesiredArmLength = _armLength;
 		DesiredPivot = GlobalPosition; // seed to avoid snapping from origin
 	}
 
@@ -68,7 +72,7 @@ public partial class CameraRig : Node3D
 
 	public void SetTarget(Node3D t)
 	{
-		Target = t;
+		_target = t;
 		Arm.ClearExcludedObjects();
 		// Exclude player and rig colliders so camera doesn’t retract on itself
 		foreach (var co in EnumerateColliders(t)) Arm.AddExcludedObject(co.GetRid());
@@ -91,7 +95,7 @@ public partial class CameraRig : Node3D
 		_controller?.OnDetach(this);
 		_controller = c;
 		_controller?.OnAttach(this);
-		if (c != null) FollowSpeed = c.FollowSpeed;
+		if (c != null) _followSpeed = c.FollowSpeed;
 	}
 
 	public override void _UnhandledInput(InputEvent @event) => _controller?.HandleInput(this, @event);
@@ -103,11 +107,11 @@ public partial class CameraRig : Node3D
 		_controller?.UpdateCamera(this, delta);
 
 		GlobalPosition = EnableSmoothing
-			? CameraController.Smooth(GlobalPosition, DesiredPivot, delta, FollowSpeed)
+			? CameraController.Smooth(GlobalPosition, DesiredPivot, delta, _followSpeed)
 			: DesiredPivot;
 
-		ArmLength = DesiredArmLength;
-		Arm.SpringLength = ArmLength;
+		_armLength = DesiredArmLength;
+		Arm.SpringLength = _armLength;
 		Arm.CollisionMask = ArmCollisionMask;
 	}
 }

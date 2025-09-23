@@ -28,11 +28,22 @@ public static class Gameplay
 
 	public static class Camera
 	{
-		public static float MinimumThirdPersonZoom => .5f;
-		public static float MaxThirdPersonZoom => 5.0f;
-		public static float ThirdPersonZoomStep => 0.7f;
-		public static Vector2 ThirdPersonPitchLimitsRad => new(-1.2f, 1.2f);
-		public static float ThirdPersonPivotHeight => 0f;
-		public static float ThirdPersonSpringArmLength => 1.0f;
+		public static float FollowSpeed => 12f;
+		public static float TurnSpeed => 1.6f;
+		public static float MouseSensitivity => 0.4f;
+		public static float MaxZoom => 12.0f;
+		public static float MinZoom => 1.8f;
+		public static float ZoomStep => 0.7f;
+		public static Vector2 PitchLimitsRad => new(-1.2f, 1.2f);
+	}
+
+	public static class Character
+	{
+		public static float InertiaBleedFactor => 16.0f; // how fast a character slows down after moving
+		public static float WalkSpeed => 5.0f;
+		public static float RunSpeed => 8.5f;
+		public static float Acceleration => 18.0f;
+		public static float AirControlFactor => 0.35f;
+		public static float RotationSpeed => 12f;
 	}
 }

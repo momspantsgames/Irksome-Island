@@ -25,10 +25,6 @@ namespace IrksomeIsland.Core.Entities.States.Impl;
 
 public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 {
-	private const float WalkSpeed = 5.0f;
-	private const float RunSpeed = 8.5f;
-	private const float Accel = 18.0f;
-	private const float AirCtrl = 0.35f;
 	public override CharacterStateType Id => CharacterStateType.Walking;
 
 	protected override void OnEnter()
@@ -51,7 +47,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
 		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 		var wish = new Vector2(ix, iz);
-		var hasInput = wish.LengthSquared() > 0.0001f;
+		var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
 
 		// camera-relative planar basis
 		var fwd = -cam.GlobalTransform.Basis.Z;
@@ -67,7 +63,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 		// target speed (Shift to run)
 		var run = Input.IsActionPressed(Actions.MovementAction.Run);
-		var targetSpeed = run ? RunSpeed : WalkSpeed;
+		var targetSpeed = run ? Gameplay.Character.RunSpeed : Gameplay.Character.WalkSpeed;
 		var targetVel = dir * targetSpeed;
 
 		// current vel split
@@ -75,7 +71,10 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var horiz = new Vector3(v.X, 0f, v.Z);
 
 		// ground/air control
-		var a = C.IsOnFloor() ? Accel : Accel * AirCtrl;
+		var a = C.IsOnFloor()
+			? Gameplay.Character.Acceleration
+			: Gameplay.Character.Acceleration * Gameplay.Character.AirControlFactor;
+
 		horiz = horiz.Lerp(targetVel, (float)(1.0 - Math.Exp(-a * delta)));
 
 		// gravity
@@ -90,12 +89,12 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		{
 			var yaw = Mathf.Atan2(dir.X, dir.Z);
 			var rot = C.Rotation;
-			rot.Y = Mathf.LerpAngle(rot.Y, yaw, 1f - Mathf.Exp(-12f * (float)delta));
+			rot.Y = Mathf.LerpAngle(rot.Y, yaw, 1f - Mathf.Exp(-Gameplay.Character.RotationSpeed * (float)delta));
 			C.Rotation = rot;
 		}
 
 		// state transitions
-		if (!hasInput && horiz.LengthSquared() < 0.01f)
+		if (!hasInput && horiz.LengthSquared() < Gameplay.FloatMathEpsilon)
 			C.RequestState(CharacterStateType.Idle);
 	}
 }

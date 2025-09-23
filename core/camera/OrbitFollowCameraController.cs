@@ -19,30 +19,24 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Camera;
 
 public partial class OrbitFollowCameraController : CameraController
 {
+	private const float PivotHeight = 2.0f;
+	private const bool RequireRmb = true;
 	private bool _rotating;
-
 	private Node3D? _target;
 	private float _yaw, _pitch;
-	public float MaxArm = 8.0f;
-	public float MinArm = 1.8f;
-	public Vector2 PitchLimitsRad = new(-1.2f, 1.2f);
-	public float PivotHeight = 2.0f;
-	public bool RequireRmb = true; // MMO-style
-	public float Sensitivity = 0.015f;
-	public float TurnSpeed = 1.6f;
-	public float ZoomStep = 0.7f;
+	public bool InvertY { get; set; } = true;
 
 	public void SetTarget(CameraRig rig, Node3D target)
 	{
 		_target = target;
 		rig.SetTarget(target);
 
-		// Init yaw/pitch from current rig↔target
 		var to = rig.GlobalTransform.Origin - target.GlobalTransform.Origin;
 		if (to.LengthSquared() > 1e-6f)
 		{
@@ -50,7 +44,9 @@ public partial class OrbitFollowCameraController : CameraController
 			_pitch = Mathf.Asin(to.Normalized().Y);
 		}
 
-		rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength <= 0 ? 5.5f : rig.DesiredArmLength, MinArm, MaxArm);
+		var defaultZoom = Gameplay.Camera.MinZoom + (Gameplay.Camera.MaxZoom - Gameplay.Camera.MinZoom) / 2f;
+		rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength <= 0 ? defaultZoom : rig.DesiredArmLength,
+			Gameplay.Camera.MinZoom, Gameplay.Camera.MaxZoom);
 	}
 
 	public override void HandleInput(CameraRig rig, InputEvent e)
@@ -64,35 +60,48 @@ public partial class OrbitFollowCameraController : CameraController
 			}
 
 			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelUp)
-				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength - ZoomStep, MinArm, MaxArm);
+			{
+				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength - Gameplay.Camera.ZoomStep,
+					Gameplay.Camera.MinZoom,
+					Gameplay.Camera.MaxZoom);
+			}
 
 			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelDown)
-				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength + ZoomStep, MinArm, MaxArm);
+			{
+				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength + Gameplay.Camera.ZoomStep,
+					Gameplay.Camera.MinZoom,
+					Gameplay.Camera.MaxZoom);
+			}
 		}
 
 		if (e is InputEventMouseMotion mm && (_rotating || !RequireRmb))
 		{
-			_yaw -= mm.Relative.X * Sensitivity;
-			_pitch -= mm.Relative.Y * Sensitivity;
-			_pitch = Mathf.Clamp(_pitch, PitchLimitsRad.X, PitchLimitsRad.Y);
+			var reducer = .01f;
+			_yaw -= mm.Relative.X * Gameplay.Camera.MouseSensitivity * reducer;
+			_pitch += (InvertY ? 1f : -1f) * mm.Relative.Y * Gameplay.Camera.MouseSensitivity * reducer;
+			_pitch = Mathf.Clamp(_pitch, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
 			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
 		}
 	}
 
-	public override void UpdateCamera(CameraRig rig, double dt)
+	public override void UpdateCamera(CameraRig rig, double delta)
 	{
 		if (_target == null || !_target.IsInsideTree()) return;
 
 		if (_rotating)
 		{
-			var kYaw = (Input.GetActionStrength("cam_rotate_right") - Input.GetActionStrength("cam_rotate_left")) *
-			           TurnSpeed * (float)dt;
+			var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
+			            Input.GetActionStrength(Actions.Camera.RotateLeft)) *
+			           Gameplay.Camera.TurnSpeed * (float)delta;
 
-			var kPit = (Input.GetActionStrength("cam_pitch_up") - Input.GetActionStrength("cam_pitch_down")) *
-			           TurnSpeed * (float)dt;
+			var kPit = (Input.GetActionStrength(Actions.Camera.PitchUp) -
+			            Input.GetActionStrength(Actions.Camera.PitchDown)) *
+			           Gameplay.Camera.TurnSpeed * (float)delta;
 
 			if (kYaw != 0) _yaw += kYaw;
-			if (kPit != 0) _pitch = Mathf.Clamp(_pitch + kPit, PitchLimitsRad.X, PitchLimitsRad.Y);
+			if (kPit != 0)
+				_pitch = Mathf.Clamp(_pitch + kPit, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
+
 			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
 		}
 
