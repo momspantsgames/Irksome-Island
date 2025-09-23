@@ -19,15 +19,21 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
-public partial class JoinMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
+public partial class JoinMenu : CharacterChooserMenu, IMenuContent<MainMenu.MainMenuScreen>
 {
+	private LineEdit? _address;
 	private Button? _backButton;
 	private Button? _joinButton;
+	private OptionButton? _modelList;
 	private LineEdit? _password;
 	private LineEdit? _playerName;
+	private LineEdit? _port;
 
 	public Action<MainMenu.MainMenuScreen>? RequestScreen { get; set; }
 	public Action? RequestBack { get; set; }
@@ -36,8 +42,13 @@ public partial class JoinMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 	{
 		base._Ready();
 
+		_port = GetNode<LineEdit>("Inputs/PortBox");
 		_playerName = GetNode<LineEdit>("Inputs/NameBox");
 		_password = GetNode<LineEdit>("Inputs/PasswordBox");
+		_modelList = GetNode<OptionButton>("Inputs/ModelList");
+		_address = GetNode<LineEdit>("Inputs/AddressBox");
+
+		BuildCharacterModelList(_modelList);
 
 		_joinButton = GetNode<Button>("JoinGame");
 		_joinButton.Pressed += OnJoinPressed;
@@ -48,6 +59,27 @@ public partial class JoinMenu : Control, IMenuContent<MainMenu.MainMenuScreen>
 
 	private void OnJoinPressed()
 	{
-		RequestScreen?.Invoke(MainMenu.MainMenuScreen.Join);
+		var address = _address?.Text?.StripEdges() ?? "localhost";
+		var name = _playerName?.Text?.StripEdges() ?? "Nameless Jerk";
+		var port = int.TryParse(_port?.Text, out var p) ? Mathf.Clamp(p, 1024, 65535) : 25565;
+		var model = GetSelectedModelOrDefault(_modelList);
+
+		// var pwd = _password?.Text ?? ""; // not used yet
+
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		var net = app.GetNode<NetworkManager>(NodeNames.NetworkManager);
+
+		net.ConnectToServer(address, port);
+
+		var config = new GameConfiguration
+		{
+			WorldName = NodeNames.WorldMain,
+			LocalPlayerName = name,
+			LocalPlayerModel = model,
+			Port = port,
+			GameType = GameType.Network
+		};
+
+		app.StartGame(config);
 	}
 }

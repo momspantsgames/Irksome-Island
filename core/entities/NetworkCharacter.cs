@@ -31,8 +31,9 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	private MultiplayerSynchronizer _sync = null!;
 	protected CharacterState? CurrentState;
 
-	public CharacterStateType CurrentStateId { get; private set; } = CharacterStateType.Idle;
-	public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
+	[Export] public CharacterStateType CurrentStateId { get; private set; } = CharacterStateType.Idle;
+
+	[Export] public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
 
 	[ExportCategory("Debug")]
 	[Export]
@@ -47,14 +48,15 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	public override void _EnterTree()
 	{
-		_sync = new MultiplayerSynchronizer { Name = NodeNames.NetworkedCharacterSynchronizer };
-		_sync.RootPath = "..";
-		AddChild(_sync);
+		_sync = new MultiplayerSynchronizer { Name = NodeNames.NetworkedCharacterSynchronizer, RootPath = ".." };
 
 		var rc = new SceneReplicationConfig();
+		rc.AddProperty(new NodePath(":global_transform"));
 		rc.AddProperty(new NodePath(":CurrentStateId"));
 		rc.AddProperty(new NodePath(":ModelTypeId"));
 		_sync.ReplicationConfig = rc;
+
+		AddChild(_sync);
 	}
 
 	public void Bootstrap(CharacterStateType state, CharacterModelType model)
