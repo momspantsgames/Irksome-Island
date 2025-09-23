@@ -35,14 +35,6 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	[Export] public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
 
-	[ExportCategory("Debug")]
-	[Export]
-	public CharacterStateType DebugCurrentState
-	{
-		get => CurrentStateId;
-		set => CurrentStateId = value;
-	}
-
 	protected abstract void BuildStates();
 	protected abstract void ApplyModel(CharacterModelType id);
 
@@ -51,7 +43,9 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 		_sync = new MultiplayerSynchronizer { Name = NodeNames.NetworkedCharacterSynchronizer, RootPath = ".." };
 
 		var rc = new SceneReplicationConfig();
-		rc.AddProperty(new NodePath(":global_transform"));
+		rc.AddProperty(new NodePath(":global_position"));
+		rc.AddProperty(new NodePath(":rotation"));
+		rc.AddProperty(new NodePath(":velocity"));
 		rc.AddProperty(new NodePath(":CurrentStateId"));
 		rc.AddProperty(new NodePath(":ModelTypeId"));
 		_sync.ReplicationConfig = rc;

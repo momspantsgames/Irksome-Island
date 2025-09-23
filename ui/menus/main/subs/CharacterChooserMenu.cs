@@ -25,7 +25,7 @@ namespace IrksomeIsland.Ui.Menus.Main.Subs;
 
 public abstract partial class CharacterChooserMenu : Control
 {
-	protected static readonly Dictionary<string, CharacterModelType> ModelNames = new()
+	private static readonly Dictionary<string, CharacterModelType> ModelNames = new()
 	{
 		["Kid Nickelback"] = CharacterModelType.CharacterA,
 		["Scrivener Rodney"] = CharacterModelType.CharacterB,

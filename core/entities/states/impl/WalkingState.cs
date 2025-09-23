@@ -39,7 +39,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 	protected override void OnPhysicsUpdate(double delta)
 	{
-		if (!C.IsMultiplayerAuthority()) return;
+		if (!IsOwner) return;
 
 		var cam = C.GetViewport().GetCamera3D();
 		if (cam == null) return;
