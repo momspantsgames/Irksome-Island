@@ -44,6 +44,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 
 	protected override void OnPhysicsUpdate(double delta)
 	{
+		if (!IsOwner) return;
 		// bleed horizontal speed to zero; keep gravity
 		var v = C.Velocity;
 		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));

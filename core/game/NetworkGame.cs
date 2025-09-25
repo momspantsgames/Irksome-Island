@@ -75,6 +75,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		base.StopGame();
 	}
 
+	// called on the server when a peer joins
 	private void OnPeerJoined(long id)
 	{
 		if (!Network.IsServer) return;
@@ -107,6 +108,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	public Node3D ServerAddPlayer(int peerId, string scenePath, CharacterModelType? configurationLocalPlayerModel)
 	{
 		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
+
 		var xf = new Transform3D(Basis.Identity, GetPlayerSpawnPoint());
 		var state = CharacterStateType.Idle;
 		var model = configurationLocalPlayerModel ?? CharacterModelType.CharacterA;
@@ -119,7 +121,9 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 			{ "model", (int)model }
 		};
 
-		var n = _playerSpawner.Spawn(data) as Node3D
+		IrkLogger.Log($"Server attempting to spawn player {peerId} with data: {data}");
+
+		var n = _playerSpawner.Spawn(data) as PlayerCharacter
 		        ?? throw new InvalidOperationException("Spawn failed");
 
 		Players[peerId] = n;
@@ -162,9 +166,16 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		var ps = ResourceLoader.Load<PackedScene>(path);
 		var node = ps.Instantiate<Node3D>();
-		node.Name = $"Player_{peer}";
+		node.Name = $"{peer}";
+
 		node.SetMultiplayerAuthority(peer);
-		node.SetDeferred("global_transform", spawn);
+
+		if (peer == Multiplayer.GetUniqueId())
+		{
+			node.GlobalTransform = spawn;
+			if (node is CharacterBody3D body)
+				body.Velocity = Vector3.Zero;
+		}
 
 		if (node is NetworkedCharacter nc)
 			nc.Bootstrap(state, model);

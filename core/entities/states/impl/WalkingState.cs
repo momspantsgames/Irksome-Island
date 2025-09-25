@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities.States.Impl;
@@ -42,20 +43,18 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		if (!IsOwner) return;
 
 		var cam = C.GetViewport().GetCamera3D();
-		if (cam == null) return;
 
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
 		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 		var wish = new Vector2(ix, iz);
 		var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
 
-		// camera-relative planar basis
-		var fwd = -cam.GlobalTransform.Basis.Z;
-		fwd.Y = 0f;
-		fwd = fwd.Normalized();
-		var right = cam.GlobalTransform.Basis.X;
-		right.Y = 0f;
-		right = right.Normalized();
+		IrkLogger.Log($"Input: ix={ix}, iz={iz}, hasInput={hasInput}", IrkLogger.LogLevel.Trace);
+
+		// camera-relative planar basis (fallback to character basis if camera not ready)
+		var basisSource = cam != null ? cam.GlobalTransform.Basis : C.GlobalTransform.Basis;
+		var fwd = -basisSource.Z; fwd.Y = 0f; fwd = fwd.Normalized();
+		var right = basisSource.X; right.Y = 0f; right = right.Normalized();
 
 		// desired world move dir
 		var dir = right * wish.X + fwd * wish.Y;

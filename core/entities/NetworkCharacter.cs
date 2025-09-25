@@ -20,6 +20,7 @@
 
 
 using Godot;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities.States;
 
@@ -41,13 +42,11 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 	public override void _EnterTree()
 	{
 		_sync = new MultiplayerSynchronizer { Name = NodeNames.NetworkedCharacterSynchronizer, RootPath = ".." };
+		_sync.SetMultiplayerAuthority(GetMultiplayerAuthority());
 
 		var rc = new SceneReplicationConfig();
-		rc.AddProperty(new NodePath(":global_position"));
-		rc.AddProperty(new NodePath(":rotation"));
-		rc.AddProperty(new NodePath(":velocity"));
+		rc.AddProperty(new NodePath(":global_transform"));
 		rc.AddProperty(new NodePath(":CurrentStateId"));
-		rc.AddProperty(new NodePath(":ModelTypeId"));
 		_sync.ReplicationConfig = rc;
 
 		AddChild(_sync);
@@ -64,6 +63,9 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 		BuildStates();
 		ChangeState(CurrentStateId);
 		ApplyModel(ModelTypeId);
+
+		IrkLogger.Log($"NetworkedCharacter ready: State={CurrentStateId}, Model={ModelTypeId}",
+			IrkLogger.LogLevel.Trace);
 	}
 
 	protected void ChangeState(CharacterStateType next)
@@ -91,28 +93,45 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	public void RequestState(CharacterStateType desired)
 	{
-		if (Multiplayer.IsServer()) SetState(desired);
-		else RpcId(1, nameof(RpcRequestState), (byte)desired);
+		if (Multiplayer.IsServer())
+		{
+			SetState(desired);
+			return;
+		}
+
+		if (IsMultiplayerAuthority())
+		{
+			SetState(desired);
+		}
+
+		// Notify server (e.g., for validation/bookkeeping)
+		RpcId(1, nameof(RpcRequestState), (byte)desired);
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private void RpcRequestState(byte desired)
 	{
-		if (Multiplayer.IsServer()) SetState((CharacterStateType)desired);
+		if (!Multiplayer.IsServer()) return;
+		var sender = Multiplayer.GetRemoteSenderId();
+		if (sender != GetMultiplayerAuthority()) return;
+
+		// Only mutate on server if the server is the authority for this node
+		if (Multiplayer.GetUniqueId() == GetMultiplayerAuthority())
+		{
+			SetState((CharacterStateType)desired);
+		}
 	}
 
-	public void RequestModel(CharacterModelType id)
+	public override void _Process(double delta)
 	{
-		if (Multiplayer.IsServer()) SetModel(id);
-		else RpcId(1, nameof(RpcRequestModel), (short)id);
+		CurrentState?.HandleInput(delta);
+		base._Process(delta);
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void RpcRequestModel(short id)
+	public override void _PhysicsProcess(double delta)
 	{
-		if (Multiplayer.IsServer()) SetModel((CharacterModelType)id);
+		IrkLogger.Log($"Player {Name} velocity: {Velocity}", IrkLogger.LogLevel.Trace);
+		CurrentState?.PhysicsUpdate(delta);
+		base._PhysicsProcess(delta);
 	}
-
-	public override void _Process(double delta) => CurrentState?.HandleInput(delta);
-	public override void _PhysicsProcess(double delta) => CurrentState?.PhysicsUpdate(delta);
 }

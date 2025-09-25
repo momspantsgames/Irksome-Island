@@ -33,7 +33,7 @@ public static class IrkLogger
 		Error = 4
 	}
 
-	private static LogLevel _currentLevel = LogLevel.Debug;
+	private static LogLevel _currentLevel = LogLevel.Trace;
 
 	public static void Log(string message, LogLevel level = LogLevel.Info)
 	{
