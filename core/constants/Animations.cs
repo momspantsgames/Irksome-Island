@@ -26,4 +26,5 @@ public static class Animations
 	public static string Idle => "idle";
 	public static string Walk => "walk";
 	public static string Sprint => "sprint";
+	public static string Static => "static";
 }

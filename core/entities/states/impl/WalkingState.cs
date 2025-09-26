@@ -34,7 +34,10 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 	protected override void OnHandleInput(double delta)
 	{
-		// no-op; we read input in PhysicsUpdate for tight sync
+		if (!IsOwner) return;
+
+		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
+			C.RequestState(CharacterStateType.Jumping);
 	}
 
 	protected override void OnPhysicsUpdate(double delta)
@@ -62,7 +65,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		dir = dir.LengthSquared() > Gameplay.FloatMathEpsilon ? dir.Normalized() : Vector3.Zero;
 
 		// target speed (Shift to run)
-		var run = Input.IsActionPressed(Actions.MovementAction.Run);
+		var run = Input.IsActionPressed(Actions.MovementAction.Sprint);
 		var targetSpeed = run ? Gameplay.Character.RunSpeed : Gameplay.Character.WalkSpeed;
 		var targetVel = dir * targetSpeed;
 

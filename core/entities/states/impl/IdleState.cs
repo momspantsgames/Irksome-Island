@@ -30,12 +30,16 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	protected override void OnEnter()
 	{
 		C.Velocity = new Vector3(0.0f, C.Velocity.Y, 0.0f);
-		C.AnimTravel(Animations.Idle);
+		C.AnimTravel(Animations.Static);
 	}
 
 	protected override void OnHandleInput(double delta)
 	{
 		if (!IsOwner) return;
+
+		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
+			C.RequestState(CharacterStateType.Jumping);
+
 		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
 		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
 

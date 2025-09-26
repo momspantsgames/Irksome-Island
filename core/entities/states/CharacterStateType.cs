@@ -24,7 +24,7 @@ public enum CharacterStateType : byte
 {
 	Idle = 0,
 	Walking = 1,
-	Running = 2,
+	Sprinting = 2,
 	Jumping = 3,
 	Falling = 4,
 	Attacking = 5,

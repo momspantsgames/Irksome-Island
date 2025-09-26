@@ -28,7 +28,9 @@ public static class CharacterStateFactory
 		new Dictionary<CharacterStateType, Func<NetworkedCharacter, CharacterState>>
 		{
 			[CharacterStateType.Idle] = c => new IdleState(c),
-			[CharacterStateType.Walking] = c => new WalkingState(c)
+			[CharacterStateType.Walking] = c => new WalkingState(c),
+			[CharacterStateType.Jumping] = c => new JumpingState(c),
+			[CharacterStateType.Sprinting] = c => new WalkingState(c)
 			// add more as you implement them...
 		};
 }

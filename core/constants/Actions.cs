@@ -32,7 +32,7 @@ public static class Actions
 
 	public static class MovementAction
 	{
-		public static string Run => "run";
+		public static string Sprint => "sprint";
 		public static string Jump => "jump";
 	}
 

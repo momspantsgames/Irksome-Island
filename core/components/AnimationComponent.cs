@@ -42,6 +42,18 @@ public partial class AnimationComponent : Node
 		if (_tree == null) return;
 		_tree.Active = true;
 		_animPlayback = (AnimationNodeStateMachinePlayback)_tree.Get(Paths.Animation.PlaybackPath);
+
+		// todo: make this work
+		// set up the looping animations - Kenney assets dont import with this set in Godot (?)
+		// var animPlayer = GetNode<AnimationPlayer>(_tree?.player);
+		// LoopAnimation(animPlayer.GetAnimation(Animations.Idle));
+		// LoopAnimation(animPlayer.GetAnimation(Animations.Walk));
+		// LoopAnimation(animPlayer.GetAnimation(Animations.Sprint));
+	}
+
+	private static void LoopAnimation(Animation anim)
+	{
+		anim.LoopMode = Animation.LoopModeEnum.Linear;
 	}
 
 	public void Travel(string stateName) => _animPlayback?.Travel(stateName);

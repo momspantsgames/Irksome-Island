@@ -45,5 +45,6 @@ public static class Gameplay
 		public static float Acceleration => 18.0f;
 		public static float AirControlFactor => 0.35f;
 		public static float RotationSpeed => 12f;
+		public static float JumpSpeed => 6.5f;
 	}
 }
