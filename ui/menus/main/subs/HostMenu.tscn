@@ -28,6 +28,10 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+focus_neighbor_top = NodePath("../../Back")
+focus_neighbor_bottom = NodePath("../NameBox")
+focus_next = NodePath("../NameBox")
+focus_previous = NodePath("../../Back")
 text = "24565"
 alignment = 2
 
@@ -41,6 +45,10 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+focus_neighbor_top = NodePath("../PortBox")
+focus_neighbor_bottom = NodePath("../ModelList")
+focus_next = NodePath("../ModelList")
+focus_previous = NodePath("../PortBox")
 text = "Lester"
 alignment = 2
 
@@ -54,6 +62,10 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+focus_neighbor_top = NodePath("../NameBox")
+focus_neighbor_bottom = NodePath("../PlayersBox")
+focus_next = NodePath("../PlayersBox")
+focus_previous = NodePath("../NameBox")
 alignment = 2
 
 [node name="PlayersLabel" type="Label" parent="Inputs"]
@@ -65,6 +77,10 @@ horizontal_alignment = 2
 [node name="PlayersBox" type="LineEdit" parent="Inputs"]
 layout_mode = 2
 size_flags_horizontal = 8
+focus_neighbor_top = NodePath("../ModelList")
+focus_neighbor_bottom = NodePath("../PasswordBox")
+focus_next = NodePath("../PasswordBox")
+focus_previous = NodePath("../ModelList")
 text = "8"
 alignment = 2
 
@@ -78,6 +94,10 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+focus_neighbor_top = NodePath("../PlayersBox")
+focus_neighbor_bottom = NodePath("../../HostGame")
+focus_next = NodePath("../../HostGame")
+focus_previous = NodePath("../PlayersBox")
 alignment = 2
 secret = true
 secret_character = "*"
@@ -85,9 +105,17 @@ secret_character = "*"
 [node name="HostGame" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../Inputs/PasswordBox")
+focus_neighbor_bottom = NodePath("../Back")
+focus_next = NodePath("../Back")
+focus_previous = NodePath("../Inputs/PasswordBox")
 text = "Host Game"
 
 [node name="Back" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../HostGame")
+focus_neighbor_bottom = NodePath("../Inputs/PortBox")
+focus_next = NodePath("../Inputs/PortBox")
+focus_previous = NodePath("../HostGame")
 text = "Back"

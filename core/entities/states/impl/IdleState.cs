@@ -37,14 +37,18 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	{
 		if (!IsOwner) return;
 
+		var wish = Input.GetVector(
+			Actions.Movement.Left,
+			Actions.Movement.Right,
+			Actions.Movement.Backward,
+			Actions.Movement.Forward
+		);
+
+		if (wish.LengthSquared() > Gameplay.FloatMathEpsilon)
+			C.RequestState(CharacterStateType.Walking);
+
 		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
 			C.RequestState(CharacterStateType.Jumping);
-
-		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
-		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
-
-		if (ix * ix + iz * iz > Gameplay.FloatMathEpsilon)
-			C.RequestState(CharacterStateType.Walking);
 	}
 
 	protected override void OnPhysicsUpdate(double delta)

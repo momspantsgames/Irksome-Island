@@ -51,27 +51,10 @@ public partial class OrbitFollowCameraController : CameraController
 
 	public override void HandleInput(CameraRig rig, InputEvent e)
 	{
-		if (e is InputEventMouseButton mb)
+		if (e is InputEventMouseButton { ButtonIndex: MouseButton.Right } mb)
 		{
-			if (mb.ButtonIndex == MouseButton.Right)
-			{
-				_rotating = mb.Pressed;
-				Input.MouseMode = _rotating ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
-			}
-
-			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelUp)
-			{
-				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength - Gameplay.Camera.ZoomStep,
-					Gameplay.Camera.MinZoom,
-					Gameplay.Camera.MaxZoom);
-			}
-
-			if (mb.Pressed && mb.ButtonIndex == MouseButton.WheelDown)
-			{
-				rig.DesiredArmLength = Mathf.Clamp(rig.DesiredArmLength + Gameplay.Camera.ZoomStep,
-					Gameplay.Camera.MinZoom,
-					Gameplay.Camera.MaxZoom);
-			}
+			_rotating = mb.Pressed;
+			Input.MouseMode = _rotating ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
 		}
 
 		if (e is InputEventMouseMotion mm && (_rotating || !RequireRmb))
@@ -88,6 +71,7 @@ public partial class OrbitFollowCameraController : CameraController
 	{
 		if (_target == null || !_target.IsInsideTree()) return;
 
+		// keyboard & mouse
 		if (_rotating)
 		{
 			var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
@@ -103,6 +87,32 @@ public partial class OrbitFollowCameraController : CameraController
 				_pitch = Mathf.Clamp(_pitch + kPit, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
 
 			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
+		}
+
+		// joystick
+		var stick = Input.GetVector(Actions.Camera.RotateLeft, Actions.Camera.RotateRight, Actions.Camera.PitchDown,
+			Actions.Camera.PitchUp);
+
+		if (stick.LengthSquared() > Gameplay.FloatMathEpsilon)
+		{
+			_yaw -= stick.X * Gameplay.Camera.ThumbstickSensitivity * (float)delta;
+			_pitch += (InvertY ? -1f : 1f) * stick.Y * Gameplay.Camera.ThumbstickSensitivity * (float)delta;
+			_pitch = Mathf.Clamp(_pitch, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
+			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
+		}
+
+		var zoomAxis =
+			Input.GetActionStrength(Actions.Camera.ZoomIn) -
+			Input.GetActionStrength(Actions.Camera.ZoomOut);
+
+		if (Mathf.Abs(zoomAxis) > Gameplay.FloatMathEpsilon)
+		{
+			// analog-friendly continuous zoom
+			rig.DesiredArmLength = Mathf.Clamp(
+				rig.DesiredArmLength - zoomAxis * Gameplay.Camera.ZoomStep * (float)delta,
+				Gameplay.Camera.MinZoom,
+				Gameplay.Camera.MaxZoom
+			);
 		}
 
 		var t = _target.GlobalTransform.Origin + new Vector3(0, PivotHeight, 0);

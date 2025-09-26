@@ -10,19 +10,35 @@ script = ExtResource("1_6j5jd")
 [node name="Host" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../Quit")
+focus_neighbor_bottom = NodePath("../Join")
+focus_next = NodePath("../Join")
+focus_previous = NodePath("../Quit")
 text = "Host Game"
 
 [node name="Join" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../Host")
+focus_neighbor_bottom = NodePath("../Options")
+focus_next = NodePath("../Options")
+focus_previous = NodePath("../Host")
 text = "Join Game"
 
 [node name="Options" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../Join")
+focus_neighbor_bottom = NodePath("../Quit")
+focus_next = NodePath("../Quit")
+focus_previous = NodePath("../Join")
 text = "Options"
 
 [node name="Quit" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
+focus_neighbor_top = NodePath("../Options")
+focus_neighbor_bottom = NodePath("../Host")
+focus_next = NodePath("../Host")
+focus_previous = NodePath("../Options")
 text = "Quit"

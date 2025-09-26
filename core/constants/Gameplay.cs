@@ -31,9 +31,10 @@ public static class Gameplay
 		public static float FollowSpeed => 12f;
 		public static float TurnSpeed => 1.6f;
 		public static float MouseSensitivity => 0.4f;
+		public static float ThumbstickSensitivity => 4f;
 		public static float MaxZoom => 12.0f;
 		public static float MinZoom => 1.8f;
-		public static float ZoomStep => 0.7f;
+		public static float ZoomStep => 3f;
 		public static Vector2 PitchLimitsRad => new(-1.2f, 1.2f);
 	}
 

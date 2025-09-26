@@ -46,9 +46,13 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 		var cam = C.GetViewport().GetCamera3D();
 
-		var ix = Input.GetActionStrength(Actions.Movement.Right) - Input.GetActionStrength(Actions.Movement.Left);
-		var iz = Input.GetActionStrength(Actions.Movement.Forward) - Input.GetActionStrength(Actions.Movement.Backward);
-		var wish = new Vector2(ix, iz);
+		var wish = Input.GetVector(
+			Actions.Movement.Left,
+			Actions.Movement.Right,
+			Actions.Movement.Backward,
+			Actions.Movement.Forward
+		);
+
 		var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
 
 		// camera-relative planar basis (fallback to character basis if camera not ready)
