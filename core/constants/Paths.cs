@@ -18,18 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using IrksomeIsland.Core.Entities;
+
 namespace IrksomeIsland.Core.Constants;
 
 public static class Paths
 {
 	private const string ResourcesPrefix = "res://";
 	private const string SceneSuffix = ".tscn";
+	private const string ResourceSuffix = ".tres";
 	private const string Prefabs = "prefabs";
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
 	private const string MainMenu = "ui/menus/main/subs";
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
-	public const string PlayerCharacterScene = ResourcesPrefix + "core/entities/PlayerCharacter" + SceneSuffix;
+	public const string NetworkedCharacterScene = ResourcesPrefix + "core/entities/NetworkedCharacter" + SceneSuffix;
+
+	public static readonly IReadOnlyDictionary<CharacterModelType, string> CharacterModels =
+		new Dictionary<CharacterModelType, string>
+		{
+			[CharacterModelType.CharacterA] = ForCharacterModel("CharacterA"),
+			[CharacterModelType.CharacterB] = ForCharacterModel("CharacterB"),
+			[CharacterModelType.CharacterC] = ForCharacterModel("CharacterC"),
+			[CharacterModelType.CharacterD] = ForCharacterModel("CharacterD"),
+			[CharacterModelType.CharacterE] = ForCharacterModel("CharacterE"),
+			[CharacterModelType.CharacterF] = ForCharacterModel("CharacterF"),
+			[CharacterModelType.CharacterG] = ForCharacterModel("CharacterG"),
+			[CharacterModelType.CharacterH] = ForCharacterModel("CharacterH")
+		};
 
 	public static string ForCharacterModel(string fileName) =>
 		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
@@ -38,4 +54,12 @@ public static class Paths
 		$"{ResourcesPrefix}{Worlds}/{worldName}/{worldName}{SceneSuffix}";
 
 	public static string ForMainMenu(string fileName) => $"{ResourcesPrefix}{MainMenu}/{fileName}{SceneSuffix}";
+
+	public static class Animation
+	{
+		public const string DefaultCharacterAnimStateMachine =
+			ResourcesPrefix + "assets/animations/CharacterAnimationStateMachine" + ResourceSuffix;
+
+		public const string PlaybackPath = "parameters/playback";
+	}
 }

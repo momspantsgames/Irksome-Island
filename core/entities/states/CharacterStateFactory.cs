@@ -18,23 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities.States.Impl;
 
-public static class NodeNames
+namespace IrksomeIsland.Core.Entities.States;
+
+public static class CharacterStateFactory
 {
-	private const string AppRoot = "AppRoot";
-	public const string NetworkManager = "NetworkManager";
-	public const string ApplicationManager = "ApplicationManager";
-	public const string AnimationComponent = "AnimationComponent";
-	public const string AnimationTree = "AnimationTree";
-	public const string ModelRoot = "ModelRoot";
-	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
-	public const string PlayersRoot = "Players";
-	public const string PropsRoot = "Props";
-	public const string PlayerSpawner = "PlayerSpawner";
-	public const string PropSpawner = "PropSpawner";
-	public const string CameraRig = "CameraRig";
-	public const string WorldMain = "MainWorld";
-
-	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
+	public static readonly IReadOnlyDictionary<CharacterStateType, Func<NetworkedCharacter, CharacterState>> All =
+		new Dictionary<CharacterStateType, Func<NetworkedCharacter, CharacterState>>
+		{
+			[CharacterStateType.Idle] = c => new IdleState(c),
+			[CharacterStateType.Walking] = c => new WalkingState(c)
+			// add more as you implement them...
+		};
 }

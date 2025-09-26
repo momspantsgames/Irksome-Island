@@ -20,21 +20,10 @@
 
 namespace IrksomeIsland.Core.Constants;
 
-public static class NodeNames
+public static class Animations
 {
-	private const string AppRoot = "AppRoot";
-	public const string NetworkManager = "NetworkManager";
-	public const string ApplicationManager = "ApplicationManager";
-	public const string AnimationComponent = "AnimationComponent";
-	public const string AnimationTree = "AnimationTree";
-	public const string ModelRoot = "ModelRoot";
-	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
-	public const string PlayersRoot = "Players";
-	public const string PropsRoot = "Props";
-	public const string PlayerSpawner = "PlayerSpawner";
-	public const string PropSpawner = "PropSpawner";
-	public const string CameraRig = "CameraRig";
-	public const string WorldMain = "MainWorld";
 
-	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
+	public static string Idle => "idle";
+	public static string Walk => "walk";
+	public static string Sprint => "sprint";
 }

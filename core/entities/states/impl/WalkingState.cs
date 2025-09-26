@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 using Godot;
-using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities.States.Impl;
@@ -30,7 +29,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 	protected override void OnEnter()
 	{
-		// keep vertical velocity; horizontal continues smoothly
+		C.AnimTravel(Animations.Walk);
 	}
 
 	protected override void OnHandleInput(double delta)
@@ -49,12 +48,14 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var wish = new Vector2(ix, iz);
 		var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
 
-		IrkLogger.Log($"Input: ix={ix}, iz={iz}, hasInput={hasInput}", IrkLogger.LogLevel.Trace);
-
 		// camera-relative planar basis (fallback to character basis if camera not ready)
 		var basisSource = cam != null ? cam.GlobalTransform.Basis : C.GlobalTransform.Basis;
-		var fwd = -basisSource.Z; fwd.Y = 0f; fwd = fwd.Normalized();
-		var right = basisSource.X; right.Y = 0f; right = right.Normalized();
+		var fwd = -basisSource.Z;
+		fwd.Y = 0f;
+		fwd = fwd.Normalized();
+		var right = basisSource.X;
+		right.Y = 0f;
+		right = right.Normalized();
 
 		// desired world move dir
 		var dir = right * wish.X + fwd * wish.Y;

@@ -20,24 +20,44 @@
 
 
 using Godot;
-using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities.States;
 
 namespace IrksomeIsland.Core.Entities;
 
-public abstract partial class NetworkedCharacter : CharacterBody3D
+public partial class NetworkedCharacter : CharacterBody3D
 {
-	protected readonly Dictionary<CharacterStateType, CharacterState> States = new();
+	private static readonly Dictionary<CharacterModelType, PackedScene> ModelCache = new();
+	private readonly Dictionary<CharacterStateType, CharacterState> _states = new();
+	private AnimationComponent? _animation;
+	private Node? _currentModel;
+	private CharacterState? _currentState;
+	private CharacterStateType _currentStateId = CharacterStateType.Idle;
+	private Node3D? _modelRoot;
 	private MultiplayerSynchronizer _sync = null!;
-	protected CharacterState? CurrentState;
 
-	[Export] public CharacterStateType CurrentStateId { get; private set; } = CharacterStateType.Idle;
+	[Export]
+	public CharacterStateType CurrentStateId
+	{
+		get => _currentStateId;
+		private set
+		{
+			if (_currentStateId == value) return;
+			_currentStateId = value;
+			ChangeState(value); // so that everyone gets that new state and knows when to run onEnter()
+		}
+	}
 
 	[Export] public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
 
-	protected abstract void BuildStates();
-	protected abstract void ApplyModel(CharacterModelType id);
+	private void BuildStates()
+	{
+		foreach (var kvp in CharacterStateFactory.All)
+			_states[kvp.Key] = kvp.Value(this);
+	}
+
+	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
 
 	public override void _EnterTree()
 	{
@@ -60,35 +80,58 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	public override void _Ready()
 	{
+		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
+		_animation = new AnimationComponent { Name = NodeNames.AnimationComponent };
+		AddChild(_animation);
+
 		BuildStates();
 		ChangeState(CurrentStateId);
 		ApplyModel(ModelTypeId);
-
-		IrkLogger.Log($"NetworkedCharacter ready: State={CurrentStateId}, Model={ModelTypeId}",
-			IrkLogger.LogLevel.Trace);
 	}
 
-	protected void ChangeState(CharacterStateType next)
+	public void AnimTravel(string s) => _animation?.Travel(s);
+
+	private void ChangeState(CharacterStateType next)
 	{
-		if (!States.TryGetValue(next, out var newState)) return;
+		if (!_states.TryGetValue(next, out var newState)) return;
 
-		CurrentState?.Exit();
-		CurrentState = newState;
-		CurrentState.Enter();
+		_currentState?.Exit();
+		_currentState = newState;
+		_currentState.Enter();
 	}
 
-	protected void SetState(CharacterStateType s)
+	private void SetState(CharacterStateType s)
 	{
 		if (CurrentStateId == s) return;
 		CurrentStateId = s;
 		ChangeState(s);
 	}
 
-	protected void SetModel(CharacterModelType id)
+	private void SetModel(CharacterModelType id)
 	{
 		if (ModelTypeId == id) return;
 		ModelTypeId = id;
 		ApplyModel(id);
+	}
+
+	private void ApplyModel(CharacterModelType id)
+	{
+		var path = GetModelPath(id);
+		if (string.IsNullOrEmpty(path)) return;
+
+		_currentModel?.QueueFree();
+
+		if (!ModelCache.TryGetValue(id, out var ps))
+		{
+			ps = ResourceLoader.Load<PackedScene>(path);
+			if (ps != null) ModelCache[id] = ps;
+		}
+
+		if (ps == null) return;
+
+		_currentModel = ps.Instantiate();
+		_modelRoot?.AddChild(_currentModel);
+		_animation?.BindTo(_currentModel);
 	}
 
 	public void RequestState(CharacterStateType desired)
@@ -124,14 +167,13 @@ public abstract partial class NetworkedCharacter : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
-		CurrentState?.HandleInput(delta);
+		_currentState?.HandleInput(delta);
 		base._Process(delta);
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		IrkLogger.Log($"Player {Name} velocity: {Velocity}", IrkLogger.LogLevel.Trace);
-		CurrentState?.PhysicsUpdate(delta);
+		_currentState?.PhysicsUpdate(delta);
 		base._PhysicsProcess(delta);
 	}
 }

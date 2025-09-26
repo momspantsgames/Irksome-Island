@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://bpr26qme8tk3e"]
 
-[ext_resource type="Script" uid="uid://cpdwx7dxjcmvi" path="res://core/entities/PlayerCharacter.cs" id="1_hlmxi"]
+[ext_resource type="Script" uid="uid://bftll63y8bil2" path="res://core/entities/NetworkedCharacter.cs" id="1_yvpgr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hlmxi"]
 height = 2.6640625
 
-[node name="PlayerCharacter" type="CharacterBody3D"]
-script = ExtResource("1_hlmxi")
+[node name="NetworkedCharacter" type="CharacterBody3D"]
+script = ExtResource("1_yvpgr")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3332635, 0)

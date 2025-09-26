@@ -30,6 +30,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 	protected override void OnEnter()
 	{
 		C.Velocity = new Vector3(0.0f, C.Velocity.Y, 0.0f);
+		C.AnimTravel(Animations.Idle);
 	}
 
 	protected override void OnHandleInput(double delta)

@@ -56,7 +56,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		// server spawns itself
 		if (Network.IsServer)
 		{
-			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.PlayerCharacterScene, Configuration.LocalPlayerModel);
+			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.NetworkedCharacterScene, Configuration.LocalPlayerModel);
 		}
 
 		Network.PeerJoined += OnPeerJoined;
@@ -80,7 +80,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	{
 		if (!Network.IsServer) return;
 
-		ServerAddPlayer((int)id, Paths.PlayerCharacterScene, Configuration.LocalPlayerModel);
+		ServerAddPlayer((int)id, Paths.NetworkedCharacterScene, Configuration.LocalPlayerModel);
 	}
 
 	private void OnPeerLeft(long id)
@@ -123,7 +123,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		IrkLogger.Log($"Server attempting to spawn player {peerId} with data: {data}");
 
-		var n = _playerSpawner.Spawn(data) as PlayerCharacter
+		var n = _playerSpawner.Spawn(data) as NetworkedCharacter
 		        ?? throw new InvalidOperationException("Spawn failed");
 
 		Players[peerId] = n;

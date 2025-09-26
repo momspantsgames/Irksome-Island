@@ -18,23 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Constants;
+using Godot;
+using IrksomeIsland.Core.Constants;
 
-public static class NodeNames
+namespace IrksomeIsland.Core.Components;
+
+public partial class AnimationComponent : Node
 {
-	private const string AppRoot = "AppRoot";
-	public const string NetworkManager = "NetworkManager";
-	public const string ApplicationManager = "ApplicationManager";
-	public const string AnimationComponent = "AnimationComponent";
-	public const string AnimationTree = "AnimationTree";
-	public const string ModelRoot = "ModelRoot";
-	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
-	public const string PlayersRoot = "Players";
-	public const string PropsRoot = "Props";
-	public const string PlayerSpawner = "PlayerSpawner";
-	public const string PropSpawner = "PropSpawner";
-	public const string CameraRig = "CameraRig";
-	public const string WorldMain = "MainWorld";
+	private AnimationNodeStateMachinePlayback? _animPlayback;
+	private Node3D _modelRoot = null!;
+	private NodePath _modelRootPath = "..";
+	private AnimationTree? _tree;
 
-	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
+	public override void _Ready()
+	{
+		_modelRoot = GetNode<Node3D>(_modelRootPath);
+	}
+
+	// Call after you instance/swap a model
+	public void BindTo(Node modelInstance)
+	{
+		_tree = modelInstance.GetNodeOrNull<AnimationTree>(NodeNames.AnimationTree);
+		if (_tree == null) return;
+		_tree.Active = true;
+		_animPlayback = (AnimationNodeStateMachinePlayback)_tree.Get(Paths.Animation.PlaybackPath);
+	}
+
+	public void Travel(string stateName) => _animPlayback?.Travel(stateName);
 }
