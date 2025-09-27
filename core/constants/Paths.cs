@@ -33,6 +33,7 @@ public static class Paths
 	private const string MainMenu = "ui/menus/main/subs";
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
 	public const string NetworkedCharacterScene = ResourcesPrefix + "core/entities/NetworkedCharacter" + SceneSuffix;
+	public const string ChatPanelScene = ResourcesPrefix + "ui/chat/ChatPanel" + SceneSuffix;
 
 	public static readonly IReadOnlyDictionary<CharacterModelType, string> CharacterModels =
 		new Dictionary<CharacterModelType, string>

@@ -24,6 +24,7 @@ public static class NodeNames
 {
 	private const string AppRoot = "AppRoot";
 	public const string NetworkManager = "NetworkManager";
+	public const string ChatManager = "ChatManager";
 	public const string ApplicationManager = "ApplicationManager";
 	public const string AnimationComponent = "AnimationComponent";
 	public const string AnimationTree = "AnimationTree";

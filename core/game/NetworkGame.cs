@@ -25,14 +25,17 @@ using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Entities.States;
+using IrksomeIsland.Ui.Chat;
 
 namespace IrksomeIsland.Core.Game;
 
 public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 {
+	private ChatManager? _chat;
+	private ChatPanel? _chatPanel;
 	private MultiplayerSpawner _playerSpawner = null!;
 	private MultiplayerSpawner _propSpawner = null!;
-	protected NetworkManager Network => App.NetworkManager;
+	private NetworkManager Network => App.NetworkManager;
 
 	public override void _Ready()
 	{
@@ -47,6 +50,15 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		_propSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PropSpawner);
 		_propSpawner.SpawnPath = $"../{NodeNames.PropsRoot}";
 		_propSpawner.SpawnFunction = new Callable(this, nameof(SpawnPropFromData));
+
+		_chat = new ChatManager { Name = NodeNames.ChatManager };
+		AddChild(_chat);
+		if (Multiplayer.IsServer())
+			_chat.SetServerMode();
+
+		var chatScene = ResourceLoader.Load<PackedScene>(Paths.ChatPanelScene);
+		_chatPanel = chatScene.Instantiate<ChatPanel>();
+		AddChild(_chatPanel);
 	}
 
 	public override void StartGame()
@@ -81,6 +93,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		if (!Network.IsServer) return;
 
 		ServerAddPlayer((int)id, Paths.NetworkedCharacterScene, Configuration.LocalPlayerModel);
+		_chat?.SendSnapshotTo(id);
 	}
 
 	private void OnPeerLeft(long id)
