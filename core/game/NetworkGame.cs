@@ -178,7 +178,18 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		}
 
 		if (node is NetworkedCharacter nc)
+		{
 			nc.Bootstrap(state, model);
+
+			if (peer == Multiplayer.GetUniqueId())
+			{
+				var localName = Configuration.LocalPlayerName ?? "Player";
+				nc.DisplayName = localName;
+
+				if (Configuration.LocalPlayerModel is { } preferredModel)
+					nc.ModelTypeId = preferredModel;
+			}
+		}
 
 		Players[peer] = node;
 
