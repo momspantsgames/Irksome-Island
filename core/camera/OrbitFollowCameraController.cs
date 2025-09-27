@@ -89,6 +89,19 @@ public partial class OrbitFollowCameraController : CameraController
 			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
 		}
 
+		var step = 0;
+		if (Input.IsActionJustPressed(Actions.Camera.ZoomIn)) step += 1;
+		if (Input.IsActionJustPressed(Actions.Camera.ZoomOut)) step -= 1;
+
+		if (step != 0)
+		{
+			rig.DesiredArmLength = Mathf.Clamp(
+				rig.DesiredArmLength - step * Gameplay.Camera.ZoomStep,
+				Gameplay.Camera.MinZoom,
+				Gameplay.Camera.MaxZoom
+			);
+		}
+
 		// joystick
 		var stick = Input.GetVector(Actions.Camera.RotateLeft, Actions.Camera.RotateRight, Actions.Camera.PitchDown,
 			Actions.Camera.PitchUp);
@@ -99,20 +112,6 @@ public partial class OrbitFollowCameraController : CameraController
 			_pitch += (InvertY ? -1f : 1f) * stick.Y * Gameplay.Camera.ThumbstickSensitivity * (float)delta;
 			_pitch = Mathf.Clamp(_pitch, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
 			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
-		}
-
-		var zoomAxis =
-			Input.GetActionStrength(Actions.Camera.ZoomIn) -
-			Input.GetActionStrength(Actions.Camera.ZoomOut);
-
-		if (Mathf.Abs(zoomAxis) > Gameplay.FloatMathEpsilon)
-		{
-			// analog-friendly continuous zoom
-			rig.DesiredArmLength = Mathf.Clamp(
-				rig.DesiredArmLength - zoomAxis * Gameplay.Camera.ZoomStep * (float)delta,
-				Gameplay.Camera.MinZoom,
-				Gameplay.Camera.MaxZoom
-			);
 		}
 
 		var t = _target.GlobalTransform.Origin + new Vector3(0, PivotHeight, 0);

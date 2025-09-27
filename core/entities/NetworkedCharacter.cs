@@ -96,6 +96,11 @@ public partial class NetworkedCharacter : CharacterBody3D
 		rc.AddProperty(new NodePath(":CurrentStateId"));
 		rc.AddProperty(new NodePath(":DisplayName"));
 		rc.AddProperty(new NodePath(":ModelTypeId"));
+
+		// Only replicate these when they change to reduce bandwidth
+		rc.PropertySetReplicationMode(new NodePath(":CurrentStateId"), SceneReplicationConfig.ReplicationMode.OnChange);
+		rc.PropertySetReplicationMode(new NodePath(":DisplayName"), SceneReplicationConfig.ReplicationMode.OnChange);
+		rc.PropertySetReplicationMode(new NodePath(":ModelTypeId"), SceneReplicationConfig.ReplicationMode.OnChange);
 		_sync.ReplicationConfig = rc;
 
 		AddChild(_sync);
