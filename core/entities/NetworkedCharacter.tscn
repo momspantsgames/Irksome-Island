@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpr26qme8tk3e"]
+[gd_scene load_steps=4 format=3 uid="uid://bpr26qme8tk3e"]
 
 [ext_resource type="Script" uid="uid://bftll63y8bil2" path="res://core/entities/NetworkedCharacter.cs" id="1_yvpgr"]
+[ext_resource type="FontFile" uid="uid://djvhmec88q1g" path="res://assets/fonts/Kenney Future.ttf" id="2_734xb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hlmxi"]
 height = 2.6640625
@@ -13,3 +14,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3332635, 0)
 shape = SubResource("CapsuleShape3D_hlmxi")
 
 [node name="ModelRoot" type="Node3D" parent="."]
+
+[node name="Nameplate" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7275715, 0)
+billboard = 1
+font = ExtResource("2_734xb")

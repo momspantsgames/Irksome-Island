@@ -31,25 +31,52 @@ public partial class NetworkedCharacter : CharacterBody3D
 	private static readonly Dictionary<CharacterModelType, PackedScene> ModelCache = new();
 	private readonly Dictionary<CharacterStateType, CharacterState> _states = new();
 	private AnimationComponent? _animation;
+
+	private CharacterModelType _characterModelTypeId = CharacterModelType.CharacterA;
 	private Node? _currentModel;
 	private CharacterState? _currentState;
 	private CharacterStateType _currentStateId = CharacterStateType.Idle;
+	private string _displayName = "Player";
 	private Node3D? _modelRoot;
+	private Label3D? _nameplate;
 	private MultiplayerSynchronizer _sync = null!;
 
 	[Export]
 	public CharacterStateType CurrentStateId
 	{
 		get => _currentStateId;
-		private set
+		set
 		{
 			if (_currentStateId == value) return;
 			_currentStateId = value;
-			ChangeState(value); // so that everyone gets that new state and knows when to run onEnter()
+			ChangeState(value);
 		}
 	}
 
-	[Export] public CharacterModelType ModelTypeId { get; private set; } = CharacterModelType.CharacterA;
+	[Export]
+	public CharacterModelType ModelTypeId
+	{
+		get => _characterModelTypeId;
+		set
+		{
+			if (_characterModelTypeId == value) return;
+			_characterModelTypeId = value;
+			ApplyModel(value);
+		}
+	}
+
+
+	[Export]
+	public string DisplayName
+	{
+		get => _displayName;
+		set
+		{
+			if (_displayName == value) return;
+			_displayName = value;
+			if (_nameplate != null) _nameplate.Text = value;
+		}
+	}
 
 	private void BuildStates()
 	{
@@ -67,6 +94,8 @@ public partial class NetworkedCharacter : CharacterBody3D
 		var rc = new SceneReplicationConfig();
 		rc.AddProperty(new NodePath(":global_transform"));
 		rc.AddProperty(new NodePath(":CurrentStateId"));
+		rc.AddProperty(new NodePath(":DisplayName"));
+		rc.AddProperty(new NodePath(":ModelTypeId"));
 		_sync.ReplicationConfig = rc;
 
 		AddChild(_sync);
@@ -83,6 +112,10 @@ public partial class NetworkedCharacter : CharacterBody3D
 		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
 		_animation = new AnimationComponent { Name = NodeNames.AnimationComponent };
 		AddChild(_animation);
+
+		_nameplate = GetNode<Label3D>(NodeNames.Nameplate);
+		_nameplate.Text = DisplayName;
+		_nameplate.Visible = !IsMultiplayerAuthority();
 
 		BuildStates();
 		ChangeState(CurrentStateId);
@@ -105,13 +138,6 @@ public partial class NetworkedCharacter : CharacterBody3D
 		if (CurrentStateId == s) return;
 		CurrentStateId = s;
 		ChangeState(s);
-	}
-
-	private void SetModel(CharacterModelType id)
-	{
-		if (ModelTypeId == id) return;
-		ModelTypeId = id;
-		ApplyModel(id);
 	}
 
 	private void ApplyModel(CharacterModelType id)

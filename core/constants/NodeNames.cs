@@ -28,6 +28,7 @@ public static class NodeNames
 	public const string AnimationComponent = "AnimationComponent";
 	public const string AnimationTree = "AnimationTree";
 	public const string ModelRoot = "ModelRoot";
+	public const string Nameplate = "Nameplate";
 	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
 	public const string PlayersRoot = "Players";
 	public const string PropsRoot = "Props";
