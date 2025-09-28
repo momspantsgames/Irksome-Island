@@ -20,18 +20,28 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
 
 namespace IrksomeIsland.Core.Game;
 
 public partial class ChatManager : Node
 {
 	private const int Max = 100;
-	private readonly Array<string> _log = new();
+	private readonly Array<Dictionary> _log = new();
+	private Node? _playersNode;
 
-	public IReadOnlyList<string> Log => _log;
+	public IReadOnlyList<Dictionary> Log => _log;
 
 	public void SetServerMode()
 	{ /* nothing for now */
+	}
+
+	public override void _Ready()
+	{
+		_playersNode = GetTree().Root
+			.GetNode($"{NodeNames.ApplicationManager}/NetworkGame/{NodeNames.PlayersRoot}");
 	}
 
 	public void SendLocal(string text)
@@ -53,33 +63,60 @@ public partial class ChatManager : Node
 	private void RpcSay(string text)
 	{
 		if (!Multiplayer.IsServer()) return;
-		var from = Multiplayer.GetRemoteSenderId();
-		var line = $"{(from == 0 ? "Server" : from.ToString())}: {Sanitize(text)}";
-		Append(line);
-		Rpc(nameof(RpcDeliver), line);
+		var pid = Multiplayer.GetRemoteSenderId();
+
+		// 0 is server, so set it to 1 :shrug
+		if (pid == 0) pid = 1;
+
+		var name = LookupName(pid);
+		var msg = new Dictionary
+		{
+			{ "peer", pid },
+			{ "name", name },
+			{ "text", Sanitize(text) },
+			{ "ts", Time.GetUnixTimeFromSystem() }
+		};
+
+		IrkLogger.Log($"RpcSay() with {string.Join(", ", msg.Select(kv => $"{kv.Key}={kv.Value}"))}");
+
+		Append(msg);
+		Rpc(nameof(RpcDeliver), msg);
 	}
 
 	[Rpc]
-	private void RpcDeliver(string line) => Append(line);
+	private void RpcDeliver(Dictionary msg) => Append(msg);
 
 	public void SendSnapshotTo(long peerId) => RpcId(peerId, nameof(RpcInit), _log);
 
 	[Rpc]
-	private void RpcInit(Array<string> snapshot)
+	private void RpcInit(Array<Dictionary> snapshot)
 	{
 		_log.Clear();
 		foreach (var s in snapshot) _log.Add(s);
 		MessagesRefreshed?.Invoke();
 	}
 
-	private void Append(string line)
+	private string LookupName(long pid)
 	{
-		_log.Add(line);
-		if (_log.Count > Max) _log.RemoveAt(0);
-		MessageAdded?.Invoke(line);
+		if (_playersNode == null) return $"Player {pid}";
+
+		foreach (var n in _playersNode.GetChildren())
+		{
+			if (n.GetMultiplayerAuthority() == pid && n is NetworkedCharacter nc)
+				return nc.DisplayName;
+		}
+
+		return $"Player {pid}";
 	}
 
-	public event Action<string>? MessageAdded;
+	private void Append(Dictionary msg)
+	{
+		_log.Add(msg);
+		if (_log.Count > Max) _log.RemoveAt(0);
+		MessageAdded?.Invoke(msg);
+	}
+
+	public event Action<Dictionary>? MessageAdded;
 	public event Action? MessagesRefreshed;
 
 	private static string Sanitize(string s)

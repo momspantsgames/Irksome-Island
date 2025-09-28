@@ -33,7 +33,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 		C.AnimTravel(Animations.Static);
 	}
 
-	protected override void OnHandleInput(double delta)
+	protected override void OnPhysicsUpdate(double delta)
 	{
 		if (!IsOwner) return;
 
@@ -49,11 +49,7 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 
 		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
 			C.RequestState(CharacterStateType.Jumping);
-	}
 
-	protected override void OnPhysicsUpdate(double delta)
-	{
-		if (!IsOwner) return;
 		// bleed horizontal speed to zero; keep gravity
 		var v = C.Velocity;
 		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));

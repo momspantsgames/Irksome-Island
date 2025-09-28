@@ -32,17 +32,12 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		C.AnimTravel(Animations.Walk);
 	}
 
-	protected override void OnHandleInput(double delta)
+	protected override void OnPhysicsUpdate(double delta)
 	{
 		if (!IsOwner) return;
 
 		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
 			C.RequestState(CharacterStateType.Jumping);
-	}
-
-	protected override void OnPhysicsUpdate(double delta)
-	{
-		if (!IsOwner) return;
 
 		var cam = C.GetViewport().GetCamera3D();
 

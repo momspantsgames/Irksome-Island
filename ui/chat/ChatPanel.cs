@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using Godot.Collections;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Game;
 
@@ -57,16 +58,18 @@ public partial class ChatPanel : Control
 		_input.GrabFocus();
 	}
 
-	private void OnMessageAdded(string line)
+	private void OnMessageAdded(Dictionary msg)
 	{
-		_list.AppendText(line + "\n");
-		_list.ScrollToLine(_list.GetLineCount()); // autoscroll
+		_list.AppendText($"{msg["name"]}: {msg["text"]}\n");
+		_list.ScrollToLine(_list.GetLineCount());
 	}
 
 	private void RedrawAll()
 	{
 		_list.Clear();
-		foreach (var line in _chat.Log) _list.AppendText(line + "\n");
+		foreach (var msg in _chat.Log)
+			_list.AppendText($"{msg["name"]}: {msg["text"]}\n");
+
 		_list.ScrollToLine(_list.GetLineCount());
 	}
 }
