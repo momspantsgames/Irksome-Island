@@ -28,6 +28,7 @@ public partial class ApplicationManager : Node
 {
 	private IrkGame? _activeGame;
 	public NetworkManager NetworkManager { get; private set; } = null!;
+	public static bool IsHeadless => DisplayServer.GetName() == "headless";
 
 	public override void _Ready()
 	{
@@ -35,7 +36,22 @@ public partial class ApplicationManager : Node
 		NetworkManager = new NetworkManager { Name = NodeNames.NetworkManager };
 		AddChild(NetworkManager);
 
-		StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
+		if (IsHeadless)
+		{
+			var config = LoadFromFile();
+			NetworkManager.StartServer(config.Port, config.MaxPlayers, true);
+
+			RenderingServer.SetRenderLoopEnabled(false);
+			Engine.MaxFps = 0;
+			for (var i = 0; i < AudioServer.GetBusCount(); i++)
+				AudioServer.SetBusMute(i, true);
+
+			StartGame(config);
+		}
+		else
+		{
+			StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
+		}
 	}
 
 	public void StartGame(GameConfiguration config)
@@ -64,5 +80,22 @@ public partial class ApplicationManager : Node
 		};
 
 		return game;
+	}
+
+	private GameConfiguration LoadFromFile()
+	{
+		var cfg = new ConfigFile();
+		cfg.Load(Paths.ServerConfigFilePath);
+
+		var config = new GameConfiguration
+		{
+			Port = (int)cfg.GetValue(null, "port", Gameplay.Configuration.DefaultServerPort),
+			MaxPlayers = (int)cfg.GetValue(null, "max_clients", Gameplay.Configuration.DefaultMaxPlayers),
+			Name = (string)cfg.GetValue(null, "server_name", Gameplay.Configuration.DefaultServerName),
+			GameType = GameType.Network,
+			WorldName = NodeNames.WorldMain
+		};
+
+		return config;
 	}
 }

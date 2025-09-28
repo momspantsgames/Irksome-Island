@@ -48,4 +48,12 @@ public static class Gameplay
 		public static float RotationSpeed => 12f;
 		public static float JumpSpeed => 6.5f;
 	}
+
+	public static class Configuration
+	{
+		public static string DefaultServerAddress => "127.0.0.1";
+		public static int DefaultServerPort => 24565;
+		public static int DefaultMaxPlayers => 8;
+		public static string DefaultServerName => "Irksome Island Server";
+	}
 }

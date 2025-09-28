@@ -24,13 +24,13 @@ namespace IrksomeIsland.Core.Game;
 
 public sealed class GameConfiguration
 {
-	public GameType? GameType { get; init; }
+	public GameType GameType { get; init; }
 	public string? WorldName { get; init; }
-	public int? MaxPlayers { get; init; }
-	public string? Password { get; init; }
-	public string Name { get; init; } = "Irksome Island Game";
-	public bool IsPrivate { get; init; } = false;
+	public int MaxPlayers { get; set; }
+	public string? Password { get; set; }
+	public string Name { get; set; } = "Irksome Island Game";
+	public bool IsPrivate { get; set; } = false;
 	public string? LocalPlayerName { get; init; }
 	public CharacterModelType? LocalPlayerModel { get; init; }
-	public int? Port { get; init; }
+	public int Port { get; set; }
 }

@@ -66,7 +66,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		base.StartGame();
 
 		// server spawns itself
-		if (Network.IsServer)
+		if (Network.IsServer && !NetworkManager.IsHeadless)
 		{
 			ServerAddPlayer(Multiplayer.GetUniqueId(), Paths.NetworkedCharacterScene, Configuration.LocalPlayerModel);
 		}

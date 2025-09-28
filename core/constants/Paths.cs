@@ -26,6 +26,7 @@ public static class Paths
 {
 	private const string ResourcesPrefix = "res://";
 	private const string SceneSuffix = ".tscn";
+	private const string ConfigSuffix = ".cfg";
 	private const string ResourceSuffix = ".tres";
 	private const string Prefabs = "prefabs";
 	private const string Characters = "characters";
@@ -34,6 +35,7 @@ public static class Paths
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
 	public const string NetworkedCharacterScene = ResourcesPrefix + "core/entities/NetworkedCharacter" + SceneSuffix;
 	public const string ChatPanelScene = ResourcesPrefix + "ui/chat/ChatPanel" + SceneSuffix;
+	public const string ServerConfigFilePath = ResourcesPrefix + "server" + ConfigSuffix;
 
 	public static readonly IReadOnlyDictionary<CharacterModelType, string> CharacterModels =
 		new Dictionary<CharacterModelType, string>

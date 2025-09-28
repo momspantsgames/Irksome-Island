@@ -24,7 +24,6 @@ namespace IrksomeIsland.Core.Application;
 
 public partial class NetworkManager : Node
 {
-
 	public enum ConnectionState { Disconnected, Connecting, Connected, Failed }
 	public enum NetworkRole { None, Host, Client, DedicatedServer }
 
@@ -35,7 +34,6 @@ public partial class NetworkManager : Node
 
 	public bool IsServer => CurrentRole is NetworkRole.Host or NetworkRole.DedicatedServer;
 	public bool IsClient => CurrentRole == NetworkRole.Client;
-
 	public static bool IsHeadless => DisplayServer.GetName() == "headless";
 
 	public event Action<long>? PeerJoined;      // server side
@@ -60,7 +58,7 @@ public partial class NetworkManager : Node
 		Disconnect();
 	}
 
-	public void StartServer(int port, int maxPlayers)
+	public void StartServer(int port, int maxPlayers, bool dedicated = false)
 	{
 		if (!EnsureDisconnected("Cannot start server")) return;
 
@@ -72,24 +70,13 @@ public partial class NetworkManager : Node
 			return;
 		}
 
-		BindPeer(_peer, NetworkRole.Host, ConnectionState.Connected);
-		IrkLogger.Log($"Server started on port {port} with max players {maxPlayers}");
-	}
-
-	public void StartDedicatedServer(int port, int maxPlayers)
-	{
-		if (!EnsureDisconnected("Cannot start dedicated server")) return;
-
-		_peer = new ENetMultiplayerPeer();
-		var err = _peer.CreateServer(port, maxPlayers);
-		if (err != Error.Ok)
+		if (dedicated)
 		{
-			FailConnect($"Failed to create dedicated server: {err}");
-			return;
+
 		}
 
-		BindPeer(_peer, NetworkRole.DedicatedServer, ConnectionState.Connected);
-		IrkLogger.Log($"Dedicated server started on port {port} with max players {maxPlayers}");
+		BindPeer(_peer, NetworkRole.Host, ConnectionState.Connected);
+		IrkLogger.Log($"Server started on port {port} with max players {maxPlayers}");
 	}
 
 	public void ConnectToServer(string address, int port)
