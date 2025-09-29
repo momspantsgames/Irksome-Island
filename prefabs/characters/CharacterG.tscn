@@ -1,7 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://ys1276mxq6ih"]
+[gd_scene load_steps=3 format=3 uid="uid://ys1276mxq6ih"]
 
 [ext_resource type="PackedScene" uid="uid://dlmbs6glncstf" path="res://assets/models/characters/character-g.glb" id="1_y1os4"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://b42bjipdni6v1" path="res://assets/animations/CharacterAnimationStateMachine.tres" id="2_xucqr"]
 
 [node name="CharacterG" type="Node3D"]
 
-[node name="character-g2" parent="." instance=ExtResource("1_y1os4")]
+[node name="character-g" parent="." instance=ExtResource("1_y1os4")]
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../character-g")
+tree_root = ExtResource("2_xucqr")
+anim_player = NodePath("../character-g/AnimationPlayer")
+
+[editable path="character-g"]
