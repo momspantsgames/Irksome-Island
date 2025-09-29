@@ -37,7 +37,7 @@ public partial class Blaster : RigidBody3D
 
 	public override void _Ready()
 	{
-		_dartScene = GD.Load<PackedScene>(Paths.DartScene);
+		_dartScene = GD.Load<PackedScene>(Paths.Props.DartScene);
 		_muzzle = GetNode<Marker3D>("Muzzle");
 		_pickup = GetNode<Area3D>("PickupArea");
 
@@ -49,11 +49,9 @@ public partial class Blaster : RigidBody3D
 	{
 		if (_equipped)
 		{
-			// Resolve late if the model/socket wasn't ready yet
 			if (_hand == null && _handPath != "")
 				_hand = GetTree().Root.GetNodeOrNull<Node3D>(_handPath);
 
-			// Follow socket every tick
 			if (_hand != null)
 				GlobalTransform = _hand.GlobalTransform * _localOffset;
 
@@ -96,14 +94,11 @@ public partial class Blaster : RigidBody3D
 		dart.LinearVelocity = -_muzzle.GlobalBasis.Z * Gameplay.DartShootVelocity;
 	}
 
-	// --- RPCs ---
-
-	[Rpc] // server-only handler; validates authority implicitly by running on server
+	[Rpc]
 	private void ServerEquip(NodePath handSocketPath, Transform3D localOffset)
 	{
-		// Optional: validate the path belongs to the caller's character.
-		Rpc(nameof(ClEquip), handSocketPath, localOffset); // tell everyone
-		ClEquip(handSocketPath, localOffset);              // apply on server too
+		Rpc(nameof(ClEquip), handSocketPath, localOffset);
+		ClEquip(handSocketPath, localOffset);
 	}
 
 	[Rpc]
@@ -113,7 +108,7 @@ public partial class Blaster : RigidBody3D
 		ClientDrop();
 	}
 
-	[Rpc] // run on all peers
+	[Rpc]
 	private void ClEquip(NodePath handSocketPath, Transform3D localOffset)
 	{
 		_equipped = true;
@@ -123,26 +118,24 @@ public partial class Blaster : RigidBody3D
 
 		_hand = GetTree().Root.GetNodeOrNull<Node3D>(_handPath);
 
-		// Stop physics + make it non-interactive while equipped
 		Freeze = true;
 		_pickup.Monitoring = false;
 		CollisionLayer = 0;
 		CollisionMask = 0;
 	}
 
-	[Rpc] // run on all peers
+	[Rpc]
 	private void ClientDrop()
 	{
 		_equipped = false;
 
-		// Restore physics + interactions
 		Freeze = false;
 		_pickup.Monitoring = true;
 		CollisionLayer = _savedLayer;
 		CollisionMask = _savedMask;
 
 		_hand = null;
-		_handPath = NodePath.Empty;
+		_handPath = "";
 		_localOffset = Transform3D.Identity;
 	}
 }

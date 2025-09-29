@@ -49,7 +49,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		_propSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PropSpawner);
 		_propSpawner.SpawnPath = $"../{NodeNames.PropsRoot}";
-		_propSpawner.SpawnFunction = new Callable(this, nameof(SpawnPropFromData));
+		_propSpawner._SpawnableScenes = [Paths.Props.DartScene, Paths.Props.BlasterAScene];
 
 		_chat = new ChatManager { Name = NodeNames.ChatManager };
 		AddChild(_chat);
@@ -149,23 +149,6 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		if (Players.Remove(peerId, out var n)) n.QueueFree();
 	}
 
-	public Node3D ServerAddProp(Guid id, string scenePath)
-	{
-		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
-		var data = new Dictionary { { "path", scenePath }, { "id", id.ToString() } };
-		var n = _propSpawner.Spawn(data) as Node3D
-		        ?? throw new InvalidOperationException("Spawn failed");
-
-		Props[id] = n;
-		return n;
-	}
-
-	public void ServerRemoveProp(Guid id)
-	{
-		if (!Multiplayer.IsServer()) return;
-		if (Props.Remove(id, out var n)) n.QueueFree();
-	}
-
 	// Spawn callbacks run on ALL peers.
 	// Must RETURN a node NOT yet in the tree. Spawner adds it under SpawnPath.
 	private Node SpawnPlayerFromData(Variant dv)
@@ -220,20 +203,6 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 			};
 		}
 
-		return node;
-	}
-
-	private Node SpawnPropFromData(Variant dv)
-	{
-		var d = (Dictionary)dv;
-		var path = (string)d["path"];
-		var id = Guid.Parse((string)d["id"]);
-
-		var ps = ResourceLoader.Load<PackedScene>(path);
-		var node = ps.Instantiate<Node3D>();
-		node.Name = $"Prop_{id.ToString()[..8]}";
-
-		Props[id] = node;
 		return node;
 	}
 }

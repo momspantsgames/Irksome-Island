@@ -1,17 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=6 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld/MainWorld.cs" id="1_sdvpa"]
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/MainWorld/chunks/GrassField.tscn" id="2_x5p2k"]
+[ext_resource type="PackedScene" uid="uid://db20iawbrwifr" path="res://core/props/PropPlaceholder.tscn" id="4_pjh4b"]
+[ext_resource type="PackedScene" uid="uid://drm3kll6ec82b" path="res://prefabs/props/BlasterA.tscn" id="5_26ugb"]
 [ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/MainWorld/Environment.tres" id="8_ea240"]
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
 
 [node name="Trees" type="Node3D" parent="."]
-
-[node name="Fat" type="Node3D" parent="Trees"]
-
-[node name="Cone" type="Node3D" parent="Trees"]
 
 [node name="StaticLights" type="Node3D" parent="."]
 
@@ -34,4 +32,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -9)
 environment = ExtResource("8_ea240")
 
 [node name="PlayerSpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 2.2, -9)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.1135294, -9)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="PropPlaceholder" parent="Props" instance=ExtResource("4_pjh4b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.0714154, -4)
+ItemScene = ExtResource("5_26ugb")

@@ -18,27 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace IrksomeIsland.Core.Constants;
+using Godot;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Constants;
 
-public static class NodeNames
+namespace IrksomeIsland.Core.Props;
+
+public partial class PropPlaceholder : Marker3D
 {
-	private const string AppRoot = "AppRoot";
-	public const string NetworkManager = "NetworkManager";
-	public const string ChatManager = "ChatManager";
-	public const string ApplicationManager = "ApplicationManager";
-	public const string AnimationComponent = "AnimationComponent";
-	public const string EquipmentComponent = "EquipmentComponent";
-	public const string InteractionComponent = "InteractionComponent";
-	public const string AnimationTree = "AnimationTree";
-	public const string ModelRoot = "ModelRoot";
-	public const string Nameplate = "Nameplate";
-	public const string NetworkedCharacterSynchronizer = "NetCharSynchronizer";
-	public const string PlayersRoot = "Players";
-	public const string PropsRoot = "Props";
-	public const string PlayerSpawner = "PlayerSpawner";
-	public const string PropSpawner = "PropSpawner";
-	public const string CameraRig = "CameraRig";
-	public const string WorldMain = "MainWorld";
+	[Export] public PackedScene ItemScene { get; set; } = null!;
+	[Export] public Transform3D LocalOffset { get; set; } = Transform3D.Identity;
 
-	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
+	public override void _Ready()
+	{
+		if (!Multiplayer.IsServer())
+		{
+			QueueFree();
+			return;
+		}
+
+		CallDeferred(nameof(SpawnNow));
+	}
+
+	private void SpawnNow()
+	{
+		if (!Multiplayer.IsServer())
+		{
+			QueueFree();
+			return;
+		}
+
+		var appManager = GetTree().Root.GetNode<ApplicationManager>($"{NodeNames.ApplicationManager}");
+		var propsRoot = appManager?.ActiveGame?.GetNode<Node3D>($"{NodeNames.PropsRoot}");
+
+		if (propsRoot != null)
+		{
+			var item = ItemScene.Instantiate<Node3D>();
+			propsRoot.AddChild(item, true);
+			item.GlobalTransform = GlobalTransform;
+
+			QueueFree();
+		}
+	}
 }

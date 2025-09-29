@@ -70,11 +70,6 @@ public partial class NetworkManager : Node
 			return;
 		}
 
-		if (dedicated)
-		{
-
-		}
-
 		BindPeer(_peer, NetworkRole.Host, ConnectionState.Connected);
 		IrkLogger.Log($"Server started on port {port} with max players {maxPlayers}");
 	}

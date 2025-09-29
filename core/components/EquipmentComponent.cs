@@ -55,12 +55,7 @@ public partial class EquipmentComponent : Node
 		}
 	}
 
-	[Export]
-	public Transform3D LocalOffset
-	{
-		get => _localOffset;
-		set => _localOffset = value;
-	}
+	[Export] public Transform3D LocalOffset { get; set; }
 
 	public override void _EnterTree()
 	{
@@ -84,6 +79,7 @@ public partial class EquipmentComponent : Node
 
 	public override void _Ready()
 	{
+		// no op yet
 	}
 
 	public void ServerEquip(Guid propId, string attachNodePath, Transform3D localOffset)

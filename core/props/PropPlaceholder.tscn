@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://db20iawbrwifr"]
+
+[ext_resource type="Script" uid="uid://kokcd5owdjbf" path="res://core/props/PropPlaceholder.cs" id="1_ohg0g"]
+
+[node name="PropPlaceholder" type="Marker3D"]
+script = ExtResource("1_ohg0g")

@@ -122,6 +122,9 @@ public partial class NetworkedCharacter : CharacterBody3D
 		Equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
 		AddChild(Equipment);
 
+		var interaction = new InteractionComponent { Name = NodeNames.InteractionComponent };
+		AddChild(interaction);
+
 		_nameplate = GetNode<Label3D>(NodeNames.Nameplate);
 		_nameplate.Text = DisplayName;
 		_nameplate.Visible = !IsMultiplayerAuthority();
