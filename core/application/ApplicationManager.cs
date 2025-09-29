@@ -26,7 +26,8 @@ namespace IrksomeIsland.Core.Application;
 
 public partial class ApplicationManager : Node
 {
-	private IrkGame? _activeGame;
+    private IrkGame? _activeGame;
+    public IrkGame? ActiveGame => _activeGame;
 	public NetworkManager NetworkManager { get; private set; } = null!;
 	public static bool IsHeadless => DisplayServer.GetName() == "headless";
 

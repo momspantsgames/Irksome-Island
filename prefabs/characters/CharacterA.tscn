@@ -7,7 +7,15 @@
 
 [node name="character-a" parent="." instance=ExtResource("1_c4o2w")]
 
+[node name="LeftEquip" type="Marker3D" parent="character-a/character-a/root/torso/arm-left" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.21316242, -0.8734468, 0)
+
+[node name="RightEquip" type="Marker3D" parent="character-a/character-a/root/torso/arm-right" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.19760346, -0.8741441, 0)
+
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../character-a")
 tree_root = ExtResource("2_7kplt")
 anim_player = NodePath("../character-a/AnimationPlayer")
+
+[editable path="character-a"]

@@ -134,4 +134,9 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		var sp = World.GetNodeOrNull<Marker3D>("PlayerSpawnPoint");
 		return sp?.GlobalPosition ?? Vector3.Zero;
 	}
+
+	public bool TryGetProp(Guid id, out Node3D prop)
+	{
+		return Props.TryGetValue(id, out prop!);
+	}
 }

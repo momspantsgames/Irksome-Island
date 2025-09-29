@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cncyckky4algy"]
+
+[ext_resource type="PackedScene" uid="uid://cux3tyqw8axf" path="res://assets/models/props/bullet-foam-tip.glb" id="1_b0mje"]
+[ext_resource type="Script" uid="uid://dgjngmvjbhvbh" path="res://core/props/Dart.cs" id="1_vmnwb"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_vmnwb"]
+height = 0.05986023
+radius = 0.009765625
+
+[node name="Dart" type="RigidBody3D"]
+script = ExtResource("1_vmnwb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.030220032, 0)
+shape = SubResource("CylinderShape3D_vmnwb")
+
+[node name="bullet-foam-tip2" parent="." instance=ExtResource("1_b0mje")]

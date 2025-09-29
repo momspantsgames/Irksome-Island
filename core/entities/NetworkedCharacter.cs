@@ -78,6 +78,8 @@ public partial class NetworkedCharacter : CharacterBody3D
 		}
 	}
 
+	public EquipmentComponent? Equipment { get; private set; }
+
 	private void BuildStates()
 	{
 		foreach (var kvp in CharacterStateFactory.All)
@@ -97,7 +99,6 @@ public partial class NetworkedCharacter : CharacterBody3D
 		rc.AddProperty(new NodePath(":DisplayName"));
 		rc.AddProperty(new NodePath(":ModelTypeId"));
 
-		// Only replicate these when they change to reduce bandwidth
 		rc.PropertySetReplicationMode(new NodePath(":CurrentStateId"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":DisplayName"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":ModelTypeId"), SceneReplicationConfig.ReplicationMode.OnChange);
@@ -118,6 +119,9 @@ public partial class NetworkedCharacter : CharacterBody3D
 		_animation = new AnimationComponent { Name = NodeNames.AnimationComponent };
 		AddChild(_animation);
 
+		Equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
+		AddChild(Equipment);
+
 		_nameplate = GetNode<Label3D>(NodeNames.Nameplate);
 		_nameplate.Text = DisplayName;
 		_nameplate.Visible = !IsMultiplayerAuthority();
@@ -125,6 +129,16 @@ public partial class NetworkedCharacter : CharacterBody3D
 		BuildStates();
 		ChangeState(CurrentStateId);
 		ApplyModel(ModelTypeId);
+	}
+
+	public void ServerEquip(Guid propId, string attachNodePath, Transform3D localOffset)
+	{
+		Equipment?.ServerEquip(propId, attachNodePath, localOffset);
+	}
+
+	public void ServerUnequip()
+	{
+		Equipment?.ServerUnequip();
 	}
 
 	public void AnimTravel(string s) => _animation?.Travel(s);

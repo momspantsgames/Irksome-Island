@@ -34,6 +34,7 @@ public static class Paths
 	private const string MainMenu = "ui/menus/main/subs";
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
 	public const string NetworkedCharacterScene = ResourcesPrefix + "core/entities/NetworkedCharacter" + SceneSuffix;
+	public const string DartScene = ResourcesPrefix + "/" + Prefabs + "/props/Dart" + SceneSuffix;
 	public const string ChatPanelScene = ResourcesPrefix + "ui/chat/ChatPanel" + SceneSuffix;
 	public const string ServerConfigFilePath = ResourcesPrefix + "server" + ConfigSuffix;
 
