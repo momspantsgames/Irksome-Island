@@ -29,6 +29,7 @@ public static class NodeNames
 	public const string AnimationComponent = "AnimationComponent";
 	public const string EquipmentComponent = "EquipmentComponent";
 	public const string InteractionComponent = "InteractionComponent";
+	public const string PropPusherComponent = "PropPusherComponent";
 	public const string AnimationTree = "AnimationTree";
 	public const string ModelRoot = "ModelRoot";
 	public const string Nameplate = "Nameplate";

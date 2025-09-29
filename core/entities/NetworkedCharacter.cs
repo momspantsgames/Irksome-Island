@@ -39,6 +39,7 @@ public partial class NetworkedCharacter : CharacterBody3D
 	private string _displayName = "Player";
 	private Node3D? _modelRoot;
 	private Label3D? _nameplate;
+	private PropPusherComponent? _propPusher;
 	private MultiplayerSynchronizer _sync = null!;
 
 	[Export]
@@ -124,6 +125,10 @@ public partial class NetworkedCharacter : CharacterBody3D
 
 		var interaction = new InteractionComponent { Name = NodeNames.InteractionComponent };
 		AddChild(interaction);
+
+		_propPusher = new PropPusherComponent { Name = NodeNames.PropPusherComponent };
+		_propPusher.SetMultiplayerAuthority(GetMultiplayerAuthority());
+		AddChild(_propPusher);
 
 		_nameplate = GetNode<Label3D>(NodeNames.Nameplate);
 		_nameplate.Text = DisplayName;
@@ -226,33 +231,6 @@ public partial class NetworkedCharacter : CharacterBody3D
 
 	public void PushRigidBodies()
 	{
-		for (var i = 0; i < GetSlideCollisionCount(); i++)
-		{
-			var c = GetSlideCollision(i);
-			if (c.GetCollider() is not RigidBody3D rb) continue;
-
-			// compute impulse
-			var impulseVect = -c.GetNormal() * Gameplay.CharacterRigidBodyPushForce;
-
-			if (Multiplayer.IsServer())
-			{
-				rb.ApplyCentralImpulse(impulseVect);
-				rb.Sleeping = false;
-			}
-			else
-			{
-				RpcId(1, nameof(ServerPushProp), rb.GetPath(), impulseVect);
-			}
-		}
-	}
-
-	[Rpc]
-	private void ServerPushProp(NodePath propPath, Vector3 impulse)
-	{
-		var rb = GetTree().Root.GetNodeOrNull<RigidBody3D>(propPath);
-		if (rb == null || rb.Freeze) return;
-
-		rb.ApplyCentralImpulse(impulse);
-		rb.Sleeping = false;
+		_propPusher?.PushRigidBodies();
 	}
 }
