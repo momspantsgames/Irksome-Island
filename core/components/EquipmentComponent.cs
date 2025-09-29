@@ -59,19 +59,17 @@ public partial class EquipmentComponent : Node
 
 	public override void _EnterTree()
 	{
-		_sync = new MultiplayerSynchronizer { Name = "EquipmentSync", RootPath = "." };
+		_sync = new MultiplayerSynchronizer { Name = "EquipmentSync", RootPath = ".." };
 		_sync.SetMultiplayerAuthority(GetMultiplayerAuthority());
 
 		var rc = new SceneReplicationConfig();
 		rc.AddProperty(new NodePath(":Active"));
 		rc.AddProperty(new NodePath(":PropGuid"));
 		rc.AddProperty(new NodePath(":AttachNodePath"));
-		rc.AddProperty(new NodePath(":LocalOffset"));
 
 		rc.PropertySetReplicationMode(new NodePath(":Active"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":PropGuid"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":AttachNodePath"), SceneReplicationConfig.ReplicationMode.OnChange);
-		rc.PropertySetReplicationMode(new NodePath(":LocalOffset"), SceneReplicationConfig.ReplicationMode.OnChange);
 		_sync.ReplicationConfig = rc;
 
 		AddChild(_sync);
@@ -110,7 +108,7 @@ public partial class EquipmentComponent : Node
 				if (!_clientSetupApplied)
 					ApplyClientSetup(_propNode);
 
-				_propNode.GlobalTransform = _socket.GlobalTransform * _localOffset;
+				_propNode.GlobalTransform = _socket.GlobalTransform * LocalOffset;
 			}
 		}
 		else if (_clientSetupApplied && _setupTarget != null)

@@ -49,7 +49,8 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		_propSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PropSpawner);
 		_propSpawner.SpawnPath = $"../{NodeNames.PropsRoot}";
-		_propSpawner._SpawnableScenes = [Paths.Props.DartScene, Paths.Props.BlasterAScene];
+		_propSpawner.AddSpawnableScene(Paths.Props.DartScene);
+		_propSpawner.AddSpawnableScene(Paths.Props.BlasterAScene);
 
 		_chat = new ChatManager { Name = NodeNames.ChatManager };
 		AddChild(_chat);
