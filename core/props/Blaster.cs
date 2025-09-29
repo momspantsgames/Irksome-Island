@@ -34,6 +34,7 @@ public partial class Blaster : RigidBody3D
 	private Marker3D? _muzzle;
 	private Area3D _pickup = null!;
 	private uint _savedLayer, _savedMask;
+	private MultiplayerSynchronizer _sync = null!;
 
 	public override void _Ready()
 	{
@@ -59,6 +60,38 @@ public partial class Blaster : RigidBody3D
 			AngularVelocity = Vector3.Zero;
 		}
 	}
+
+	public override void _EnterTree()
+	{
+		// Server owns physics for loose props
+		SetMultiplayerAuthority(1);
+
+		_sync = new MultiplayerSynchronizer { Name = "PropSync", RootPath = ".." };
+		var rc = new SceneReplicationConfig();
+
+		rc.AddProperty(new NodePath(":global_transform"));
+		rc.AddProperty(new NodePath(":linear_velocity"));
+		rc.AddProperty(new NodePath(":angular_velocity"));
+
+		rc.PropertySetReplicationMode(new NodePath(":global_transform"),
+			SceneReplicationConfig.ReplicationMode.OnChange);
+
+		rc.PropertySetReplicationMode(new NodePath(":linear_velocity"),
+			SceneReplicationConfig.ReplicationMode.OnChange);
+
+		rc.PropertySetReplicationMode(new NodePath(":angular_velocity"),
+			SceneReplicationConfig.ReplicationMode.OnChange);
+
+		_sync.ReplicationConfig = rc;
+
+		AddChild(_sync);
+	}
+
+	private void SetSyncActive(bool active)
+	{
+		_sync.ProcessMode = active ? ProcessModeEnum.Inherit : ProcessModeEnum.Disabled;
+	}
+
 
 	// Call from character (server or single-player). Clients will RPC to server.
 	public void RequestEquip(NodePath handSocketPath, Transform3D localOffset)
@@ -122,6 +155,7 @@ public partial class Blaster : RigidBody3D
 		_pickup.Monitoring = false;
 		CollisionLayer = 0;
 		CollisionMask = 0;
+		SetSyncActive(false);
 	}
 
 	[Rpc]
@@ -137,5 +171,7 @@ public partial class Blaster : RigidBody3D
 		_hand = null;
 		_handPath = "";
 		_localOffset = Transform3D.Identity;
+		SetSyncActive(true);
+		Sleeping = false;
 	}
 }

@@ -85,6 +85,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 
 		C.Velocity = v;
 		C.MoveAndSlide();
+		C.PushRigidBodies();
 
 		// face move direction if any
 		if (hasInput && dir.LengthSquared() > Gameplay.FloatMathEpsilon)

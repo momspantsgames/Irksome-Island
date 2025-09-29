@@ -21,6 +21,7 @@
 using Godot;
 using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Core.Props;
 
@@ -49,15 +50,12 @@ public partial class PropPlaceholder : Marker3D
 		}
 
 		var appManager = GetTree().Root.GetNode<ApplicationManager>($"{NodeNames.ApplicationManager}");
-		var propsRoot = appManager?.ActiveGame?.GetNode<Node3D>($"{NodeNames.PropsRoot}");
-
-		if (propsRoot != null)
+		if (appManager?.ActiveGame is NetworkGame game)
 		{
-			var item = ItemScene.Instantiate<Node3D>();
-			propsRoot.AddChild(item, true);
-			item.GlobalTransform = GlobalTransform;
-
-			QueueFree();
+			var scenePath = ItemScene.ResourcePath;
+			game.ServerSpawnProp(scenePath, GlobalTransform);
 		}
+
+		QueueFree();
 	}
 }

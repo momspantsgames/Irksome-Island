@@ -195,7 +195,6 @@ public partial class NetworkedCharacter : CharacterBody3D
 			SetState(desired);
 		}
 
-		// Notify server (e.g., for validation/bookkeeping)
 		RpcId(1, nameof(RpcRequestState), (byte)desired);
 	}
 
@@ -223,5 +222,37 @@ public partial class NetworkedCharacter : CharacterBody3D
 	{
 		_currentState?.PhysicsUpdate(delta);
 		base._PhysicsProcess(delta);
+	}
+
+	public void PushRigidBodies()
+	{
+		for (var i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var c = GetSlideCollision(i);
+			if (c.GetCollider() is not RigidBody3D rb) continue;
+
+			// compute impulse
+			var impulseVect = -c.GetNormal() * Gameplay.CharacterRigidBodyPushForce;
+
+			if (Multiplayer.IsServer())
+			{
+				rb.ApplyCentralImpulse(impulseVect);
+				rb.Sleeping = false;
+			}
+			else
+			{
+				RpcId(1, nameof(ServerPushProp), rb.GetPath(), impulseVect);
+			}
+		}
+	}
+
+	[Rpc]
+	private void ServerPushProp(NodePath propPath, Vector3 impulse)
+	{
+		var rb = GetTree().Root.GetNodeOrNull<RigidBody3D>(propPath);
+		if (rb == null || rb.Freeze) return;
+
+		rb.ApplyCentralImpulse(impulse);
+		rb.Sleeping = false;
 	}
 }

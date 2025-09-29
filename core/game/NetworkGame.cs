@@ -49,8 +49,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		_propSpawner = GetOrCreate<MultiplayerSpawner>(NodeNames.PropSpawner);
 		_propSpawner.SpawnPath = $"../{NodeNames.PropsRoot}";
-		_propSpawner.AddSpawnableScene(Paths.Props.DartScene);
-		_propSpawner.AddSpawnableScene(Paths.Props.BlasterAScene);
+		_propSpawner.SpawnFunction = new Callable(this, nameof(SpawnPropFromData));
 
 		_chat = new ChatManager { Name = NodeNames.ChatManager };
 		AddChild(_chat);
@@ -205,5 +204,38 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		}
 
 		return node;
+	}
+
+	private Node SpawnPropFromData(Variant dv)
+	{
+		var d = (Dictionary)dv;
+		var idStr = (string)d["id"];
+		var path = (string)d["path"];
+		var xf = (Transform3D)d["xf"];
+
+		var id = new Guid(idStr);
+		var ps = ResourceLoader.Load<PackedScene>(path);
+		var node = ps.Instantiate<Node3D>();
+		node.Name = $"Prop_{id.ToString()[..8]}";
+		node.GlobalTransform = xf;
+		node.SetMultiplayerAuthority(1);
+
+		Props[id] = node;
+		return node;
+	}
+
+	public Guid ServerSpawnProp(string scenePath, Transform3D xf)
+	{
+		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
+		var id = Guid.NewGuid();
+		var data = new Dictionary
+		{
+			{ "id", id.ToString() },
+			{ "path", scenePath },
+			{ "xf", xf }
+		};
+
+		_propSpawner.Spawn(data);
+		return id;
 	}
 }

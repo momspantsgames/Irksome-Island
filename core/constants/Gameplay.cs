@@ -26,6 +26,7 @@ public static class Gameplay
 {
 	public static float FloatMathEpsilon => 1e-4f;
 	public static float DartShootVelocity => 50f;
+	public static float CharacterRigidBodyPushForce => .2f;
 
 	public static class Camera
 	{

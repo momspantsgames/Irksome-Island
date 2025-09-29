@@ -60,5 +60,6 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 
 		C.Velocity = v;
 		C.MoveAndSlide();
+		C.PushRigidBodies();
 	}
 }

@@ -76,6 +76,7 @@ public class JumpingState(NetworkedCharacter c) : CharacterState(c)
 		C.Velocity = v;
 
 		C.MoveAndSlide();
+		C.PushRigidBodies();
 
 		// landed -> decide Idle vs Walking
 		if (C.IsOnFloor())
