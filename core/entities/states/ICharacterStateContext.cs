@@ -18,12 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Godot;
+
 namespace IrksomeIsland.Core.Entities.States;
 
-public enum CharacterStateType : byte
+public interface ICharacterStateContext
 {
-	Idle = 0,
-	Walking = 1,
-	Sprinting = 2,
-	Jumping = 3
+	NetworkedCharacter Character { get; }
+	bool IsServer { get; }
+	bool IsOwner { get; }
+
+	// Animation and movement helpers
+	void AnimTravel(string animName);
+	void PushRigidBodies();
+
+	// Prop ownership and lookup live here (server authoritative)
+	bool TryClaimProp(string propId);
+	void ReleaseProp(string propId);
+	Node3D? GetPropNode(string propId);
+	bool IsPropAvailable(string propId);
 }

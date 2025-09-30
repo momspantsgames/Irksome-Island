@@ -157,7 +157,6 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		var path = (string)d["path"];
 		var peer = (int)d["peer"];
 		var spawn = (Transform3D)d["spawn"];
-		var state = (CharacterStateType)(int)d["state"];
 		var model = (CharacterModelType)(int)d["model"];
 
 		var ps = ResourceLoader.Load<PackedScene>(path);
@@ -175,7 +174,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 
 		if (node is NetworkedCharacter nc)
 		{
-			nc.Bootstrap(state, model);
+			nc.Bootstrap(model);
 
 			if (peer == Multiplayer.GetUniqueId())
 			{

@@ -27,6 +27,7 @@ public static class NodeNames
 	public const string ChatManager = "ChatManager";
 	public const string ApplicationManager = "ApplicationManager";
 	public const string AnimationComponent = "AnimationComponent";
+	public const string CharacterStateComponent = "CharacterStateComponent";
 	public const string EquipmentComponent = "EquipmentComponent";
 	public const string InteractionComponent = "InteractionComponent";
 	public const string PropPusherComponent = "PropPusherComponent";

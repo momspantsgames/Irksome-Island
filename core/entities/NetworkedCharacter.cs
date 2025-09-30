@@ -20,39 +20,28 @@
 
 
 using Godot;
+using Godot.Collections;
 using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities.States;
 
 namespace IrksomeIsland.Core.Entities;
 
-public partial class NetworkedCharacter : CharacterBody3D
+public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContext
 {
-	private static readonly Dictionary<CharacterModelType, PackedScene> ModelCache = new();
-	private readonly Dictionary<CharacterStateType, CharacterState> _states = new();
+	private static readonly System.Collections.Generic.Dictionary<CharacterModelType, PackedScene> ModelCache = new();
 	private AnimationComponent? _animation;
 
 	private CharacterModelType _characterModelTypeId = CharacterModelType.CharacterA;
 	private Node? _currentModel;
-	private CharacterState? _currentState;
-	private CharacterStateType _currentStateId = CharacterStateType.Idle;
 	private string _displayName = "Player";
+
+	private EquipmentComponent? _equipment;
 	private Node3D? _modelRoot;
 	private Label3D? _nameplate;
 	private PropPusherComponent? _propPusher;
+	private CharacterStateComponent? _state;
 	private MultiplayerSynchronizer _sync = null!;
-
-	[Export]
-	public CharacterStateType CurrentStateId
-	{
-		get => _currentStateId;
-		set
-		{
-			if (_currentStateId == value) return;
-			_currentStateId = value;
-			ChangeState(value);
-		}
-	}
 
 	[Export]
 	public CharacterModelType ModelTypeId
@@ -79,13 +68,27 @@ public partial class NetworkedCharacter : CharacterBody3D
 		}
 	}
 
-	public EquipmentComponent? Equipment { get; private set; }
+	public NetworkedCharacter Character => this;
+	public bool IsServer => Multiplayer.IsServer();
+	public bool IsOwner => IsMultiplayerAuthority();
+	public void AnimTravel(string animName) => _animation?.Travel(animName);
 
-	private void BuildStates()
+
+	public void PushRigidBodies()
 	{
-		foreach (var kvp in CharacterStateFactory.All)
-			_states[kvp.Key] = kvp.Value(this);
+		_propPusher?.PushRigidBodies();
 	}
+
+	public bool TryClaimProp(string propId) => throw new NotImplementedException();
+
+	public void ReleaseProp(string propId)
+	{
+		throw new NotImplementedException();
+	}
+
+	public Node3D? GetPropNode(string propId) => throw new NotImplementedException();
+
+	public bool IsPropAvailable(string propId) => throw new NotImplementedException();
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
 
@@ -96,11 +99,9 @@ public partial class NetworkedCharacter : CharacterBody3D
 
 		var rc = new SceneReplicationConfig();
 		rc.AddProperty(new NodePath(":global_transform"));
-		rc.AddProperty(new NodePath(":CurrentStateId"));
 		rc.AddProperty(new NodePath(":DisplayName"));
 		rc.AddProperty(new NodePath(":ModelTypeId"));
 
-		rc.PropertySetReplicationMode(new NodePath(":CurrentStateId"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":DisplayName"), SceneReplicationConfig.ReplicationMode.OnChange);
 		rc.PropertySetReplicationMode(new NodePath(":ModelTypeId"), SceneReplicationConfig.ReplicationMode.OnChange);
 		_sync.ReplicationConfig = rc;
@@ -108,20 +109,24 @@ public partial class NetworkedCharacter : CharacterBody3D
 		AddChild(_sync);
 	}
 
-	public void Bootstrap(CharacterStateType state, CharacterModelType model)
+	public void Bootstrap(CharacterModelType model)
 	{
-		CurrentStateId = state;
 		ModelTypeId = model;
 	}
 
 	public override void _Ready()
 	{
 		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
+		_state = new CharacterStateComponent { Name = NodeNames.CharacterStateComponent };
+		_state.SetMultiplayerAuthority(GetMultiplayerAuthority());
+		AddChild(_state);
+		_state.Initialize(this, CharacterStateFactory.All);
+
 		_animation = new AnimationComponent { Name = NodeNames.AnimationComponent };
 		AddChild(_animation);
 
-		Equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
-		AddChild(Equipment);
+		_equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
+		AddChild(_equipment);
 
 		var interaction = new InteractionComponent { Name = NodeNames.InteractionComponent };
 		AddChild(interaction);
@@ -134,37 +139,7 @@ public partial class NetworkedCharacter : CharacterBody3D
 		_nameplate.Text = DisplayName;
 		_nameplate.Visible = !IsMultiplayerAuthority();
 
-		BuildStates();
-		ChangeState(CurrentStateId);
 		ApplyModel(ModelTypeId);
-	}
-
-	public void ServerEquip(Guid propId, string attachNodePath, Transform3D localOffset)
-	{
-		Equipment?.ServerEquip(propId, attachNodePath, localOffset);
-	}
-
-	public void ServerUnequip()
-	{
-		Equipment?.ServerUnequip();
-	}
-
-	public void AnimTravel(string s) => _animation?.Travel(s);
-
-	private void ChangeState(CharacterStateType next)
-	{
-		if (!_states.TryGetValue(next, out var newState)) return;
-
-		_currentState?.Exit();
-		_currentState = newState;
-		_currentState.Enter();
-	}
-
-	private void SetState(CharacterStateType s)
-	{
-		if (CurrentStateId == s) return;
-		CurrentStateId = s;
-		ChangeState(s);
 	}
 
 	private void ApplyModel(CharacterModelType id)
@@ -187,50 +162,6 @@ public partial class NetworkedCharacter : CharacterBody3D
 		_animation?.BindTo(_currentModel);
 	}
 
-	public void RequestState(CharacterStateType desired)
-	{
-		if (Multiplayer.IsServer())
-		{
-			SetState(desired);
-			return;
-		}
-
-		if (IsMultiplayerAuthority())
-		{
-			SetState(desired);
-		}
-
-		RpcId(1, nameof(RpcRequestState), (byte)desired);
-	}
-
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void RpcRequestState(byte desired)
-	{
-		if (!Multiplayer.IsServer()) return;
-		var sender = Multiplayer.GetRemoteSenderId();
-		if (sender != GetMultiplayerAuthority()) return;
-
-		// Only mutate on server if the server is the authority for this node
-		if (Multiplayer.GetUniqueId() == GetMultiplayerAuthority())
-		{
-			SetState((CharacterStateType)desired);
-		}
-	}
-
-	public override void _Process(double delta)
-	{
-		_currentState?.HandleInput(delta);
-		base._Process(delta);
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		_currentState?.PhysicsUpdate(delta);
-		base._PhysicsProcess(delta);
-	}
-
-	public void PushRigidBodies()
-	{
-		_propPusher?.PushRigidBodies();
-	}
+	public void RequestState(CharacterStateType desired, Dictionary? payload = null)
+		=> _state?.Request(desired, payload);
 }

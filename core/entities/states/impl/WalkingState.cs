@@ -23,23 +23,25 @@ using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities.States.Impl;
 
-public class WalkingState(NetworkedCharacter c) : CharacterState(c)
+public class WalkingState(ICharacterStateContext ctx) : CharacterState(ctx)
 {
+	private NetworkedCharacter _character = null!;
 	public override CharacterStateType Id => CharacterStateType.Walking;
 
 	protected override void OnEnter()
 	{
-		C.AnimTravel(Animations.Walk);
+		_character = Ctx.Character;
+		_character.AnimTravel(Animations.Walk);
 	}
 
 	protected override void OnPhysicsUpdate(double delta)
 	{
 		if (!IsOwner) return;
 
-		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
-			C.RequestState(CharacterStateType.Jumping);
+		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && _character.IsOnFloor())
+			_character.RequestState(CharacterStateType.Jumping);
 
-		var cam = C.GetViewport().GetCamera3D();
+		var cam = _character.GetViewport().GetCamera3D();
 
 		var wish = Input.GetVector(
 			Actions.Movement.Left,
@@ -51,7 +53,7 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
 
 		// camera-relative planar basis (fallback to character basis if camera not ready)
-		var basisSource = cam != null ? cam.GlobalTransform.Basis : C.GlobalTransform.Basis;
+		var basisSource = cam != null ? cam.GlobalTransform.Basis : _character.GlobalTransform.Basis;
 		var fwd = -basisSource.Z;
 		fwd.Y = 0f;
 		fwd = fwd.Normalized();
@@ -69,11 +71,11 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var targetVel = dir * targetSpeed;
 
 		// current vel split
-		var v = C.Velocity;
+		var v = _character.Velocity;
 		var horiz = new Vector3(v.X, 0f, v.Z);
 
 		// ground/air control
-		var a = C.IsOnFloor()
+		var a = _character.IsOnFloor()
 			? Gameplay.Character.Acceleration
 			: Gameplay.Character.Acceleration * Gameplay.Character.AirControlFactor;
 
@@ -83,21 +85,21 @@ public class WalkingState(NetworkedCharacter c) : CharacterState(c)
 		var g = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 		v = new Vector3(horiz.X, v.Y - g * (float)delta, horiz.Z);
 
-		C.Velocity = v;
-		C.MoveAndSlide();
-		C.PushRigidBodies();
+		_character.Velocity = v;
+		_character.MoveAndSlide();
+		_character.PushRigidBodies();
 
 		// face move direction if any
 		if (hasInput && dir.LengthSquared() > Gameplay.FloatMathEpsilon)
 		{
 			var yaw = Mathf.Atan2(dir.X, dir.Z);
-			var rot = C.Rotation;
+			var rot = _character.Rotation;
 			rot.Y = Mathf.LerpAngle(rot.Y, yaw, 1f - Mathf.Exp(-Gameplay.Character.RotationSpeed * (float)delta));
-			C.Rotation = rot;
+			_character.Rotation = rot;
 		}
 
 		// state transitions
 		if (!hasInput && horiz.LengthSquared() < Gameplay.FloatMathEpsilon)
-			C.RequestState(CharacterStateType.Idle);
+			_character.RequestState(CharacterStateType.Idle);
 	}
 }

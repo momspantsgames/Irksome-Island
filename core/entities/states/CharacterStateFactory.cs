@@ -24,13 +24,11 @@ namespace IrksomeIsland.Core.Entities.States;
 
 public static class CharacterStateFactory
 {
-	public static readonly IReadOnlyDictionary<CharacterStateType, Func<NetworkedCharacter, CharacterState>> All =
-		new Dictionary<CharacterStateType, Func<NetworkedCharacter, CharacterState>>
+	public static readonly IReadOnlyDictionary<CharacterStateType, Func<ICharacterStateContext, CharacterState>> All
+		= new Dictionary<CharacterStateType, Func<ICharacterStateContext, CharacterState>>
 		{
-			[CharacterStateType.Idle] = c => new IdleState(c),
-			[CharacterStateType.Walking] = c => new WalkingState(c),
-			[CharacterStateType.Jumping] = c => new JumpingState(c),
-			[CharacterStateType.Sprinting] = c => new WalkingState(c)
-			// add more as you implement them...
+			[CharacterStateType.Idle] = ctx => new IdleState(ctx),
+			[CharacterStateType.Walking] = ctx => new WalkingState(ctx),
+			[CharacterStateType.Jumping] = ctx => new JumpingState(ctx)
 		};
 }

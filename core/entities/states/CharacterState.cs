@@ -18,31 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Application;
+using Godot.Collections;
 
 namespace IrksomeIsland.Core.Entities.States;
 
-public abstract class CharacterState(NetworkedCharacter c)
+public abstract class CharacterState(ICharacterStateContext ctx)
 {
-	protected readonly NetworkedCharacter C = c;
+	protected readonly ICharacterStateContext Ctx = ctx;
+
 	public abstract CharacterStateType Id { get; }
-	protected bool IsOwner => C.IsMultiplayerAuthority();
-	protected bool IsServer => C.Multiplayer.IsServer();
+
+	protected bool IsOwner => Ctx.IsOwner;
+	protected bool IsServer => Ctx.IsServer;
+
+	// Called by the machine before Enter when a payload exists
+	public virtual void Configure(Dictionary? payload)
+	{
+	}
 
 	public void Enter()
 	{
-		IrkLogger.Log($"{Id}.Enter() for {C.Name}", IrkLogger.LogLevel.Trace);
 		OnEnter();
 	}
 
 	public void Exit()
 	{
-		IrkLogger.Log($"{Id}.Exit() for {C.Name}", IrkLogger.LogLevel.Trace);
 		OnExit();
 	}
 
-	public void HandleInput(double delta) => OnHandleInput(delta);
-	public void PhysicsUpdate(double delta) => OnPhysicsUpdate(delta);
+	public void HandleInput(double delta)
+	{
+		OnHandleInput(delta);
+	}
+
+	public void PhysicsUpdate(double delta)
+	{
+		OnPhysicsUpdate(delta);
+	}
 
 	protected virtual void OnEnter()
 	{

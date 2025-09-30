@@ -23,14 +23,16 @@ using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Entities.States.Impl;
 
-public class IdleState(NetworkedCharacter c) : CharacterState(c)
+public class IdleState(ICharacterStateContext ctx) : CharacterState(ctx)
 {
+	private NetworkedCharacter _character = null!;
 	public override CharacterStateType Id => CharacterStateType.Idle;
 
 	protected override void OnEnter()
 	{
-		C.Velocity = new Vector3(0.0f, C.Velocity.Y, 0.0f);
-		C.AnimTravel(Animations.Static);
+		_character = Ctx.Character;
+		_character.Velocity = new Vector3(0.0f, _character.Velocity.Y, 0.0f);
+		_character.AnimTravel(Animations.Static);
 	}
 
 	protected override void OnPhysicsUpdate(double delta)
@@ -45,21 +47,21 @@ public class IdleState(NetworkedCharacter c) : CharacterState(c)
 		);
 
 		if (wish.LengthSquared() > Gameplay.FloatMathEpsilon)
-			C.RequestState(CharacterStateType.Walking);
+			_character.RequestState(CharacterStateType.Walking);
 
-		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && C.IsOnFloor())
-			C.RequestState(CharacterStateType.Jumping);
+		if (Input.IsActionJustPressed(Actions.MovementAction.Jump) && _character.IsOnFloor())
+			_character.RequestState(CharacterStateType.Jumping);
 
 		// bleed horizontal speed to zero; keep gravity
-		var v = C.Velocity;
+		var v = _character.Velocity;
 		v.X = Mathf.Lerp(v.X, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));
 		v.Z = Mathf.Lerp(v.Z, 0f, 1f - Mathf.Exp(-(float)delta * Gameplay.Character.InertiaBleedFactor));
 
 		var g = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 		v.Y -= g * (float)delta;
 
-		C.Velocity = v;
-		C.MoveAndSlide();
-		C.PushRigidBodies();
+		_character.Velocity = v;
+		_character.MoveAndSlide();
+		_character.PushRigidBodies();
 	}
 }
