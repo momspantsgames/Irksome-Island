@@ -29,11 +29,11 @@ public partial class NetworkManager : Node
 
 	private ENetMultiplayerPeer? _peer;
 
-	public NetworkRole CurrentRole { get; private set; } = NetworkRole.None;
-	public ConnectionState State { get; private set; } = ConnectionState.Disconnected;
+	private NetworkRole CurrentRole { get; set; } = NetworkRole.None;
+	private ConnectionState State { get; set; } = ConnectionState.Disconnected;
 
 	public bool IsServer => CurrentRole is NetworkRole.Host or NetworkRole.DedicatedServer;
-	public bool IsClient => CurrentRole == NetworkRole.Client;
+	private bool IsClient => CurrentRole == NetworkRole.Client;
 	public static bool IsHeadless => DisplayServer.GetName() == "headless";
 
 	public event Action<long>? PeerJoined;      // server side
@@ -94,7 +94,7 @@ public partial class NetworkManager : Node
 		IrkLogger.Log($"Attempting to connect to {address}:{port}");
 	}
 
-	public void Disconnect()
+	private void Disconnect()
 	{
 		var peer = _peer;
 		_peer = null;
@@ -112,7 +112,7 @@ public partial class NetworkManager : Node
 		IrkLogger.Log("Disconnected from network");
 	}
 
-	public bool IsPlayerConnected(long playerId)
+	private bool IsPlayerConnected(long playerId)
 	{
 		if (Multiplayer.MultiplayerPeer == null || State != ConnectionState.Connected)
 			return false;

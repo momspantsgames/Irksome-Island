@@ -38,7 +38,7 @@ public partial class CameraRig : Node3D
 	public Vector3 DesiredPivot { get; set; }
 	public float DesiredArmLength { get; set; }
 
-	public SpringArm3D Arm { get; private set; } = null!;
+	private SpringArm3D Arm { get; set; } = null!;
 	public Camera3D Cam { get; private set; } = null!;
 
 	public override void _Ready()

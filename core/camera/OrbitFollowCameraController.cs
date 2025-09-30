@@ -30,7 +30,7 @@ public partial class OrbitFollowCameraController : CameraController
 	private bool _rotating;
 	private Node3D? _target;
 	private float _yaw, _pitch;
-	public bool InvertY { get; set; } = true;
+	private bool InvertY { get; set; } = true;
 
 	public void SetTarget(CameraRig rig, Node3D target)
 	{
@@ -56,8 +56,7 @@ public partial class OrbitFollowCameraController : CameraController
 			_rotating = mb.Pressed;
 			Input.MouseMode = _rotating ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
 		}
-
-		if (e is InputEventMouseMotion mm && (_rotating || !RequireRmb))
+		else if (e is InputEventMouseMotion mm && (_rotating || !RequireRmb))
 		{
 			var reducer = .01f;
 			_yaw -= mm.Relative.X * Gameplay.Camera.MouseSensitivity * reducer;

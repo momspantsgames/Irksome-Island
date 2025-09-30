@@ -79,17 +79,6 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		_propPusher?.PushRigidBodies();
 	}
 
-	public bool TryClaimProp(string propId) => throw new NotImplementedException();
-
-	public void ReleaseProp(string propId)
-	{
-		throw new NotImplementedException();
-	}
-
-	public Node3D? GetPropNode(string propId) => throw new NotImplementedException();
-
-	public bool IsPropAvailable(string propId) => throw new NotImplementedException();
-
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
 
 	public override void _EnterTree()

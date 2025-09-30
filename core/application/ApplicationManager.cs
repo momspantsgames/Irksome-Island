@@ -26,10 +26,10 @@ namespace IrksomeIsland.Core.Application;
 
 public partial class ApplicationManager : Node
 {
-    private IrkGame? _activeGame;
-    public IrkGame? ActiveGame => _activeGame;
+	public IrkGame? ActiveGame { get; private set; }
+
 	public NetworkManager NetworkManager { get; private set; } = null!;
-	public static bool IsHeadless => DisplayServer.GetName() == "headless";
+	private static bool IsHeadless => DisplayServer.GetName() == "headless";
 
 	public override void _Ready()
 	{
@@ -58,21 +58,20 @@ public partial class ApplicationManager : Node
 	public void StartGame(GameConfiguration config)
 	{
 		StopGame();
-		_activeGame = CreateGame(config);
-		AddChild(_activeGame);
-		_activeGame.StartGame();
+		ActiveGame = CreateGame(config);
+		AddChild(ActiveGame);
+		ActiveGame.StartGame();
 	}
 
 	private void StopGame()
 	{
-		_activeGame?.StopGame();
-		_activeGame?.QueueFree();
-		_activeGame = null;
+		ActiveGame?.StopGame();
+		ActiveGame?.QueueFree();
+		ActiveGame = null;
 	}
 
 	private static IrkGame CreateGame(GameConfiguration config)
 	{
-
 		IrkGame game = config.GameType switch
 		{
 			GameType.Attract => new AttractGame(config),

@@ -24,7 +24,7 @@ namespace IrksomeIsland.Core.Camera;
 
 public abstract partial class CameraController : Resource
 {
-	public float FollowSpeed { get; set; } = 12f;
+	public float FollowSpeed { get; private set; } = 12f;
 
 	public virtual void OnAttach(CameraRig rig)
 	{

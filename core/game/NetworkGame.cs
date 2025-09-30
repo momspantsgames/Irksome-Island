@@ -150,7 +150,6 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	}
 
 	// Spawn callbacks run on ALL peers.
-	// Must RETURN a node NOT yet in the tree. Spawner adds it under SpawnPath.
 	private Node SpawnPlayerFromData(Variant dv)
 	{
 		var d = (Dictionary)dv;
