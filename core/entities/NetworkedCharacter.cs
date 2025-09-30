@@ -68,16 +68,16 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		}
 	}
 
-	public NetworkedCharacter Character => this;
+	public CharacterBody3D Body => this;
 	public bool IsServer => Multiplayer.IsServer();
 	public bool IsOwner => IsMultiplayerAuthority();
-	public void AnimTravel(string animName) => _animation?.Travel(animName);
 
+	public void AnimTravel(string name) => _animation?.Travel(name);
 
-	public void PushRigidBodies()
-	{
-		_propPusher?.PushRigidBodies();
-	}
+	public void PushRigidBodies() => _propPusher?.PushRigidBodies();
+
+	public void RequestState(CharacterStateType state, Dictionary? payload = null)
+		=> _state?.Request(state, payload);
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
 
@@ -150,7 +150,4 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		_modelRoot?.AddChild(_currentModel);
 		_animation?.BindTo(_currentModel);
 	}
-
-	public void RequestState(CharacterStateType desired, Dictionary? payload = null)
-		=> _state?.Request(desired, payload);
 }

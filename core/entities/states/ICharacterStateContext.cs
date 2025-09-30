@@ -18,11 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Godot;
+using Godot.Collections;
+
 namespace IrksomeIsland.Core.Entities.States;
 
 public interface ICharacterStateContext
 {
-	NetworkedCharacter Character { get; }
+	CharacterBody3D Body { get; }
 	bool IsServer { get; }
 	bool IsOwner { get; }
+
+	void AnimTravel(string name);
+	void PushRigidBodies();
+
+	void RequestState(CharacterStateType state, Dictionary? payload = null);
 }

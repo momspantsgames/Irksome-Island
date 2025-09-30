@@ -25,17 +25,15 @@ namespace IrksomeIsland.Core.Entities.States.Impl;
 
 public class JumpingState(ICharacterStateContext ctx) : CharacterState(ctx)
 {
-	private NetworkedCharacter _character = null!;
 	public override CharacterStateType Id => CharacterStateType.Jumping;
 
 	protected override void OnEnter()
 	{
-		_character = Ctx.Character;
-		var v = _character.Velocity;
+		var v = Ctx.Body.Velocity;
 		v.Y = Gameplay.Character.JumpSpeed;
-		_character.Velocity = v;
+		Ctx.Body.Velocity = v;
 
-		_character.AnimTravel(Animations.Idle);
+		Ctx.AnimTravel(Animations.Idle);
 	}
 
 	protected override void OnPhysicsUpdate(double delta)
@@ -51,8 +49,8 @@ public class JumpingState(ICharacterStateContext ctx) : CharacterState(ctx)
 		var dir = Vector3.Zero;
 		if (wish.LengthSquared() > Gameplay.FloatMathEpsilon)
 		{
-			var cam = _character.GetViewport().GetCamera3D();
-			var basis = cam != null ? cam.GlobalTransform.Basis : _character.GlobalTransform.Basis;
+			var cam = Ctx.Body.GetViewport().GetCamera3D();
+			var basis = cam != null ? cam.GlobalTransform.Basis : Ctx.Body.GlobalTransform.Basis;
 			var fwd = -basis.Z;
 			fwd.Y = 0;
 			fwd = fwd.Normalized();
@@ -63,7 +61,7 @@ public class JumpingState(ICharacterStateContext ctx) : CharacterState(ctx)
 		}
 
 		// air acceleration
-		var v = _character.Velocity;
+		var v = Ctx.Body.Velocity;
 		var horiz = new Vector3(v.X, 0, v.Z);
 		var target = dir * (Input.IsActionPressed(Actions.MovementAction.Sprint)
 			? Gameplay.Character.RunSpeed
@@ -75,17 +73,17 @@ public class JumpingState(ICharacterStateContext ctx) : CharacterState(ctx)
 		// gravity
 		var g = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 		v = new Vector3(horiz.X, v.Y - g * (float)delta, horiz.Z);
-		_character.Velocity = v;
+		Ctx.Body.Velocity = v;
 
-		_character.MoveAndSlide();
-		_character.PushRigidBodies();
+		Ctx.Body.MoveAndSlide();
+		Ctx.PushRigidBodies();
 
 		// landed -> decide Idle vs Walking
-		if (_character.IsOnFloor())
+		if (Ctx.Body.IsOnFloor())
 		{
 			var hasInput = wish.LengthSquared() > Gameplay.FloatMathEpsilon;
-			_character.AnimTravel(hasInput ? "walk" : "idle");
-			_character.RequestState(hasInput ? CharacterStateType.Walking : CharacterStateType.Idle);
+			Ctx.AnimTravel(hasInput ? "walk" : "idle");
+			Ctx.RequestState(hasInput ? CharacterStateType.Walking : CharacterStateType.Idle);
 			return;
 		}
 
@@ -93,9 +91,9 @@ public class JumpingState(ICharacterStateContext ctx) : CharacterState(ctx)
 		if (dir != Vector3.Zero)
 		{
 			var yaw = Mathf.Atan2(dir.X, dir.Z);
-			var rot = _character.Rotation;
+			var rot = Ctx.Body.Rotation;
 			rot.Y = Mathf.LerpAngle(rot.Y, yaw, 1f - Mathf.Exp(-Gameplay.Character.RotationSpeed * (float)delta));
-			_character.Rotation = rot;
+			Ctx.Body.Rotation = rot;
 		}
 	}
 }
