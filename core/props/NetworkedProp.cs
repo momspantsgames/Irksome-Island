@@ -25,6 +25,8 @@ namespace IrksomeIsland.Core.Props;
 
 public partial class NetworkedProp : RigidBody3D
 {
+	[Export] public NodePath AlignmentNodePath { get; set; } = "Grip";
+	[Export] public Transform3D AlignmentOffset { get; set; } = Transform3D.Identity;
 	private Area3D _interactArea = null!;
 
 	public override void _Ready()

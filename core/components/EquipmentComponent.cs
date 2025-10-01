@@ -12,20 +12,20 @@ namespace IrksomeIsland.Core.Components;
 public partial class EquipmentComponent : Node3D
 {
 	private Marker3D? _backEquipPoint;
+	private NetworkedProp? _backItem;
 	private string _backItemName = "";
 
 	private CharacterBus _bus = null!;
 	private Marker3D? _headEquipPoint;
+	private NetworkedProp? _headItem;
 	private string _headItemName = "";
 	private Marker3D? _leftHandEquipPoint;
+	private NetworkedProp? _leftHandItem;
 	private string _leftHandItemName = "";
 	private Marker3D? _rightHandEquipPoint;
+	private NetworkedProp? _rightHandItem;
 
 	private string _rightHandItemName = "";
-	private NetworkedProp? _rightHandItem;
-	private NetworkedProp? _leftHandItem;
-	private NetworkedProp? _headItem;
-	private NetworkedProp? _backItem;
 	private MultiplayerSynchronizer _sync = null!;
 
 	[Export]
@@ -148,16 +148,16 @@ public partial class EquipmentComponent : Node3D
 	{
 		switch (slot)
 		{
-			case var s when s == NodeNames.EquipmentAttachmentPoint.RightHand:
+			case NodeNames.EquipmentAttachmentPoint.RightHand:
 				RightHandItemName = item.Name.ToString();
 				break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.LeftHand:
+			case NodeNames.EquipmentAttachmentPoint.LeftHand:
 				LeftHandItemName = item.Name.ToString();
 				break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.Head:
+			case NodeNames.EquipmentAttachmentPoint.Head:
 				HeadItemName = item.Name.ToString();
 				break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.Back:
+			case NodeNames.EquipmentAttachmentPoint.Back:
 				BackItemName = item.Name.ToString();
 				break;
 			default:
@@ -170,7 +170,8 @@ public partial class EquipmentComponent : Node3D
 	private void ApplySlot(string slot, string previousItemName, string nextItemName)
 	{
 		// Clear previous mapping and unfreeze if we are switching/removing
-		if (!string.IsNullOrEmpty(previousItemName) && (string.IsNullOrEmpty(nextItemName) || previousItemName != nextItemName))
+		if (!string.IsNullOrEmpty(previousItemName) &&
+		    (string.IsNullOrEmpty(nextItemName) || previousItemName != nextItemName))
 		{
 			var prev = ResolveItemByName(previousItemName);
 			if (prev != null)
@@ -180,10 +181,10 @@ public partial class EquipmentComponent : Node3D
 
 			switch (slot)
 			{
-				case var s when s == NodeNames.EquipmentAttachmentPoint.RightHand: _rightHandItem = null; break;
-				case var s when s == NodeNames.EquipmentAttachmentPoint.LeftHand: _leftHandItem = null; break;
-				case var s when s == NodeNames.EquipmentAttachmentPoint.Head: _headItem = null; break;
-				case var s when s == NodeNames.EquipmentAttachmentPoint.Back: _backItem = null; break;
+				case NodeNames.EquipmentAttachmentPoint.RightHand: _rightHandItem = null; break;
+				case NodeNames.EquipmentAttachmentPoint.LeftHand: _leftHandItem = null; break;
+				case NodeNames.EquipmentAttachmentPoint.Head: _headItem = null; break;
+				case NodeNames.EquipmentAttachmentPoint.Back: _backItem = null; break;
 			}
 		}
 
@@ -198,10 +199,10 @@ public partial class EquipmentComponent : Node3D
 
 		switch (slot)
 		{
-			case var s when s == NodeNames.EquipmentAttachmentPoint.RightHand: _rightHandItem = item; break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.LeftHand: _leftHandItem = item; break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.Head: _headItem = item; break;
-			case var s when s == NodeNames.EquipmentAttachmentPoint.Back: _backItem = item; break;
+			case NodeNames.EquipmentAttachmentPoint.RightHand: _rightHandItem = item; break;
+			case NodeNames.EquipmentAttachmentPoint.LeftHand: _leftHandItem = item; break;
+			case NodeNames.EquipmentAttachmentPoint.Head: _headItem = item; break;
+			case NodeNames.EquipmentAttachmentPoint.Back: _backItem = item; break;
 		}
 	}
 
@@ -216,28 +217,50 @@ public partial class EquipmentComponent : Node3D
 	{
 		return slot switch
 		{
-			var s when s == NodeNames.EquipmentAttachmentPoint.RightHand => _rightHandEquipPoint,
-			var s when s == NodeNames.EquipmentAttachmentPoint.LeftHand => _leftHandEquipPoint,
-			var s when s == NodeNames.EquipmentAttachmentPoint.Head => _headEquipPoint,
-			var s when s == NodeNames.EquipmentAttachmentPoint.Back => _backEquipPoint,
+			NodeNames.EquipmentAttachmentPoint.RightHand => _rightHandEquipPoint,
+			NodeNames.EquipmentAttachmentPoint.LeftHand => _leftHandEquipPoint,
+			NodeNames.EquipmentAttachmentPoint.Head => _headEquipPoint,
+			NodeNames.EquipmentAttachmentPoint.Back => _backEquipPoint,
 			_ => null
 		};
 	}
 
 	public override void _Process(double delta)
 	{
-    // Server and owning client drive equipped items to follow attachment points by setting global transforms
-    var parent = GetParent();
-    var isOwnerClient = parent != null && parent.IsMultiplayerAuthority() && !Multiplayer.IsServer();
-    if (!Multiplayer.IsServer() && !isOwnerClient) return;
+		// Server and owning client drive equipped items to follow attachment points by setting global transforms
+		var parent = GetParent();
+		var isOwnerClient = parent != null && parent.IsMultiplayerAuthority() && !Multiplayer.IsServer();
+		if (!Multiplayer.IsServer() && !isOwnerClient) return;
 
-	if (_rightHandItem != null && _rightHandEquipPoint != null)
-		_rightHandItem.SetDeferred("global_transform", _rightHandEquipPoint.GlobalTransform);
-	if (_leftHandItem != null && _leftHandEquipPoint != null)
-		_leftHandItem.SetDeferred("global_transform", _leftHandEquipPoint.GlobalTransform);
-	if (_headItem != null && _headEquipPoint != null)
-		_headItem.SetDeferred("global_transform", _headEquipPoint.GlobalTransform);
-	if (_backItem != null && _backEquipPoint != null)
-		_backItem.SetDeferred("global_transform", _backEquipPoint.GlobalTransform);
+		if (_rightHandItem != null && _rightHandEquipPoint != null)
+		{
+			_rightHandItem.SetDeferred("global_transform",
+				ComputeAlignedTransform(_rightHandItem, _rightHandEquipPoint));
+		}
+
+		if (_leftHandItem != null && _leftHandEquipPoint != null)
+			_leftHandItem.SetDeferred("global_transform", ComputeAlignedTransform(_leftHandItem, _leftHandEquipPoint));
+
+		if (_headItem != null && _headEquipPoint != null)
+			_headItem.SetDeferred("global_transform", ComputeAlignedTransform(_headItem, _headEquipPoint));
+
+		if (_backItem != null && _backEquipPoint != null)
+			_backItem.SetDeferred("global_transform", ComputeAlignedTransform(_backItem, _backEquipPoint));
+	}
+
+	private static Transform3D ComputeAlignedTransform(NetworkedProp item, Marker3D attachPoint)
+	{
+		var nodePath = item.AlignmentNodePath;
+		Node3D? grip = null;
+		if (!nodePath.IsEmpty)
+			grip = item.GetNodeOrNull<Node3D>(nodePath);
+
+		if (grip == null)
+			return attachPoint.GlobalTransform * item.AlignmentOffset;
+
+		// We want: (item.Global * grip.Local) == (attach.Global * offset)
+		// => item.Global = attach.Global * offset * inverse(grip.Local)
+		var inverseLocalGrip = grip.Transform.AffineInverse();
+		return attachPoint.GlobalTransform * item.AlignmentOffset * inverseLocalGrip;
 	}
 }
