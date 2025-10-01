@@ -18,18 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Constants;
+using Godot;
 
 namespace IrksomeIsland.Core.Props;
 
-public partial class Dart : NetworkedProp
+public interface IInteractable
 {
-	public override void _Ready()
-	{
-		base._Ready();
+	// Called on the server to perform the interaction
+	void OnInteractServer(Node3D interactor);
 
-		CollisionLayer = CollisionLayers.Projectiles.ToMask();
-		CollisionMask = (CollisionLayers.World | CollisionLayers.Characters | CollisionLayers.Projectiles |
-		                 CollisionLayers.Dynamic | CollisionLayers.Props).ToMask();
-	}
+	// Optional client hint (prompt text, icon path, etc.)
+	string? GetInteractionPrompt();
 }

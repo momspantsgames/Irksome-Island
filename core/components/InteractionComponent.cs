@@ -3,111 +3,155 @@
 // MIT License
 
 using Godot;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Bus;
+using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
+using IrksomeIsland.Core.Props;
 
 namespace IrksomeIsland.Core.Components;
 
-public interface IInteractable
+public partial class InteractionComponent : Area3D, ICharacterBusAware
 {
-	// Called on the server to perform the interaction
-	void OnInteractServer(Node3D interactor);
-
-	// Optional client hint (prompt text, icon path, etc.)
-	string? GetInteractionPrompt();
-}
-
-public partial class InteractionComponent : Node
-{
+	private readonly HashSet<IInteractable> _candidates = new();
+	private readonly List<IInteractable> _ordered = new();
+	private CharacterBus _bus = null!;
 	private IInteractable? _current;
 
-	private Node3D _ownerNode = null!;
-	private Area3D _queryArea = null!;
-	private CollisionShape3D _queryShape = null!;
-	[Export] public float Radius { get; set; } = 2.0f;
-	[Export] public float Height { get; set; } = 1.6f;
+	public void BindTo(CharacterBus bus)
+	{
+		_bus = bus;
+		_bus.InteractionRequested += TryInteract;
+		_bus.InteractionCycleRequested += OnCycle;
+	}
+
+	private void TryInteract()
+	{
+		NetworkedProp? current = null;
+		if (_current != null)
+		{
+			current = (NetworkedProp)_current;
+		}
+
+		IrkLogger.Log($"TryInteract() called from {GetParent().Name} on {current?.Name} ");
+	}
 
 	public override void _Ready()
 	{
-		_ownerNode = GetParent<Node3D>();
+		Name = NodeNames.InteractionComponent;
 
-		_queryArea = new Area3D { Name = "InteractionQuery" };
-		_queryShape = new CollisionShape3D
+		var detectionShape = new CollisionShape3D
 		{
-			Shape = new CylinderShape3D { Radius = Radius, Height = Height }
+			// could be a cone for more forward-facing interactions
+			Shape = new SphereShape3D { Radius = Gameplay.Character.InteractDetectRadius }
 		};
 
-		_queryArea.AddChild(_queryShape);
-		AddChild(_queryArea);
+		AddChild(detectionShape);
+
+		Monitoring = true;
+		Monitorable = false;
+		CollisionMask = CollisionLayers.Props.ToMask();
+
+		BodyEntered += OnBodyEntered;
+		BodyExited += OnBodyExited;
+		AreaEntered += OnAreaEntered;
+		AreaExited += OnAreaExited;
 	}
 
-	public override void _Process(double delta)
+	private void OnBodyEntered(Node3D body)
 	{
-		var space = _ownerNode.GetWorld3D().DirectSpaceState;
-		if (space == null) return;
-
-		var shape = new CylinderShape3D { Radius = Radius, Height = Height };
-		var parms = new PhysicsShapeQueryParameters3D
-		{
-			Shape = shape,
-			Transform = _ownerNode.GlobalTransform,
-			CollisionMask = uint.MaxValue,
-			CollideWithAreas = true,
-			CollideWithBodies = true
-		};
-
-		var results = space.IntersectShape(parms, 16);
-		_current = null;
-		foreach (var hit in results)
-		{
-			if (hit.TryGetValue("collider", out var colliderVar))
-			{
-				var obj = colliderVar.AsGodotObject();
-				if (obj is Node node && FindInteractable(node) is { } interactable)
-				{
-					_current = interactable;
-					break;
-				}
-			}
-		}
-
-		// if (Input.IsActionJustPressed(ActionName))
-		// {
-		// 	TryInteract();
-		// }
+		TryAdd(body);
 	}
 
-	public void TryInteract()
+	private void OnBodyExited(Node3D body)
 	{
-		if (_current == null) return;
-		if (!Multiplayer.IsServer())
+		TryRemove(body);
+	}
+
+	private void OnAreaEntered(Area3D area)
+	{
+		TryAdd(area);
+	}
+
+	private void OnAreaExited(Area3D area)
+	{
+		TryRemove(area);
+	}
+
+	private void TryAdd(Node n)
+	{
+		if (TryFindInteractable(n, out var it) && _candidates.Add(it))
+			RebuildOrdered();
+	}
+
+	private void OnCycle(int dir)
+	{
+		if (_ordered.Count == 0)
 		{
-			RpcId(1, nameof(RpcRequestInteract));
+			_current = null;
 			return;
 		}
 
-		_current.OnInteractServer(_ownerNode!);
+		var idx = _current != null ? _ordered.IndexOf(_current) : -1;
+		if (idx < 0) idx = 0;
+		idx = Mod(idx + (dir >= 0 ? +1 : -1), _ordered.Count);
+		_current = _ordered[idx];
 	}
 
-	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-	private void RpcRequestInteract()
-	{
-		if (!Multiplayer.IsServer()) return;
-		var sender = Multiplayer.GetRemoteSenderId();
-		if (_ownerNode?.GetMultiplayerAuthority() != sender) return;
-		if (_current == null) return;
-		_current.OnInteractServer(_ownerNode!);
-	}
+	private static int Mod(int x, int m) => (x % m + m) % m;
 
-	private static IInteractable? FindInteractable(Node node)
+	private void TryRemove(Node n)
 	{
-		// Node implements IInteractable directly
-		if (node is IInteractable here) return here;
-
-		// Or a sibling/child implements it
-		foreach (var child in node.GetChildren())
+		if (TryFindInteractable(n, out var it) && _candidates.Remove(it))
 		{
-			if (child is IInteractable ii) return ii;
+			if (ReferenceEquals(_current, it)) _current = null;
+			RebuildOrdered();
+		}
+	}
+
+	private void RebuildOrdered()
+	{
+		_ordered.Clear();
+		_ordered.AddRange(_candidates);
+
+		var parent = GetParent<NetworkedCharacter>();
+		var origin = parent.GlobalTransform.Origin;
+		var fwd = -parent.GlobalTransform.Basis.Z;
+
+		_ordered.Sort((a, b) =>
+		{
+			var na = (NetworkedProp)a;
+			var nb = (NetworkedProp)b;
+			var da = na.GlobalTransform.Origin - origin;
+			var db = nb.GlobalTransform.Origin - origin;
+
+			var dotA = fwd.Dot(da.Normalized());
+			var dotB = fwd.Dot(db.Normalized());
+
+			// prioritize in front, then nearer, then name for stability
+			var cmp = -dotA.CompareTo(dotB);
+			if (cmp != 0) return cmp;
+			cmp = da.Length().CompareTo(db.Length());
+			return cmp != 0 ? cmp : string.Compare(na.Name.ToString(), nb.Name.ToString(), StringComparison.Ordinal);
+		});
+
+		_current ??= _ordered.FirstOrDefault();
+	}
+
+	private static bool TryFindInteractable(Node n, out IInteractable it)
+	{
+		while (n != null)
+		{
+			if (n is IInteractable cast)
+			{
+				it = cast;
+				return true;
+			}
+
+			n = n.GetParent();
 		}
 
-		return null;
+		it = null!;
+		return false;
 	}
 }

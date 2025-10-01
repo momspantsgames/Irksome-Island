@@ -43,4 +43,12 @@ public static class NodeNames
 	public const string WorldMain = "MainWorld";
 
 	public static string ApplicationManagerPath() => $"{AppRoot}/{ApplicationManager}";
+
+	public static class EquipmentAttachmentPoint
+	{
+		public const string Head = "HeadEquip";
+		public const string Back = "BackEquip";
+		public const string LeftHand = "LeftEquip";
+		public const string RightHand = "RightEquip";
+	}
 }

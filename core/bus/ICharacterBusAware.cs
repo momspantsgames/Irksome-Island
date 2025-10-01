@@ -18,18 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Constants;
+namespace IrksomeIsland.Core.Bus;
 
-namespace IrksomeIsland.Core.Props;
-
-public partial class Dart : NetworkedProp
+public interface ICharacterBusAware
 {
-	public override void _Ready()
-	{
-		base._Ready();
-
-		CollisionLayer = CollisionLayers.Projectiles.ToMask();
-		CollisionMask = (CollisionLayers.World | CollisionLayers.Characters | CollisionLayers.Projectiles |
-		                 CollisionLayers.Dynamic | CollisionLayers.Props).ToMask();
-	}
+	void BindTo(CharacterBus bus);
 }

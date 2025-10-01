@@ -19,9 +19,18 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Props;
 
-public partial class NetworkedProp : Node
+public partial class NetworkedProp : RigidBody3D
 {
+	private Area3D _interactArea = null!;
+
+	public override void _Ready()
+	{
+		CollisionLayer = CollisionLayers.Props.ToMask();
+		CollisionMask = (CollisionLayers.World | CollisionLayers.Characters | CollisionLayers.Projectiles |
+		                 CollisionLayers.Dynamic | CollisionLayers.Props).ToMask();
+	}
 }

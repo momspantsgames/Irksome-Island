@@ -18,18 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Props;
 
-namespace IrksomeIsland.Core.Props;
+namespace IrksomeIsland.Core.Bus;
 
-public partial class Dart : NetworkedProp
+public sealed class CharacterBus
 {
-	public override void _Ready()
-	{
-		base._Ready();
+	public event Action? InteractionRequested;
+	public event Action<NetworkedProp, string>? EquipRequested;
+	public event Action<NetworkedProp, string>? Equipped;
+	public event Action<int>? InteractionCycleRequested;
 
-		CollisionLayer = CollisionLayers.Projectiles.ToMask();
-		CollisionMask = (CollisionLayers.World | CollisionLayers.Characters | CollisionLayers.Projectiles |
-		                 CollisionLayers.Dynamic | CollisionLayers.Props).ToMask();
-	}
+	public void RaiseInteractionRequested() => InteractionRequested?.Invoke();
+	public void RaiseEquipRequested(NetworkedProp n, string slot) => EquipRequested?.Invoke(n, slot);
+	public void RaiseEquipped(NetworkedProp n, string slot) => Equipped?.Invoke(n, slot);
+	public void RaiseInteractionCycleRequested(int dir) => InteractionCycleRequested?.Invoke(dir);
 }

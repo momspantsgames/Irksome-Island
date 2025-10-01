@@ -21,6 +21,7 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Bus;
 using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities.States;
@@ -30,6 +31,7 @@ namespace IrksomeIsland.Core.Entities;
 public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContext
 {
 	private static readonly System.Collections.Generic.Dictionary<CharacterModelType, PackedScene> ModelCache = new();
+	private readonly CharacterBus _bus = new();
 	private AnimationComponent? _animation;
 
 	private CharacterModelType _characterModelTypeId = CharacterModelType.CharacterA;
@@ -37,6 +39,7 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 	private string _displayName = "Player";
 
 	private EquipmentComponent? _equipment;
+	private InteractionComponent? _interaction;
 	private Node3D? _modelRoot;
 	private Label3D? _nameplate;
 	private PropPusherComponent? _propPusher;
@@ -54,7 +57,6 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 			ApplyModel(value);
 		}
 	}
-
 
 	[Export]
 	public string DisplayName
@@ -78,6 +80,12 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 
 	public void RequestState(CharacterStateType state, Dictionary? payload = null)
 		=> _state?.Request(state, payload);
+
+	public override void _Input(InputEvent @event)
+	{
+		if (!IsMultiplayerAuthority()) return;
+		if (Input.IsActionJustPressed(Actions.Interact)) _bus.RaiseInteractionRequested();
+	}
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
 
@@ -105,7 +113,12 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 
 	public override void _Ready()
 	{
+		CollisionLayer = CollisionLayers.Characters.ToMask();
+		CollisionMask = (CollisionLayers.Props | CollisionLayers.Characters |
+		                 CollisionLayers.World | CollisionLayers.Projectiles).ToMask();
+
 		_modelRoot = GetNode<Node3D>(NodeNames.ModelRoot);
+
 		_state = new CharacterStateComponent { Name = NodeNames.CharacterStateComponent };
 		_state.SetMultiplayerAuthority(GetMultiplayerAuthority());
 		AddChild(_state);
@@ -116,9 +129,11 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 
 		_equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
 		AddChild(_equipment);
+		_equipment.BindTo(_bus);
 
-		var interaction = new InteractionComponent { Name = NodeNames.InteractionComponent };
-		AddChild(interaction);
+		_interaction = new InteractionComponent { Name = NodeNames.InteractionComponent };
+		AddChild(_interaction);
+		_interaction.BindTo(_bus);
 
 		_propPusher = new PropPusherComponent { Name = NodeNames.PropPusherComponent };
 		_propPusher.SetMultiplayerAuthority(GetMultiplayerAuthority());
@@ -149,5 +164,6 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		_currentModel = ps.Instantiate();
 		_modelRoot?.AddChild(_currentModel);
 		_animation?.BindTo(_currentModel);
+		_equipment?.BindTo(_currentModel);
 	}
 }
