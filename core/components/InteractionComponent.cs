@@ -27,13 +27,47 @@ public partial class InteractionComponent : Area3D, ICharacterBusAware
 
 	private void TryInteract()
 	{
-		NetworkedProp? current = null;
-		if (_current != null)
+		if (_current is not NetworkedProp prop)
 		{
-			current = (NetworkedProp)_current;
+			IrkLogger.Log($"TryInteract() called but no current target");
+			return;
 		}
 
-		IrkLogger.Log($"TryInteract() called from {GetParent().Name} on {current?.Name} ");
+		var interactor = GetParent<NetworkedCharacter>();
+
+		if (Multiplayer.IsServer())
+		{
+			PerformInteractionServer(prop, interactor);
+		}
+		else
+		{
+			RpcId(1, nameof(RpcPerformInteraction), prop.GetPath(), interactor.GetPath());
+		}
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void RpcPerformInteraction(NodePath propPath, NodePath interactorPath)
+	{
+		if (!Multiplayer.IsServer()) return;
+		var prop = GetNodeOrNull<NetworkedProp>(propPath);
+		var interactor = GetNodeOrNull<NetworkedCharacter>(interactorPath);
+		if (prop == null || interactor == null) return;
+		PerformInteractionServer(prop, interactor);
+	}
+
+	private static void PerformInteractionServer(NetworkedProp prop, NetworkedCharacter interactor)
+	{
+		if (prop is IInteractable interactable)
+		{
+			try
+			{
+				interactable.OnInteractServer(interactor);
+			}
+			catch (Exception ex)
+			{
+				IrkLogger.Log($"Interaction failed: {ex.Message}");
+			}
+		}
 	}
 
 	public override void _Ready()

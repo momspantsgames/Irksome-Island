@@ -19,22 +19,30 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
+using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
 
 namespace IrksomeIsland.Core.Props;
 
 public partial class Blaster : NetworkedProp, IInteractable
 {
 	private PackedScene? _dartScene;
+	private Marker3D? _grip;
 	private Marker3D? _muzzle;
 	private MultiplayerSynchronizer _sync = null!;
 
 	public void OnInteractServer(Node3D interactor)
 	{
-		throw new NotImplementedException();
+		if (!Multiplayer.IsServer()) return;
+		if (interactor is not NetworkedCharacter character) return;
+
+		var equip = character.GetNode<EquipmentComponent>(NodeNames.EquipmentComponent);
+		equip.Equip(this, NodeNames.EquipmentAttachmentPoint.RightHand);
 	}
 
-	public string GetInteractionPrompt() => throw new NotImplementedException();
+	public string GetInteractionPrompt() => "Pick up";
 
 	public override void _Ready()
 	{
@@ -46,8 +54,8 @@ public partial class Blaster : NetworkedProp, IInteractable
 
 		_dartScene = GD.Load<PackedScene>(Paths.Props.DartScene);
 		_muzzle = GetNode<Marker3D>("Muzzle");
+		_grip = GetNode<Marker3D>("Grip");
 	}
-
 
 	public override void _EnterTree()
 	{
