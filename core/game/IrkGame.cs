@@ -29,11 +29,11 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 {
 	protected readonly Dictionary<long, Node3D> Players = new();
 	protected readonly Dictionary<Guid, Node3D> Props = new();
+	private Node3D _playersRoot = null!;
+	private Node3D _propsRoot = null!;
+	private Node? _world;
+	private PackedScene? _worldScene;
 	protected CameraRig? CameraRig;
-	protected Node3D PlayersRoot = null!;
-	protected Node3D PropsRoot = null!;
-	protected Node? World;
-	protected PackedScene? WorldScene;
 
 	protected ApplicationManager App { get; private set; } = null!;
 
@@ -43,19 +43,19 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 	public override void _Ready()
 	{
 		App = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
-		PlayersRoot = GetOrCreate<Node3D>(NodeNames.PlayersRoot);
-		PropsRoot = GetOrCreate<Node3D>(NodeNames.PropsRoot);
+		_playersRoot = GetOrCreate<Node3D>(NodeNames.PlayersRoot);
+		_propsRoot = GetOrCreate<Node3D>(NodeNames.PropsRoot);
 	}
 
 	public virtual void StartGame()
 	{
-		if (WorldScene == null && Configuration.WorldName != null)
-			WorldScene = ResourceLoader.Load<PackedScene>(Paths.ForWorld(Configuration.WorldName));
+		if (_worldScene == null && Configuration.WorldName != null)
+			_worldScene = ResourceLoader.Load<PackedScene>(Paths.ForWorld(Configuration.WorldName));
 
-		if (WorldScene == null) throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
+		if (_worldScene == null) throw new InvalidOperationException($"World not found: {Configuration.WorldName}");
 
-		World = WorldScene?.Instantiate();
-		AddChild(World);
+		_world = _worldScene?.Instantiate();
+		AddChild(_world);
 
 		CameraRig = new CameraRig();
 		CameraRig.Name = NodeNames.CameraRig;
@@ -64,9 +64,9 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 
 	public virtual void StopGame()
 	{
-		World?.QueueFree();
-		World = null;
-		WorldScene = null;
+		_world?.QueueFree();
+		_world = null;
+		_worldScene = null;
 
 		CameraRig?.QueueFree();
 		CameraRig = null;
@@ -79,7 +79,7 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		var n = ps.Instantiate<Node3D>();
 		n.Name = name;
 		n.SetMultiplayerAuthority(authorityPeerId);
-		PlayersRoot.AddChild(n);
+		_playersRoot.AddChild(n);
 		Players[authorityPeerId] = n;
 		return n;
 	}
@@ -90,7 +90,7 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 		if (ps == null) throw new InvalidOperationException($"Missing: {scenePath}");
 		var n = ps.Instantiate<Node3D>();
 		n.Name = name;
-		PropsRoot.AddChild(n);
+		_propsRoot.AddChild(n);
 		Props[id] = n;
 		return n;
 	}
@@ -129,14 +129,11 @@ public abstract partial class IrkGame(GameConfiguration config) : Node
 
 	protected Vector3 GetPlayerSpawnPoint()
 	{
-		if (World == null) return Vector3.Zero;
+		if (_world == null) return Vector3.Zero;
 
-		var sp = World.GetNodeOrNull<Marker3D>("PlayerSpawnPoint");
+		var sp = _world.GetNodeOrNull<Marker3D>("PlayerSpawnPoint");
 		return sp?.GlobalPosition ?? Vector3.Zero;
 	}
 
-	public bool TryGetProp(Guid id, out Node3D prop)
-	{
-		return Props.TryGetValue(id, out prop!);
-	}
+	public bool TryGetProp(Guid id, out Node3D prop) => Props.TryGetValue(id, out prop!);
 }

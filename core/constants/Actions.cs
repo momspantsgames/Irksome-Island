@@ -22,6 +22,8 @@ namespace IrksomeIsland.Core.Constants;
 
 public static class Actions
 {
+	public static string Interact => "interact";
+
 	public static class Movement
 	{
 		public static string Forward => "move_forward";
