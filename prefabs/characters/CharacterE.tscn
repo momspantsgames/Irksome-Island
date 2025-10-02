@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://18ip0xaxkqoi"]
 
 [ext_resource type="PackedScene" uid="uid://dx4b80ph87h8j" path="res://assets/models/characters/character-e.glb" id="1_jlu2o"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://b42bjipdni6v1" path="res://assets/animations/CharacterAnimationStateMachine.tres" id="2_e1w0h"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://bknbnlsafxxa" path="res://assets/animations/CharacterAnimationBlendTree.tres" id="2_e1w0h"]
 
 [node name="CharacterE" type="Node3D"]
 
@@ -11,5 +11,9 @@
 root_node = NodePath("../character-e2")
 tree_root = ExtResource("2_e1w0h")
 anim_player = NodePath("../character-e2/AnimationPlayer")
+parameters/UpperHold/blend_amount = 0.0
+parameters/UpperShoot/active = false
+parameters/UpperShoot/internal_active = false
+parameters/UpperShoot/request = 0
 
 [editable path="character-e2"]

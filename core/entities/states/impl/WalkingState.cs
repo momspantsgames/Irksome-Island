@@ -25,10 +25,12 @@ namespace IrksomeIsland.Core.Entities.States.Impl;
 
 public class WalkingState(ICharacterStateContext ctx) : CharacterState(ctx)
 {
+	private bool _animIsSprint;
 	public override CharacterStateType Id => CharacterStateType.Walking;
 
 	protected override void OnEnter()
 	{
+		_animIsSprint = false;
 		Ctx.AnimTravel(Animations.Walk);
 	}
 
@@ -65,6 +67,12 @@ public class WalkingState(ICharacterStateContext ctx) : CharacterState(ctx)
 
 		// target speed (Shift to run)
 		var run = Input.IsActionPressed(Actions.MovementAction.Sprint);
+		if (run != _animIsSprint)
+		{
+			Ctx.AnimTravel(run ? Animations.Sprint : Animations.Walk);
+			_animIsSprint = run;
+		}
+
 		var targetSpeed = run ? Gameplay.Character.RunSpeed : Gameplay.Character.WalkSpeed;
 		var targetVel = dir * targetSpeed;
 

@@ -165,8 +165,6 @@ public partial class EquipmentComponent : Node3D
 			default:
 				return;
 		}
-
-		_bus.RaiseEquipped(item, slot);
 	}
 
 	private void OnPrimaryUse()
@@ -248,6 +246,9 @@ public partial class EquipmentComponent : Node3D
 			case NodeNames.EquipmentAttachmentPoint.Head: _headItem = item; break;
 			case NodeNames.EquipmentAttachmentPoint.Back: _backItem = item; break;
 		}
+
+		// Notify listeners (animation, etc.) on both server and clients when slot is applied
+		_bus.RaiseEquipped(item, slot);
 	}
 
 	private NetworkedProp? ResolveItemByName(string name)
@@ -306,5 +307,11 @@ public partial class EquipmentComponent : Node3D
 		// => item.Global = attach.Global * offset * inverse(grip.Local)
 		var inverseLocalGrip = grip.Transform.AffineInverse();
 		return attachPoint.GlobalTransform * item.AlignmentOffset * inverseLocalGrip;
+	}
+
+	public bool HasUsableEquippedItem()
+	{
+		var item = _rightHandItem ?? _leftHandItem;
+		return item is IUsableProp;
 	}
 }

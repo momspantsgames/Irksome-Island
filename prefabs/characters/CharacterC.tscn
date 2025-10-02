@@ -1,13 +1,31 @@
 [gd_scene load_steps=3 format=3 uid="uid://brveaai007v0c"]
 
 [ext_resource type="PackedScene" uid="uid://r3ohn5behux6" path="res://assets/models/characters/character-c.glb" id="1_gi6cl"]
-[ext_resource type="AnimationNodeStateMachine" uid="uid://b42bjipdni6v1" path="res://assets/animations/CharacterAnimationStateMachine.tres" id="2_gkjid"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://bknbnlsafxxa" path="res://assets/animations/CharacterAnimationBlendTree.tres" id="2_gkjid"]
 
 [node name="CharacterC" type="Node3D"]
 
 [node name="character-c2" parent="." instance=ExtResource("1_gi6cl")]
 
+[node name="LeftEquip" type="Marker3D" parent="character-c2/character-c/root/torso/arm-left" index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.21316242, -0.8734468, 0.109249115)
+
+[node name="RightEquip" type="Marker3D" parent="character-c2/character-c/root/torso/arm-right" index="0"]
+transform = Transform3D(-1, 0, 8.742278e-08, 8.742278e-08, -4.371139e-08, 1, 3.821371e-15, 1, 4.371139e-08, -0.19760346, -0.8741441, 0.109249115)
+
+[node name="HeadEquip" type="Marker3D" parent="character-c2/character-c/root/torso/head" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.8792934, 0)
+
+[node name="BackEquip" type="Marker3D" parent="character-c2/character-c/root/torso" index="3"]
+transform = Transform3D(-4.371139e-08, -0.8660254, -0.5, -4.3711395e-08, -0.5, 0.8660254, -1, 5.9710864e-08, -1.5999474e-08, -1.8833823e-09, 0.8018752, -0.34989142)
+
 [node name="AnimationTree" type="AnimationTree" parent="."]
 root_node = NodePath("../character-c2")
 tree_root = ExtResource("2_gkjid")
 anim_player = NodePath("../character-c2/AnimationPlayer")
+parameters/UpperHold/blend_amount = 0.0
+parameters/UpperShoot/active = false
+parameters/UpperShoot/internal_active = false
+parameters/UpperShoot/request = 0
+
+[editable path="character-c2"]

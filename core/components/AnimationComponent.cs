@@ -19,16 +19,19 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Bus;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Props;
 
 namespace IrksomeIsland.Core.Components;
 
-public partial class AnimationComponent : Node
+public partial class AnimationComponent : Node, ICharacterBusAware
 {
 	private AnimationNodeStateMachinePlayback? _animPlayback;
 	private Node3D _modelRoot = null!;
 	private NodePath _modelRootPath = "..";
 	private AnimationTree? _tree;
+    private CharacterBus? _bus;
 
 	public override void _Ready()
 	{
@@ -41,7 +44,44 @@ public partial class AnimationComponent : Node
 		_tree = modelInstance.GetNodeOrNull<AnimationTree>(NodeNames.AnimationTree);
 		if (_tree == null) return;
 		_tree.Active = true;
-		_animPlayback = (AnimationNodeStateMachinePlayback)_tree.Get(Paths.Animation.PlaybackPath);
+		// Support both flat state machine (parameters/playback) and nested Locomotion state machine
+		var v = _tree.Get(Paths.Animation.PlaybackPath);
+		if (v.VariantType == Variant.Type.Nil)
+			v = _tree.Get(Paths.Animation.LocomotionPlaybackPath);
+		_animPlayback = v.As<AnimationNodeStateMachinePlayback>();
+	}
+
+	public void BindTo(CharacterBus bus)
+	{
+		_bus = bus;
+		_bus.Equipped += OnEquipped;
+		_bus.PrimaryUseRequested += OnPrimaryUseRequested;
+	}
+
+	private void OnEquipped(NetworkedProp item, string slot)
+	{
+		if (_tree == null) return;
+		if (slot == NodeNames.EquipmentAttachmentPoint.RightHand)
+		{
+			// Arm upper body overlay
+			_tree.Set("parameters/UpperHold/blend_amount", 1.0f);
+		}
+	}
+
+	private void OnPrimaryUseRequested()
+	{
+		if (_tree == null) return;
+		// Trigger the OneShot; prefer request if available, else fallback to active
+		var hasRequest = _tree.Get("parameters/UpperShoot/request").VariantType != Variant.Type.Nil;
+		if (hasRequest)
+		{
+			// OneShotRequest.Fire == 1
+			_tree.Set("parameters/UpperShoot/request", 1);
+		}
+		else
+		{
+			_tree.Set("parameters/UpperShoot/active", true);
+		}
 	}
 
 	private static void SetLoop(AnimationPlayer player, string animName)

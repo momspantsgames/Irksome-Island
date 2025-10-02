@@ -1,0 +1,73 @@
+[gd_resource type="AnimationNodeBlendTree" load_steps=21 format=3 uid="uid://bknbnlsafxxa"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_436b5"]
+animation = &"holding-right-shoot"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hwjl7"]
+animation = &"holding-right"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t4t8n"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_y43s4"]
+animation = &"sprint"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1i567"]
+animation = &"static"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rbcvm"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_436b5"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_hwjl7"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1fpca"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5sc1x"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cvgjh"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_snm3a"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ag0pc"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ebc8c"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v6k1f"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rt86w"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xgh3i"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_k80h8"]
+states/idle/node = SubResource("AnimationNodeAnimation_t4t8n")
+states/idle/position = Vector2(594, 268)
+states/sprint/node = SubResource("AnimationNodeAnimation_y43s4")
+states/sprint/position = Vector2(402, 435)
+states/static/node = SubResource("AnimationNodeAnimation_1i567")
+states/static/position = Vector2(397, 100)
+states/walk/node = SubResource("AnimationNodeAnimation_rbcvm")
+states/walk/position = Vector2(397, 268)
+transitions = ["Start", "static", SubResource("AnimationNodeStateMachineTransition_436b5"), "static", "walk", SubResource("AnimationNodeStateMachineTransition_hwjl7"), "walk", "static", SubResource("AnimationNodeStateMachineTransition_1fpca"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_5sc1x"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_cvgjh"), "static", "idle", SubResource("AnimationNodeStateMachineTransition_snm3a"), "idle", "static", SubResource("AnimationNodeStateMachineTransition_ag0pc"), "walk", "idle", SubResource("AnimationNodeStateMachineTransition_ebc8c"), "idle", "walk", SubResource("AnimationNodeStateMachineTransition_v6k1f"), "sprint", "idle", SubResource("AnimationNodeStateMachineTransition_rt86w"), "idle", "sprint", SubResource("AnimationNodeStateMachineTransition_xgh3i")]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_1fpca"]
+filter_enabled = true
+filters = ["character-a/root/torso", "character-a/root/torso/arm-left", "character-a/root/torso/arm-right", "character-a/root/torso/head", "character-b/root/torso", "character-b/root/torso/arm-left", "character-b/root/torso/arm-right", "character-b/root/torso/head", "character-c/root/torso", "character-c/root/torso/arm-left", "character-c/root/torso/arm-right", "character-c/root/torso/head", "character-d/root/torso", "character-d/root/torso/arm-left", "character-d/root/torso/arm-right", "character-d/root/torso/head", "character-e/root/torso", "character-e/root/torso/arm-left", "character-e/root/torso/arm-right", "character-e/root/torso/head"]
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_5sc1x"]
+filters = ["character-a/root/torso", "character-a/root/torso/arm-left", "character-a/root/torso/arm-right", "character-a/root/torso/head"]
+
+[resource]
+nodes/output/position = Vector2(1200, 200)
+nodes/Locomotion/node = SubResource("AnimationNodeStateMachine_k80h8")
+nodes/Locomotion/position = Vector2(220, 220)
+nodes/HoldingRight/node = SubResource("AnimationNodeAnimation_hwjl7")
+nodes/HoldingRight/position = Vector2(260, 440)
+nodes/UpperHold/node = SubResource("AnimationNodeBlend2_1fpca")
+nodes/UpperHold/position = Vector2(540, 200)
+nodes/HoldRightShootAnim/node = SubResource("AnimationNodeAnimation_436b5")
+nodes/HoldRightShootAnim/position = Vector2(620, 480)
+nodes/UpperShoot/node = SubResource("AnimationNodeOneShot_5sc1x")
+nodes/UpperShoot/position = Vector2(840, 200)
+node_connections = [&"output", 0, &"UpperShoot", &"UpperHold", 0, &"Locomotion", &"UpperHold", 1, &"HoldingRight", &"UpperShoot", 0, &"UpperHold", &"UpperShoot", 1, &"HoldRightShootAnim"]

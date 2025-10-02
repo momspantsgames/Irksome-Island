@@ -28,7 +28,7 @@ public partial class CameraRig : Node3D
 	private const bool EnableSmoothing = false;
 
 	private static readonly uint ArmCollisionMask =
-		(CollisionLayers.World | CollisionLayers.Props | CollisionLayers.Dynamic).ToMask();
+		(CollisionLayers.World | CollisionLayers.Dynamic).ToMask();
 
 	private float _armLength = Gameplay.Camera.MinZoom;
 	private CameraController? _controller;

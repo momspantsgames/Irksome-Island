@@ -70,5 +70,6 @@ public static class Paths
 			ResourcesPrefix + "assets/animations/CharacterAnimationStateMachine" + ResourceSuffix;
 
 		public const string PlaybackPath = "parameters/playback";
+		public const string LocomotionPlaybackPath = "parameters/Locomotion/playback";
 	}
 }

@@ -17,6 +17,6 @@ shape = SubResource("ConvexPolygonShape3D_qcl0w")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09425293, -0.103674516)
 
 [node name="Muzzle" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17538936, -0.47276556)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17538936, -0.5441453)
 
 [node name="Grip" type="Marker3D" parent="."]

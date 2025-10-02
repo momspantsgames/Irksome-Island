@@ -85,8 +85,11 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 	{
 		if (!IsMultiplayerAuthority()) return;
 		if (Input.IsActionJustPressed(Actions.Interact)) _bus.RaiseInteractionRequested();
-		if (Input.IsActionPressed(Actions.Use.Primary)) _bus.RaisePrimaryUseRequested();
-		if (Input.IsActionPressed(Actions.Use.Secondary)) _bus.RaiseSecondaryUseRequested();
+
+		// Only allow use actions if a usable item is equipped
+		if (_equipment == null || !_equipment.HasUsableEquippedItem()) return;
+		if (Input.IsActionJustPressed(Actions.Use.Primary)) _bus.RaisePrimaryUseRequested();
+		if (Input.IsActionJustPressed(Actions.Use.Secondary)) _bus.RaiseSecondaryUseRequested();
 	}
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
@@ -128,6 +131,7 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 
 		_animation = new AnimationComponent { Name = NodeNames.AnimationComponent };
 		AddChild(_animation);
+		_animation.BindTo(_bus);
 
 		_equipment = new EquipmentComponent { Name = NodeNames.EquipmentComponent };
 		AddChild(_equipment);

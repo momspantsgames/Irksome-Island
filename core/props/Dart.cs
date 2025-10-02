@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using IrksomeIsland.Core.Constants;
+using Timer = Godot.Timer;
 
 namespace IrksomeIsland.Core.Props;
 
@@ -31,5 +32,21 @@ public partial class Dart : NetworkedProp
 		CollisionLayer = CollisionLayers.Projectiles.ToMask();
 		CollisionMask = (CollisionLayers.World | CollisionLayers.Characters | CollisionLayers.Projectiles |
 		                 CollisionLayers.Dynamic | CollisionLayers.Props).ToMask();
+
+		Mass = Gameplay.DartMass;
+
+		// Server owns and despawns projectiles
+		if (Multiplayer.IsServer())
+		{
+			var timer = new Timer
+			{
+				OneShot = true,
+				WaitTime = Gameplay.DartTimeToLive
+			};
+
+			AddChild(timer);
+			timer.Timeout += QueueFree;
+			timer.Start();
+		}
 	}
 }
