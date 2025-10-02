@@ -218,6 +218,12 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		node.GlobalTransform = xf;
 		node.SetMultiplayerAuthority(1);
 
+		if (node is RigidBody3D rb)
+		{
+			if (d.TryGetValue("lin", out var value)) rb.LinearVelocity = (Vector3)value;
+			if (d.TryGetValue("ang", out var value1)) rb.AngularVelocity = (Vector3)value1;
+		}
+
 		Props[id] = node;
 		return node;
 	}
@@ -231,6 +237,23 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 			{ "id", id.ToString() },
 			{ "path", scenePath },
 			{ "xf", xf }
+		};
+
+		_propSpawner.Spawn(data);
+		return id;
+	}
+
+	public Guid ServerSpawnProjectile(string scenePath, Transform3D xf, Vector3 linearVelocity, Vector3 angularVelocity)
+	{
+		if (!Multiplayer.IsServer()) throw new InvalidOperationException("Server only");
+		var id = Guid.NewGuid();
+		var data = new Dictionary
+		{
+			{ "id", id.ToString() },
+			{ "path", scenePath },
+			{ "xf", xf },
+			{ "lin", linearVelocity },
+			{ "ang", angularVelocity }
 		};
 
 		_propSpawner.Spawn(data);

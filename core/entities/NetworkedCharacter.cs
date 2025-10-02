@@ -85,6 +85,8 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 	{
 		if (!IsMultiplayerAuthority()) return;
 		if (Input.IsActionJustPressed(Actions.Interact)) _bus.RaiseInteractionRequested();
+		if (Input.IsActionPressed(Actions.Use.Primary)) _bus.RaisePrimaryUseRequested();
+		if (Input.IsActionPressed(Actions.Use.Secondary)) _bus.RaiseSecondaryUseRequested();
 	}
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);

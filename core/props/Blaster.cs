@@ -23,10 +23,11 @@ using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities;
+using IrksomeIsland.Core.Game;
 
 namespace IrksomeIsland.Core.Props;
 
-public partial class Blaster : NetworkedProp, IInteractable
+public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 {
 	private PackedScene? _dartScene;
 	private Marker3D? _grip;
@@ -43,6 +44,26 @@ public partial class Blaster : NetworkedProp, IInteractable
 	}
 
 	public string GetInteractionPrompt() => "Pick up";
+
+	public void OnPrimaryUseServer(Node userContext)
+	{
+		if (!Multiplayer.IsServer()) return;
+		if (_muzzle == null || _dartScene == null) return;
+
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		if (app.ActiveGame is NetworkGame game)
+		{
+			var xf = _muzzle.GlobalTransform;
+			var lin = -_muzzle.GlobalTransform.Basis.Z * Gameplay.DartShootVelocity;
+			var ang = Vector3.Zero;
+			game.ServerSpawnProjectile(Paths.Props.DartScene, xf, lin, ang);
+		}
+	}
+
+	public void OnSecondaryUseServer(Node userContext)
+	{
+		// alt-fire placeholder
+	}
 
 	public override void _Ready()
 	{

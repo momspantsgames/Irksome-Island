@@ -30,3 +30,9 @@ public interface IInteractable
 	// Optional client hint (prompt text, icon path, etc.)
 	string? GetInteractionPrompt();
 }
+
+public interface IUsableProp
+{
+	void OnPrimaryUseServer(Node userContext);
+	void OnSecondaryUseServer(Node userContext);
+}

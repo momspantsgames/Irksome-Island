@@ -86,6 +86,8 @@ public partial class EquipmentComponent : Node3D
 	{
 		_bus = bus;
 		_bus.EquipRequested += Attach;
+		_bus.PrimaryUseRequested += OnPrimaryUse;
+		_bus.SecondaryUseRequested += OnSecondaryUse;
 	}
 
 	public void BindTo(Node modelScene)
@@ -165,6 +167,48 @@ public partial class EquipmentComponent : Node3D
 		}
 
 		_bus.RaiseEquipped(item, slot);
+	}
+
+	private void OnPrimaryUse()
+	{
+		if (Multiplayer.IsServer())
+			PerformPrimaryUse();
+		else
+			RpcId(1, nameof(RpcRequestPrimaryUse));
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void RpcRequestPrimaryUse()
+	{
+		if (!Multiplayer.IsServer()) return;
+		PerformPrimaryUse();
+	}
+
+	private void PerformPrimaryUse()
+	{
+		var item = _rightHandItem ?? _leftHandItem;
+		(item as IUsableProp)?.OnPrimaryUseServer(this);
+	}
+
+	private void OnSecondaryUse()
+	{
+		if (Multiplayer.IsServer())
+			PerformSecondaryUse();
+		else
+			RpcId(1, nameof(RpcRequestSecondaryUse));
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void RpcRequestSecondaryUse()
+	{
+		if (!Multiplayer.IsServer()) return;
+		PerformSecondaryUse();
+	}
+
+	private void PerformSecondaryUse()
+	{
+		var item = _rightHandItem ?? _leftHandItem;
+		(item as IUsableProp)?.OnSecondaryUseServer(this);
 	}
 
 	private void ApplySlot(string slot, string previousItemName, string nextItemName)

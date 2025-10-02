@@ -24,6 +24,12 @@ public static class Actions
 {
 	public static string Interact => "interact";
 
+    public static class Use
+    {
+        public static string Primary => "use_primary";
+        public static string Secondary => "use_secondary";
+    }
+
 	public static class Movement
 	{
 		public static string Forward => "move_forward";

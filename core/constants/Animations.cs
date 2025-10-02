@@ -27,4 +27,11 @@ public static class Animations
 	public static string Walk => "walk";
 	public static string Sprint => "sprint";
 	public static string Static => "static";
+	public static string HoldingRight => "holding-right";
+	public static string HoldingLeft => "holding-left";
+	public static string HoldingRightShoot => "holding-right-shoot";
+	public static string HoldingLeftShoot => "holding-left-shoot";
+	public static string Pickup => "pick-up";
+	public static string KickRight => "attack-kick-right";
+	public static string Die => "die";
 }
