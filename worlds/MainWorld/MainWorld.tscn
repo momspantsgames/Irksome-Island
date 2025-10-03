@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=11 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld/MainWorld.cs" id="1_sdvpa"]
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/MainWorld/chunks/GrassField.tscn" id="2_x5p2k"]
@@ -8,6 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://drm3kll6ec82b" path="res://prefabs/props/BlasterA.tscn" id="5_26ugb"]
 [ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/MainWorld/Environment.tres" id="8_ea240"]
 [ext_resource type="PackedScene" uid="uid://t0kvtk6t5vhh" path="res://prefabs/props/BlasterB.tscn" id="8_jna5q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jna5q"]
+size = Vector3(1, 17, 81)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jvk81"]
+size = Vector3(1, 17, 81)
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
@@ -76,7 +82,7 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11,
 environment = ExtResource("8_ea240")
 
 [node name="PlayerSpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.1135294, -9)
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.1135294, 18)
 
 [node name="Props" type="Node3D" parent="."]
 
@@ -99,3 +105,37 @@ ItemScene = ExtResource("8_jna5q")
 [node name="BlasterB3" parent="Props" instance=ExtResource("4_pjh4b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.0714154, 53)
 ItemScene = ExtResource("8_jna5q")
+
+[node name="InvisibleWalls" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="InvisibleWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 9, 0)
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InvisibleWalls/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
+shape = SubResource("BoxShape3D_jna5q")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="InvisibleWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 9, 0)
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InvisibleWalls/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 29)
+shape = SubResource("BoxShape3D_jna5q")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="InvisibleWalls"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -5, 9, -11)
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InvisibleWalls/StaticBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.536743e-07, 0, 5.0000005)
+shape = SubResource("BoxShape3D_jvk81")
+
+[node name="StaticBody3D4" type="StaticBody3D" parent="InvisibleWalls"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -5, 9, 69)
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InvisibleWalls/StaticBody3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.536743e-07, 0, 5.0000005)
+shape = SubResource("BoxShape3D_jvk81")

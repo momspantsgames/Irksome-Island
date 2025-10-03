@@ -40,6 +40,7 @@ public static class Gameplay
 		public static float MaxZoom => 12.0f;
 		public static float MinZoom => 1.8f;
 		public static float ZoomStep => .5f;
+		public static float DefaultZoom => 9.0f;
 		public static Vector2 PitchLimitsRad => new(-1.2f, 1.2f);
 	}
 

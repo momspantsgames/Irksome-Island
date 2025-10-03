@@ -233,6 +233,8 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 			node.TreeEntered += () =>
 			{
 				follow.SetTarget(CameraRig, node);
+				// Set a nicer default zoom distance
+				CameraRig.DesiredArmLength = Gameplay.Camera.DefaultZoom;
 				CameraRig.Cam.MakeCurrent();
 			};
 		}
