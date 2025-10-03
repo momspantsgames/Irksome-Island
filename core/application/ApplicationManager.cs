@@ -26,8 +26,9 @@ namespace IrksomeIsland.Core.Application;
 
 public partial class ApplicationManager : Node
 {
+	private AudioStreamPlayer? _music;
 	public IrkGame? ActiveGame { get; private set; }
-
+	public bool IsGameplayInputBlocked { get; set; }
 	public NetworkManager NetworkManager { get; private set; } = null!;
 	private static bool IsHeadless => DisplayServer.GetName() == "headless";
 
@@ -36,6 +37,11 @@ public partial class ApplicationManager : Node
 		Name = NodeNames.ApplicationManager;
 		NetworkManager = new NetworkManager { Name = NodeNames.NetworkManager };
 		AddChild(NetworkManager);
+
+		_music = new AudioStreamPlayer { Name = "BackgroundMusic" };
+		_music.Stream = ResourceLoader.Load<AudioStream>(Paths.ForMusic("warm_beer"));
+		_music.VolumeDb = Gameplay.BGmusicVolumeDb;
+		AddChild(_music);
 
 		if (IsHeadless)
 		{
@@ -52,6 +58,7 @@ public partial class ApplicationManager : Node
 		else
 		{
 			StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
+			_music.Play();
 		}
 	}
 

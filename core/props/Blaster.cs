@@ -69,6 +69,9 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 			var lin = -_muzzle.GlobalTransform.Basis.Z * Gameplay.DartShootVelocity;
 			var ang = Vector3.Zero;
 			game.ServerSpawnProjectile(Paths.Props.DartScene, xf, lin, ang);
+
+			// Play fire SFX at muzzle on all peers including shooter
+			game.Rpc(nameof(NetworkGame.RpcPlaySfx), Paths.ForSound("impact"), xf.Origin);
 		}
 	}
 
@@ -76,6 +79,7 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 	{
 		// alt-fire placeholder
 	}
+
 
 	public override void _Ready()
 	{

@@ -20,6 +20,7 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Game;
 
@@ -44,11 +45,22 @@ public partial class ChatPanel : Control
 		RedrawAll();
 		_input.TextSubmitted += OnSubmit;
 
-		// Optional: block gameplay while typing
-		_input.FocusEntered += () => Input.MouseMode = Input.MouseModeEnum.Visible;
-		_input.FocusExited += () =>
-		{ /* re-enable your gameplay input if needed */
-		};
+		// Block gameplay input while typing
+		_input.FocusEntered += OnFocusEntered;
+		_input.FocusExited += OnFocusExited;
+	}
+
+	private void OnFocusEntered()
+	{
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		app.IsGameplayInputBlocked = true;
+		Input.MouseMode = Input.MouseModeEnum.Visible;
+	}
+
+	private void OnFocusExited()
+	{
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		app.IsGameplayInputBlocked = false;
 	}
 
 	private void OnSubmit(string text)

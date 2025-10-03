@@ -25,6 +25,7 @@ namespace IrksomeIsland.Core.Constants;
 public static class Paths
 {
 	private const string ResourcesPrefix = "res://";
+	private const string Assets = "assets";
 	private const string SceneSuffix = ".tscn";
 	private const string ConfigSuffix = ".cfg";
 	private const string ResourceSuffix = ".tres";
@@ -32,6 +33,10 @@ public static class Paths
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
 	private const string MainMenu = "ui/menus/main/subs";
+	private const string Music = "audio/music";
+	private const string Mp3Suffix = ".mp3";
+	private const string OggSuffix = ".ogg";
+	private const string Sounds = "audio/sounds";
 	private const string Ui = "ui";
 	private const string Prompts = "prompts";
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
@@ -52,6 +57,12 @@ public static class Paths
 			[CharacterModelType.CharacterG] = ForCharacterModel("CharacterG"),
 			[CharacterModelType.CharacterH] = ForCharacterModel("CharacterH")
 		};
+
+	public static string ForMusic(string fileName) =>
+		$"{ResourcesPrefix}{Assets}/{Music}/{fileName}{Mp3Suffix}";
+
+	public static string ForSound(string fileName) =>
+		$"{ResourcesPrefix}{Assets}/{Sounds}/{fileName}{OggSuffix}";
 
 	public static string ForCharacterModel(string fileName) =>
 		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";

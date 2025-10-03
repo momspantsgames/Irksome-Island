@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using Godot;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Constants;
 
 namespace IrksomeIsland.Core.Camera;
@@ -70,27 +71,36 @@ public partial class OrbitFollowCameraController : CameraController
 	{
 		if (_target == null || !_target.IsInsideTree()) return;
 
+		var app = rig.GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		var inputBlocked = app.IsGameplayInputBlocked;
+
 		// keyboard & mouse
 		if (_rotating)
 		{
-			var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
-			            Input.GetActionStrength(Actions.Camera.RotateLeft)) *
-			           Gameplay.Camera.TurnSpeed * (float)delta;
+			if (!inputBlocked)
+			{
+				var kYaw = (Input.GetActionStrength(Actions.Camera.RotateRight) -
+				            Input.GetActionStrength(Actions.Camera.RotateLeft)) *
+				           Gameplay.Camera.TurnSpeed * (float)delta;
 
-			var kPit = (Input.GetActionStrength(Actions.Camera.PitchUp) -
-			            Input.GetActionStrength(Actions.Camera.PitchDown)) *
-			           Gameplay.Camera.TurnSpeed * (float)delta;
+				var kPit = (Input.GetActionStrength(Actions.Camera.PitchUp) -
+				            Input.GetActionStrength(Actions.Camera.PitchDown)) *
+				           Gameplay.Camera.TurnSpeed * (float)delta;
 
-			if (Math.Abs(kYaw) > Gameplay.FloatMathEpsilon) _yaw += kYaw;
-			if (Math.Abs(kPit) > Gameplay.FloatMathEpsilon)
-				_pitch = Mathf.Clamp(_pitch + kPit, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
+				if (Math.Abs(kYaw) > Gameplay.FloatMathEpsilon) _yaw += kYaw;
+				if (Math.Abs(kPit) > Gameplay.FloatMathEpsilon)
+					_pitch = Mathf.Clamp(_pitch + kPit, Gameplay.Camera.PitchLimitsRad.X, Gameplay.Camera.PitchLimitsRad.Y);
 
-			_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
+				_yaw = Mathf.Wrap(_yaw, -Mathf.Pi, Mathf.Pi);
+			}
 		}
 
 		var step = 0;
-		if (Input.IsActionJustPressed(Actions.Camera.ZoomIn)) step += 1;
-		if (Input.IsActionJustPressed(Actions.Camera.ZoomOut)) step -= 1;
+		if (!inputBlocked)
+		{
+			if (Input.IsActionJustPressed(Actions.Camera.ZoomIn)) step += 1;
+			if (Input.IsActionJustPressed(Actions.Camera.ZoomOut)) step -= 1;
+		}
 
 		if (step != 0)
 		{
@@ -102,8 +112,10 @@ public partial class OrbitFollowCameraController : CameraController
 		}
 
 		// joystick
-		var stick = Input.GetVector(Actions.Camera.RotateLeft, Actions.Camera.RotateRight, Actions.Camera.PitchDown,
-			Actions.Camera.PitchUp);
+		var stick = inputBlocked
+			? Vector2.Zero
+			: Input.GetVector(Actions.Camera.RotateLeft, Actions.Camera.RotateRight, Actions.Camera.PitchDown,
+				Actions.Camera.PitchUp);
 
 		if (stick.LengthSquared() > Gameplay.FloatMathEpsilon)
 		{

@@ -29,6 +29,7 @@ public static class Gameplay
 	public static float DartTimeToLive => 6f;
 	public static float CharacterRigidBodyPushForce => .2f;
 	public static float DartMass => .01f;
+	public static float BGmusicVolumeDb => -20;
 
 	public static class Camera
 	{

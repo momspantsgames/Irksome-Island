@@ -25,8 +25,8 @@ using IrksomeIsland.Core.Camera;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Entities.States;
-using IrksomeIsland.Ui.Chat;
 using IrksomeIsland.Ui;
+using IrksomeIsland.Ui.Chat;
 
 namespace IrksomeIsland.Core.Game;
 
@@ -65,6 +65,24 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		var hudScene = ResourceLoader.Load<PackedScene>(Paths.InteractionHudScene);
 		_interactionHud = hudScene.Instantiate<InteractionHud>();
 		AddChild(_interactionHud);
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+	public void RpcPlaySfx(string soundPath, Vector3 worldPos)
+	{
+		var sfx = GD.Load<AudioStream>(soundPath);
+		if (sfx == null) return;
+		var p = new AudioStreamPlayer3D
+		{
+			Stream = sfx,
+			UnitSize = 4.0f,
+			Bus = "SFX"
+		};
+
+		AddChild(p);
+		p.GlobalPosition = worldPos;
+		p.Finished += () => p.QueueFree();
+		p.Play();
 	}
 
 	public override void StartGame()

@@ -48,12 +48,12 @@ public abstract class CharacterState(ICharacterStateContext ctx)
 
 	public void HandleInput(double delta)
 	{
-		OnHandleInput(delta);
+		if (!IsGameplayInputBlocked()) OnHandleInput(delta);
 	}
 
 	public void PhysicsUpdate(double delta)
 	{
-		OnPhysicsUpdate(delta);
+		if (!IsGameplayInputBlocked()) OnPhysicsUpdate(delta);
 	}
 
 	protected virtual void OnEnter()
@@ -70,5 +70,14 @@ public abstract class CharacterState(ICharacterStateContext ctx)
 
 	protected virtual void OnPhysicsUpdate(double delta)
 	{
+	}
+
+	private bool IsGameplayInputBlocked()
+	{
+		// Access ApplicationManager via the character context
+		if (Ctx is not NetworkedCharacter nc) return false;
+		var app = nc.GetTree().Root.GetNode<IrksomeIsland.Core.Application.ApplicationManager>(
+			IrksomeIsland.Core.Constants.NodeNames.ApplicationManager);
+		return app.IsGameplayInputBlocked;
 	}
 }

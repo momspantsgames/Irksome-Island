@@ -21,6 +21,7 @@
 
 using Godot;
 using Godot.Collections;
+using IrksomeIsland.Core.Application;
 using IrksomeIsland.Core.Bus;
 using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
@@ -84,12 +85,18 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 	public override void _Input(InputEvent @event)
 	{
 		if (!IsMultiplayerAuthority()) return;
+		var app = GetTree().Root.GetNode<ApplicationManager>(NodeNames.ApplicationManager);
+		if (app.IsGameplayInputBlocked) return;
 		if (Input.IsActionJustPressed(Actions.Interact)) _bus.RaiseInteractionRequested();
 
 		// Only allow use actions if a usable item is equipped
 		if (_equipment == null) return;
-		if (Input.IsActionJustPressed(Actions.Use.Primary) && _equipment.HasUsableEquippedItem()) _bus.RaisePrimaryUseRequested();
-		if (Input.IsActionJustPressed(Actions.Use.Secondary) && _equipment.HasUsableEquippedItem()) _bus.RaiseSecondaryUseRequested();
+		if (Input.IsActionJustPressed(Actions.Use.Primary) && _equipment.HasUsableEquippedItem())
+			_bus.RaisePrimaryUseRequested();
+
+		if (Input.IsActionJustPressed(Actions.Use.Secondary) && _equipment.HasUsableEquippedItem())
+			_bus.RaiseSecondaryUseRequested();
+
 		if (Input.IsActionJustPressed(Actions.Use.Drop)) _bus.RaiseDropRequested();
 	}
 
