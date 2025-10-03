@@ -27,14 +27,18 @@ public sealed class CharacterBus
 	public event Action? InteractionRequested;
 	public event Action<NetworkedProp, string>? EquipRequested;
 	public event Action<NetworkedProp, string>? Equipped;
+	public event Action<NetworkedProp, string>? Unequipped;
 	public event Action<int>? InteractionCycleRequested;
     public event Action? PrimaryUseRequested;
     public event Action? SecondaryUseRequested;
+    public event Action? DropRequested;
 
 	public void RaiseInteractionRequested() => InteractionRequested?.Invoke();
 	public void RaiseEquipRequested(NetworkedProp n, string slot) => EquipRequested?.Invoke(n, slot);
 	public void RaiseEquipped(NetworkedProp n, string slot) => Equipped?.Invoke(n, slot);
+	public void RaiseUnequipped(NetworkedProp n, string slot) => Unequipped?.Invoke(n, slot);
 	public void RaiseInteractionCycleRequested(int dir) => InteractionCycleRequested?.Invoke(dir);
     public void RaisePrimaryUseRequested() => PrimaryUseRequested?.Invoke();
     public void RaiseSecondaryUseRequested() => SecondaryUseRequested?.Invoke();
+    public void RaiseDropRequested() => DropRequested?.Invoke();
 }

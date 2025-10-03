@@ -56,6 +56,7 @@ public partial class AnimationComponent : Node, ICharacterBusAware
 		_bus = bus;
 		_bus.Equipped += OnEquipped;
 		_bus.PrimaryUseRequested += OnPrimaryUseRequested;
+		_bus.Unequipped += OnUnequipped;
 	}
 
 	private void OnEquipped(NetworkedProp item, string slot)
@@ -65,6 +66,15 @@ public partial class AnimationComponent : Node, ICharacterBusAware
 		{
 			// Arm upper body overlay
 			_tree.Set("parameters/UpperHold/blend_amount", 1.0f);
+		}
+	}
+
+	private void OnUnequipped(NetworkedProp item, string slot)
+	{
+		if (_tree == null) return;
+		if (slot == NodeNames.EquipmentAttachmentPoint.RightHand)
+		{
+			_tree.Set("parameters/UpperHold/blend_amount", 0.0f);
 		}
 	}
 

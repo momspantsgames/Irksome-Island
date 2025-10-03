@@ -53,12 +53,13 @@ transitions = ["Start", "static", SubResource("AnimationNodeStateMachineTransiti
 
 [sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_1fpca"]
 filter_enabled = true
-filters = ["character-a/root/torso", "character-a/root/torso/arm-left", "character-a/root/torso/arm-right", "character-a/root/torso/head", "character-b/root/torso", "character-b/root/torso/arm-left", "character-b/root/torso/arm-right", "character-b/root/torso/head", "character-c/root/torso", "character-c/root/torso/arm-left", "character-c/root/torso/arm-right", "character-c/root/torso/head", "character-d/root/torso", "character-d/root/torso/arm-left", "character-d/root/torso/arm-right", "character-d/root/torso/head", "character-e/root/torso", "character-e/root/torso/arm-left", "character-e/root/torso/arm-right", "character-e/root/torso/head"]
+filters = ["character-a/root/torso", "character-a/root/torso/arm-left", "character-a/root/torso/arm-right", "character-a/root/torso/head", "character-b/root/torso", "character-b/root/torso/arm-left", "character-b/root/torso/arm-right", "character-b/root/torso/head", "character-c/root/torso", "character-c/root/torso/arm-left", "character-c/root/torso/arm-right", "character-c/root/torso/head", "character-d/root/torso", "character-d/root/torso/arm-left", "character-d/root/torso/arm-right", "character-d/root/torso/head", "character-e/root/torso", "character-e/root/torso/arm-left", "character-e/root/torso/arm-right", "character-e/root/torso/head", "character-f/root/torso", "character-f/root/torso/arm-left", "character-f/root/torso/arm-right", "character-f/root/torso/head"]
 
 [sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_5sc1x"]
 filters = ["character-a/root/torso", "character-a/root/torso/arm-left", "character-a/root/torso/arm-right", "character-a/root/torso/head"]
 
 [resource]
+graph_offset = Vector2(-132.38434, -44.03044)
 nodes/output/position = Vector2(1200, 200)
 nodes/Locomotion/node = SubResource("AnimationNodeStateMachine_k80h8")
 nodes/Locomotion/position = Vector2(220, 220)

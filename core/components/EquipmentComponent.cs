@@ -3,8 +3,10 @@
 // MIT License
 
 using Godot;
+using Godot.Collections;
 using IrksomeIsland.Core.Bus;
 using IrksomeIsland.Core.Constants;
+using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Props;
 
 namespace IrksomeIsland.Core.Components;
@@ -88,6 +90,7 @@ public partial class EquipmentComponent : Node3D
 		_bus.EquipRequested += Attach;
 		_bus.PrimaryUseRequested += OnPrimaryUse;
 		_bus.SecondaryUseRequested += OnSecondaryUse;
+		_bus.DropRequested += OnDropRequested;
 	}
 
 	public void BindTo(Node modelScene)
@@ -209,6 +212,60 @@ public partial class EquipmentComponent : Node3D
 		(item as IUsableProp)?.OnSecondaryUseServer(this);
 	}
 
+	private void OnDropRequested()
+	{
+		if (Multiplayer.IsServer())
+			PerformDrop();
+		else
+			RpcId(1, nameof(RpcRequestDrop));
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	private void RpcRequestDrop()
+	{
+		if (!Multiplayer.IsServer()) return;
+		PerformDrop();
+	}
+
+	private void PerformDrop()
+	{
+		var item = _rightHandItem ?? _leftHandItem;
+		if (item == null) return;
+
+		// Clear slot names so ApplySlot unfreezes and stops following
+		if (_rightHandItem == item) RightHandItemName = string.Empty;
+		else if (_leftHandItem == item) LeftHandItemName = string.Empty;
+
+		// Place on the floor in front of the character
+		var character = GetParent<NetworkedCharacter>();
+		if (character == null) return;
+
+		var forward = -character.GlobalTransform.Basis.Z;
+		forward.Y = 0f;
+		if (forward.LengthSquared() < 0.0001f) forward = new Vector3(0, 0, -1);
+		forward = forward.Normalized();
+
+		var start = character.GlobalTransform.Origin + forward * 1.0f + new Vector3(0, 1.0f, 0);
+		var end = start + new Vector3(0, -3.0f, 0);
+
+		var space = GetWorld3D().DirectSpaceState;
+		var rayQuery = PhysicsRayQueryParameters3D.Create(start, end);
+		rayQuery.CollisionMask = (uint)(CollisionLayers.World | CollisionLayers.Props | CollisionLayers.Dynamic);
+		rayQuery.Exclude = new Array<Rid> { character.GetRid(), item.GetRid() };
+		var hit = space.IntersectRay(rayQuery);
+
+		var dropPos = hit.Count > 0 ? (Vector3)hit["position"] : end;
+		var up = Vector3.Up;
+		var basis = new Basis(new Quaternion(up, Mathf.Atan2(forward.X, -forward.Z)));
+		var xf = new Transform3D(basis, dropPos + up * 0.05f);
+
+		item.SetMultiplayerAuthority(1);
+		item.Freeze = false;
+		item.LinearVelocity = Vector3.Zero;
+		item.AngularVelocity = Vector3.Zero;
+		item.GlobalTransform = xf;
+	}
+
 	private void ApplySlot(string slot, string previousItemName, string nextItemName)
 	{
 		// Clear previous mapping and unfreeze if we are switching/removing
@@ -219,6 +276,8 @@ public partial class EquipmentComponent : Node3D
 			if (prev != null)
 			{
 				prev.Freeze = false;
+				// Notify unequipped when we clear a previous item from a slot
+				_bus.RaiseUnequipped(prev, slot);
 			}
 
 			switch (slot)

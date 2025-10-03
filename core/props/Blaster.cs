@@ -43,7 +43,7 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 		equip.Equip(this, NodeNames.EquipmentAttachmentPoint.RightHand);
 	}
 
-	public string GetInteractionPrompt() => "Pick up";
+	public string GetInteractionPrompt() => "Pick up blaster";
 
 	public void OnPrimaryUseServer(Node userContext)
 	{
@@ -62,7 +62,7 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 
 	public void OnSecondaryUseServer(Node userContext)
 	{
-		// alt-fire placeholder
+		// nothing
 	}
 
 	public override void _Ready()

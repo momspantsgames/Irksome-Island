@@ -87,9 +87,10 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		if (Input.IsActionJustPressed(Actions.Interact)) _bus.RaiseInteractionRequested();
 
 		// Only allow use actions if a usable item is equipped
-		if (_equipment == null || !_equipment.HasUsableEquippedItem()) return;
-		if (Input.IsActionJustPressed(Actions.Use.Primary)) _bus.RaisePrimaryUseRequested();
-		if (Input.IsActionJustPressed(Actions.Use.Secondary)) _bus.RaiseSecondaryUseRequested();
+		if (_equipment == null) return;
+		if (Input.IsActionJustPressed(Actions.Use.Primary) && _equipment.HasUsableEquippedItem()) _bus.RaisePrimaryUseRequested();
+		if (Input.IsActionJustPressed(Actions.Use.Secondary) && _equipment.HasUsableEquippedItem()) _bus.RaiseSecondaryUseRequested();
+		if (Input.IsActionJustPressed(Actions.Use.Drop)) _bus.RaiseDropRequested();
 	}
 
 	private static string? GetModelPath(CharacterModelType id) => Paths.CharacterModels.GetValueOrDefault(id);
