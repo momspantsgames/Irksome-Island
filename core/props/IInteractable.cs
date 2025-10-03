@@ -22,6 +22,14 @@ using Godot;
 
 namespace IrksomeIsland.Core.Props;
 
+public sealed class InteractionPromptContext
+{
+	public string InteractActionName { get; init; } = "Interact";
+	public string InteractActionGlyph { get; init; } = "E";
+	public Node3D Interactor { get; init; } = null!;
+	public Node3D Target { get; init; } = null!;
+}
+
 public interface IInteractable
 {
 	// Called on the server to perform the interaction
@@ -29,6 +37,10 @@ public interface IInteractable
 
 	// Optional client hint (prompt text, icon path, etc.)
 	string? GetInteractionPrompt();
+
+	// Optional client UI (Control scene) to display when targeted
+	PackedScene? GetInteractionPromptScene();
+	void ConfigureInteractionPrompt(Control ui, InteractionPromptContext ctx);
 }
 
 public interface IUsableProp

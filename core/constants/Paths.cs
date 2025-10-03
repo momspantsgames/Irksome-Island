@@ -32,9 +32,12 @@ public static class Paths
 	private const string Characters = "characters";
 	private const string Worlds = "worlds";
 	private const string MainMenu = "ui/menus/main/subs";
+	private const string Ui = "ui";
+	private const string Prompts = "prompts";
 	public const string MainMenuScene = ResourcesPrefix + "ui/menus/main/MainMenu" + SceneSuffix;
 	public const string NetworkedCharacterScene = ResourcesPrefix + "core/entities/NetworkedCharacter" + SceneSuffix;
 	public const string ChatPanelScene = ResourcesPrefix + "ui/chat/ChatPanel" + SceneSuffix;
+	public const string InteractionHudScene = ResourcesPrefix + Ui + "/InteractionHud" + SceneSuffix;
 	public const string ServerConfigFilePath = ResourcesPrefix + "server" + ConfigSuffix;
 
 	public static readonly IReadOnlyDictionary<CharacterModelType, string> CharacterModels =
@@ -52,6 +55,9 @@ public static class Paths
 
 	public static string ForCharacterModel(string fileName) =>
 		$"{ResourcesPrefix}{Prefabs}/{Characters}/{fileName}{SceneSuffix}";
+
+	public static string ForPrompt(string fileName) =>
+		$"{ResourcesPrefix}{Ui}/{Prompts}/{fileName}{SceneSuffix}";
 
 	public static string ForWorld(string worldName) =>
 		$"{ResourcesPrefix}{Worlds}/{worldName}/{worldName}{SceneSuffix}";

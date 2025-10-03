@@ -26,6 +26,7 @@ using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Entities.States;
 using IrksomeIsland.Ui.Chat;
+using IrksomeIsland.Ui;
 
 namespace IrksomeIsland.Core.Game;
 
@@ -33,6 +34,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 {
 	private ChatManager? _chat;
 	private ChatPanel? _chatPanel;
+	private InteractionHud? _interactionHud;
 	private MultiplayerSpawner _playerSpawner = null!;
 	private MultiplayerSpawner _propSpawner = null!;
 	private NetworkManager Network => App.NetworkManager;
@@ -59,6 +61,10 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 		var chatScene = ResourceLoader.Load<PackedScene>(Paths.ChatPanelScene);
 		_chatPanel = chatScene.Instantiate<ChatPanel>();
 		AddChild(_chatPanel);
+
+		var hudScene = ResourceLoader.Load<PackedScene>(Paths.InteractionHudScene);
+		_interactionHud = hudScene.Instantiate<InteractionHud>();
+		AddChild(_interactionHud);
 	}
 
 	public override void StartGame()

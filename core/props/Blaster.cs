@@ -24,6 +24,7 @@ using IrksomeIsland.Core.Components;
 using IrksomeIsland.Core.Constants;
 using IrksomeIsland.Core.Entities;
 using IrksomeIsland.Core.Game;
+using IrksomeIsland.Ui.Prompts;
 
 namespace IrksomeIsland.Core.Props;
 
@@ -45,6 +46,17 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 
 	public string GetInteractionPrompt() => "Pick up blaster";
 
+	public PackedScene? GetInteractionPromptScene() => GD.Load<PackedScene>(Paths.ForPrompt("BlasterPrompt"));
+
+	public void ConfigureInteractionPrompt(Control ui, InteractionPromptContext ctx)
+	{
+		if (ui is BlasterPrompt bp)
+		{
+			var desc = "Press to equip";
+			bp.Configure("Blaster", ctx.InteractActionGlyph, desc);
+		}
+	}
+
 	public void OnPrimaryUseServer(Node userContext)
 	{
 		if (!Multiplayer.IsServer()) return;
@@ -62,7 +74,7 @@ public partial class Blaster : NetworkedProp, IInteractable, IUsableProp
 
 	public void OnSecondaryUseServer(Node userContext)
 	{
-		// nothing
+		// alt-fire placeholder
 	}
 
 	public override void _Ready()

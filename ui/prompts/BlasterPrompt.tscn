@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0f3a0s56edku"]
+
+[ext_resource type="Script" uid="uid://qrq8tfxp7272" path="res://ui/prompts/BlasterPrompt.cs" id="1_mf3k2"]
+
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0, 0, 0, 0.6)
+border_color = Color(1, 1, 1, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+
+[node name="BlasterPrompt" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_mf3k2")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("1")
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="PanelContainer/VBox"]
+layout_mode = 2
+text = "Pick up blaster"
+
+[node name="Desc" type="Label" parent="PanelContainer/VBox"]
+layout_mode = 2
+text = "Press Interact to equip"

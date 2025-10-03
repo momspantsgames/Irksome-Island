@@ -18,6 +18,8 @@ public partial class InteractionComponent : Area3D, ICharacterBusAware
 	private CharacterBus _bus = null!;
 	private IInteractable? _current;
 
+	public IInteractable? Current => _current;
+
 	public void BindTo(CharacterBus bus)
 	{
 		_bus = bus;
