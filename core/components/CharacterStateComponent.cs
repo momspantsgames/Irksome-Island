@@ -54,8 +54,9 @@ public partial class CharacterStateComponent : Node
 		foreach (var kvp in factory)
 			_states[kvp.Key] = kvp.Value(_ctx);
 
-		// Replicate CurrentStateId OnChange
-		_sync = new MultiplayerSynchronizer { RootPath = ".." };
+		// Replicate CurrentStateId OnChange. Use a deterministic name so paths match across peers.
+		_sync = new MultiplayerSynchronizer { Name = "StateSync", RootPath = ".." };
+		_sync.SetMultiplayerAuthority(GetMultiplayerAuthority());
 		var rc = new SceneReplicationConfig();
 		rc.AddProperty(new NodePath(":CurrentStateId"));
 		rc.PropertySetReplicationMode(new NodePath(":CurrentStateId"),

@@ -38,4 +38,31 @@ public partial class AttractGame(GameConfiguration config) : IrkGame(config)
 		_mainMenu = scene.Instantiate<MainMenu>();
 		AddChild(_mainMenu);
 	}
+
+    public override void StartGame()
+    {
+        base.StartGame();
+
+        // Position the camera rig for attract mode (no controller)
+        if (CameraRig != null)
+        {
+            // Try to focus near the world's spawn point if present
+            var spawn = GetNodeOrNull<Marker3D>("MainWorld/PlayerSpawnPoint");
+            var world = GetNodeOrNull<Node3D>(NodeNames.WorldMain);
+            var focus = spawn?.GlobalPosition ?? world?.GlobalPosition ?? Vector3.Zero;
+
+            // Raise pivot slightly so we look over geometry
+            CameraRig.DesiredPivot = focus + new Vector3(0, 2.0f, 0);
+            CameraRig.DesiredArmLength = 10.0f;
+
+            // Aim the rig at a shallow downward angle
+            var yawDeg = 25.0f;
+            var pitchRad = -0.35f; // ~-20 degrees
+            var yawRad = Mathf.DegToRad(yawDeg);
+            var cp = Mathf.Cos(pitchRad);
+            var dir = new Vector3(cp * Mathf.Sin(yawRad), Mathf.Sin(pitchRad), cp * Mathf.Cos(yawRad));
+            CameraRig.LookAt(CameraRig.DesiredPivot + dir, Vector3.Up);
+            CameraRig.Cam.MakeCurrent();
+        }
+    }
 }
