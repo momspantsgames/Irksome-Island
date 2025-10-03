@@ -58,7 +58,6 @@ public partial class ApplicationManager : Node
 		else
 		{
 			StartGame(new GameConfiguration { GameType = GameType.Attract, WorldName = NodeNames.WorldMain });
-			_music.Play();
 		}
 	}
 

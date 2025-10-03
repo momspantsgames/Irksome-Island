@@ -63,11 +63,31 @@ public partial class ChatPanel : Control
 		app.IsGameplayInputBlocked = false;
 	}
 
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		// If Enter is pressed and the chat input doesn't have focus, focus it and block gameplay
+		if (_input == null || _input.HasFocus()) return;
+		if (@event is InputEventKey k && k.Pressed && !k.Echo && (k.Keycode == Key.Enter || k.Keycode == Key.KpEnter))
+		{
+			var app = GetTree().Root.GetNode<IrksomeIsland.Core.Application.ApplicationManager>(NodeNames.ApplicationManager);
+			app.IsGameplayInputBlocked = true;
+			Input.MouseMode = Input.MouseModeEnum.Visible;
+			_input.GrabFocus();
+			GetViewport().SetInputAsHandled();
+		}
+	}
+
 	private void OnSubmit(string text)
 	{
 		_chat.SendLocal(text);
 		_input.Text = string.Empty;
-		_input.GrabFocus();
+
+		// Stop blocking gameplay after sending
+		var app = GetTree().Root.GetNode<IrksomeIsland.Core.Application.ApplicationManager>(NodeNames.ApplicationManager);
+		app.IsGameplayInputBlocked = false;
+		_input.ReleaseFocus();
+		// Leave mouse visible after sending
+		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
 
 	private void OnMessageAdded(Dictionary msg)
