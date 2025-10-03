@@ -49,6 +49,14 @@ public partial class AnimationComponent : Node, ICharacterBusAware
 		if (v.VariantType == Variant.Type.Nil)
 			v = _tree.Get(Paths.Animation.LocomotionPlaybackPath);
 		_animPlayback = v.As<AnimationNodeStateMachinePlayback>();
+
+		// Ensure critical locomotion animations loop even if import metadata differs
+		var player = FindAnimationPlayer(modelInstance);
+		if (player != null)
+		{
+			TrySetLoop(player, Animations.Walk);
+			TrySetLoop(player, Animations.Sprint);
+		}
 	}
 
 	public void BindTo(CharacterBus bus)
@@ -99,6 +107,23 @@ public partial class AnimationComponent : Node, ICharacterBusAware
 		var anim = player.GetAnimation(animName);
 		if (anim != null)
 			anim.LoopMode = Animation.LoopModeEnum.Linear;
+	}
+
+	private static AnimationPlayer? FindAnimationPlayer(Node root)
+	{
+		if (root is AnimationPlayer ap) return ap;
+		foreach (var child in root.GetChildren())
+		{
+			if (child is AnimationPlayer cAp) return cAp;
+			var nested = FindAnimationPlayer(child);
+			if (nested != null) return nested;
+		}
+		return null;
+	}
+
+	private static void TrySetLoop(AnimationPlayer player, string animName)
+	{
+		if (player.HasAnimation(animName)) SetLoop(player, animName);
 	}
 
 	public void Travel(string stateName) => _animPlayback?.Travel(stateName);
