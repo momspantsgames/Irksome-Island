@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfqnr2nxxfyc3"]
+[gd_scene load_steps=9 format=3 uid="uid://bfqnr2nxxfyc3"]
 
 [ext_resource type="Script" uid="uid://ckajhaxjtuulb" path="res://worlds/MainWorld/MainWorld.cs" id="1_sdvpa"]
 [ext_resource type="PackedScene" uid="uid://xesfil17128w" path="res://worlds/MainWorld/chunks/GrassField.tscn" id="2_x5p2k"]
+[ext_resource type="PackedScene" uid="uid://b1v762oubpgbv" path="res://worlds/MainWorld/chunks/Pond.tscn" id="3_55vkn"]
+[ext_resource type="PackedScene" uid="uid://bdtw3plr240hg" path="res://worlds/MainWorld/chunks/FrozenPond.tscn" id="4_6nbt2"]
 [ext_resource type="PackedScene" uid="uid://db20iawbrwifr" path="res://core/props/PropPlaceholder.tscn" id="4_pjh4b"]
 [ext_resource type="PackedScene" uid="uid://drm3kll6ec82b" path="res://prefabs/props/BlasterA.tscn" id="5_26ugb"]
 [ext_resource type="Environment" uid="uid://qv4yxf518qqv" path="res://worlds/MainWorld/Environment.tres" id="8_ea240"]
+[ext_resource type="PackedScene" uid="uid://t0kvtk6t5vhh" path="res://prefabs/props/BlasterB.tscn" id="8_jna5q"]
 
 [node name="MainWorld" type="Node3D"]
 script = ExtResource("1_sdvpa")
@@ -22,11 +25,52 @@ shadow_enabled = true
 
 [node name="Chunks" type="Node3D" parent="."]
 
-[node name="GroundChunk1" parent="Chunks" instance=ExtResource("2_x5p2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -9)
+[node name="GrassField" parent="Chunks" instance=ExtResource("2_x5p2k")]
 
-[node name="GroundChunk3" parent="Chunks" instance=ExtResource("2_x5p2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -9)
+[node name="GrassField2" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+
+[node name="GrassField3" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
+
+[node name="GrassField5" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 20)
+
+[node name="GrassField6" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 20)
+
+[node name="GrassField7" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 0)
+
+[node name="GrassField8" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 40)
+
+[node name="GrassField13" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 60)
+
+[node name="GrassField14" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 60)
+
+[node name="GrassField15" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 60)
+
+[node name="GrassField16" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 60)
+
+[node name="GrassField9" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 40)
+
+[node name="GrassField10" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 40)
+
+[node name="GrassField11" parent="Chunks" instance=ExtResource("2_x5p2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 20)
+
+[node name="GrassField4" parent="Chunks" instance=ExtResource("3_55vkn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="GrassField12" parent="Chunks" instance=ExtResource("4_6nbt2")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -11, 0, 39)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_ea240")
@@ -36,6 +80,22 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 1.113529
 
 [node name="Props" type="Node3D" parent="."]
 
-[node name="PropPlaceholder" parent="Props" instance=ExtResource("4_pjh4b")]
+[node name="BlasterA" parent="Props" instance=ExtResource("4_pjh4b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.0714154, -4)
 ItemScene = ExtResource("5_26ugb")
+
+[node name="BlasterA2" parent="Props" instance=ExtResource("4_pjh4b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.0714154, 14)
+ItemScene = ExtResource("5_26ugb")
+
+[node name="BlasterB" parent="Props" instance=ExtResource("4_pjh4b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.0714154, 14)
+ItemScene = ExtResource("8_jna5q")
+
+[node name="BlasterB2" parent="Props" instance=ExtResource("4_pjh4b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.0714154, 47)
+ItemScene = ExtResource("8_jna5q")
+
+[node name="BlasterB3" parent="Props" instance=ExtResource("4_pjh4b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.0714154, 53)
+ItemScene = ExtResource("8_jna5q")
