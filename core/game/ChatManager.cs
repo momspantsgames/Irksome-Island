@@ -44,6 +44,42 @@ public partial class ChatManager : Node
 			.GetNode($"{NodeNames.ApplicationManager}/NetworkGame/{NodeNames.PlayersRoot}");
 	}
 
+	public void AnnouncePeerJoined(long pid)
+	{
+		if (!Multiplayer.IsServer()) return;
+
+		var playerName = LookupName(pid);
+		if (playerName == "Player") playerName = $"Player {pid}";
+		var msg = new Dictionary
+		{
+			{ "peer", 0 },
+			{ "name", "Server" },
+			{ "text", $"{playerName} joined." },
+			{ "ts", Time.GetUnixTimeFromSystem() }
+		};
+
+		Append(msg);
+		Rpc(nameof(RpcDeliver), msg);
+	}
+
+	public void AnnouncePeerLeft(long pid)
+	{
+		if (!Multiplayer.IsServer()) return;
+
+		var playerName = LookupName(pid);
+		if (playerName == "Player") playerName = $"Player {pid}";
+		var msg = new Dictionary
+		{
+			{ "peer", 0 },
+			{ "name", "Server" },
+			{ "text", $"{playerName} left." },
+			{ "ts", Time.GetUnixTimeFromSystem() }
+		};
+
+		Append(msg);
+		Rpc(nameof(RpcDeliver), msg);
+	}
+
 	public void SendLocal(string text)
 	{
 		if (string.IsNullOrWhiteSpace(text)) return;

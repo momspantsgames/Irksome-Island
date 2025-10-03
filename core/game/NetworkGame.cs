@@ -123,6 +123,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 	private void OnPeerLeft(long id)
 	{
 		if (!Network.IsServer) return;
+		_chat?.AnnouncePeerLeft(id);
 		ServerRemovePlayer((int)id);
 	}
 
@@ -195,7 +196,7 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 				body.Velocity = Vector3.Zero;
 		}
 
-		if (node is NetworkedCharacter nc)
+        if (node is NetworkedCharacter nc)
 		{
 			nc.Bootstrap(model);
 
@@ -207,6 +208,17 @@ public partial class NetworkGame(GameConfiguration config) : IrkGame(config)
 				if (Configuration.LocalPlayerModel is { } preferredModel)
 					nc.ModelTypeId = preferredModel;
 			}
+
+            // Server waits for DisplayName replication before announcing join
+            if (Network.IsServer)
+            {
+                void Handler(string newName)
+                {
+                    nc.DisplayNameChanged -= Handler;
+                    _chat?.AnnouncePeerJoined(peer);
+                }
+                nc.DisplayNameChanged += Handler;
+            }
 		}
 
 		Players[peer] = node;

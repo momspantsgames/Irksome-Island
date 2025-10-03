@@ -67,6 +67,7 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 		{
 			if (_displayName == value) return;
 			_displayName = value;
+			DisplayNameChanged?.Invoke(value);
 			if (_nameplate != null) _nameplate.Text = value;
 		}
 	}
@@ -81,6 +82,8 @@ public partial class NetworkedCharacter : CharacterBody3D, ICharacterStateContex
 
 	public void RequestState(CharacterStateType state, Dictionary? payload = null)
 		=> _state?.Request(state, payload);
+
+	public event Action<string>? DisplayNameChanged;
 
 	public override void _Input(InputEvent @event)
 	{
